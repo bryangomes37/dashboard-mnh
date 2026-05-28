@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Estratégico | Móveis Novo Horizonte & IGHER</title>
+    <!-- Tailwind CSS para estilização premium -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .farol-verde { background-color: #22c55e; box-shadow: 0 0 14px #22c55e; }
+        .farol-amarelo { background-color: #eab308; box-shadow: 0 0 14px #eab308; }
+        .farol-vermelho { background-color: #ef4444; box-shadow: 0 0 14px #ef4444; }
+        .grid-bsc { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+        .persp-card { transition: all 0.2s ease-in-out; }
+        .persp-card:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- HEADER INSTITUCIONAL COM AS LOGOS SOLICITADAS -->
+    <header class="bg-white border-b border-slate-200 shadow-xs px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            
+            <!-- LOGO MÓVEIS NOVO HORIZONTE (Estilizada com as cores oficiais de Ubá) -->
+            <div class="flex items-center gap-4">
+                <div class="bg-[#0b1c3a] text-white p-3 rounded-lg shadow-md flex flex-col items-center justify-center border-b-4 border-amber-500 w-44">
+                    <span class="text-[9px] tracking-[0.3em] uppercase text-amber-400 font-bold -mb-1">Móveis</span>
+                    <span class="text-xs font-black tracking-wider text-center">NOVO HORIZONTE</span>
+                    <div class="w-full h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent my-1"></div>
+                    <span class="text-[8px] text-slate-300 tracking-widest font-light">UBÁ - MG</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Planejamento Estratégico</h1>
+                    <p class="text-xs text-slate-500 font-medium">Painel Corporativo de Metas e Indicadores</p>
+                </div>
+            </div>
+
+            <!-- INPUT DE CONEXÃO DIRETA COM O SHEETS -->
+            <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-xl text-xs border border-slate-200 w-full md:w-auto">
+                <i class="fa-solid fa-key text-slate-400 ml-1"></i>
+                <input type="text" id="urlInputScript" placeholder="Cole a URL azul do Apps Script aqui..." class="bg-transparent border-none outline-none w-full md:w-64 text-slate-700 font-mono">
+                <button onclick="conectarPlanilha()" class="bg-[#0b1c3a] text-white px-4 py-1.5 rounded-lg font-semibold hover:bg-slate-800 transition shadow-xs cursor-pointer shrink-0">Conectar</button>
+            </div>
+
+            <!-- LOGO IGHER CONSULTORIA -->
+            <div class="flex items-center gap-3 border-t md:border-t-0 md:border-l pt-4 md:pt-0 md:pl-6 border-slate-200">
+                <div class="text-center md:text-right">
+                    <span class="text-[9px] text-slate-400 block tracking-widest uppercase font-bold">Apoio Estratégico</span>
+                    <div class="flex items-center gap-1.5 mt-0.5 justify-center md:justify-end">
+                        <span class="font-black text-slate-900 tracking-tighter text-lg">IGHER</span>
+                        <span class="bg-blue-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">CONSULTORIA</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- BLOCO DE FILTROS COMPLETOS (PESSOAS E KPIS) -->
+        <section class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 mb-8 flex flex-col sm:flex-row flex-wrap gap-4 items-end justify-between">
+            <div class="w-full sm:w-auto grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 max-w-3xl">
+                <!-- Filtro de Pessoas (Responsáveis) -->
+                <div class="flex flex-col">
+                    <label class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1.5"><i class="fa-solid fa-user-tie text-slate-400 mr-1"></i> Filtrar por Responsável</label>
+                    <select id="filtroUser" onchange="filtrarERenderizar()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition cursor-pointer">
+                        <option value="Todos">-- Todos os Líderes --</option>
+                    </select>
+                </div>
+                <!-- Filtro de KPIs / Objetivos -->
+                <div class="flex flex-col">
+                    <label class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1.5"><i class="fa-solid fa-bullseye text-slate-400 mr-1"></i> Filtrar por Nome do KPI / Objetivo</label>
+                    <select id="filtroKpi" onchange="filtrarERenderizar()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition cursor-pointer">
+                        <option value="Todos">-- Todos os KPIs / Objetivos --</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="limparPainelFiltros()" class="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/70 px-4 py-2.5 rounded-xl transition cursor-pointer h-fit w-full sm:w-auto text-center"><i class="fa-solid fa-arrow-rotate-left mr-1"></i> Limpar Filtros</button>
+        </section>
+
+        <!-- MAPA VISUAL DO BSC (4 PERSPECTIVAS CLASSICAS) -->
+        <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-square-poll-vertical text-slate-500"></i> Mapa de Desempenho Estratégico (BSC)</h2>
+            <span id="statusSinc" class="text-xs font-semibold text-slate-400 bg-slate-200/60 px-3 py-1 rounded-full"><i class="fa-solid fa-database mr-1"></i>Usando Dados Locais</span>
+        </div>
+        
+        <section id="gridBscContainer" class="grid-bsc mb-12">
+            <!-- Renderizado via JavaScript Dinamicamente -->
+        </section>
+
+
+        <!-- PARTE DO PLANO DE AÇÃO ABAIXO (CONFORME SOLICITADO) -->
+        <div class="border-t border-slate-200 pt-8 mb-4">
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-list-check text-slate-500"></i> Plano de Ação Estratégico (Iniciativas Relacionadas)</h2>
+        </div>
+
+        <section class="bg-white shadow-xs border border-slate-200 rounded-2xl overflow-hidden mb-12">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+                    <thead class="bg-[#0b1c3a] text-slate-200">
+                        <tr>
+                            <th class="p-4 font-semibold tracking-wider text-xs uppercase">Ação Cadastrada</th>
+                            <th class="p-4 font-semibold tracking-wider text-xs uppercase">Objetivo Vinculado</th>
+                            <th class="p-4 font-semibold tracking-wider text-xs uppercase">Líder</th>
+                            <th class="p-4 font-semibold tracking-wider text-xs uppercase">Cronograma (Início / Fim)</th>
+                            <th class="p-4 font-semibold tracking-wider text-xs uppercase text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaPlanoCorpo" class="divide-y divide-slate-100 bg-white">
+                        <!-- Renderizado via JavaScript Dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#0b1c3a] text-slate-400 text-center py-6 text-xs border-t border-slate-800">
+        <p>© 2026 Móveis Novo Horizonte S/A. Gestão Industrial e Comercial Integrada Ubá/MG.</p>
+        <p class="mt-1 text-slate-500">Tecnologia desenvolvida em parceria com a IGHER Consultoria.</p>
+    </footer>
+
+    <!-- ENGINE DE MAPEAMENTO E TRATAMENTO DE COLUNAS -->
+    <script>
+        // Dados de segurança (Se a planilha cair ou não estiver linkada, o site abre lindo com estes dados reais demonstrativos)
+        let dadosGlobais = {
+            indicadores: [
+                { "Perspectiva": "Financeira", "Objetivo Estratégico": "Elevar Margem EBITDA", "KPI": "EBITDA Líquido", "Meta": "22%", "Resultado": "19.5%", "Responsável": "Leonardo", "Prazo": "Dez/2026" },
+                { "Perspectiva": "Financeira", "Objetivo Estratégico": "Faturamento Ubá", "KPI": "Faturamento Mensal", "Meta": "R$ 5M", "Resultado": "R$ 4.8M", "Responsável": "Rildo", "Prazo": "Mensal" },
+                { "Perspectiva": "Clientes", "Objetivo Estratégico": "Previsibilidade de Vendas", "KPI": "Acurácia do Forecast", "Meta": "90%", "Resultado": "92%", "Responsável": "Rildo", "Prazo": "Jun/2026" },
+                { "Perspectiva": "Processos Internos", "Objetivo Estratégico": "Eficiência Fabril", "KPI": "OEE de Máquinas", "Meta": "85%", "Resultado": "72%", "Responsável": "Raphael", "Prazo": "Out/2026" },
+                { "Perspectiva": "Processos Internos", "Objetivo Estratégico": "Governança Corporativa", "KPI": "S&OP Mensal Execução", "Meta": "100%", "Resultado": "100%", "Responsável": "IGHER / Moisés", "Prazo": "Dez/2026" },
+                { "Perspectiva": "Aprendizado e Crescimento", "Objetivo Estratégico": "Retenção de Talentos", "KPI": "Índice de Turnover", "Meta": "<5%", "Resultado": "8.5%", "Responsável": "Marcelo", "Prazo": "Dez/2026" }
+            ],
+            planoAcao: [
+                { "AÇÃO": "Implantar rotina semanal de alinhamento comercial e fábrica", "OBJETIVO ESTRATÉGICO": "Governança Corporativa", "RESPONSÁVEL": "IGHER / Moisés", "Prazo Início": "01/06", "Prazo Fim": "30/07", "Status": "Em Andamento" },
+                { "AÇÃO": "Auditoria de setup rápido na prensa automática", "OBJETIVO ESTRATÉGICO": "Eficiência Fabril", "RESPONSÁVEL": "Raphael", "Prazo Início": "10/06", "Prazo Fim": "15/07", "Status": "Não Iniciado" },
+                { "AÇÃO": "Finalizar parametrização do CRM comercial Novo Horizonte", "OBJETIVO ESTRATÉGICO": "Previsibilidade de Vendas", "RESPONSÁVEL": "Rildo", "Prazo Início": "01/05", "Prazo Fim": "20/06", "Status": "Concluído" }
+            ]
+        };
+
+        // Função de normalização inteligente de colunas (Lê qualquer variação de nome)
+        function lerCampoPlanilha(objeto, chavesPossiveis) {
+            for (let chave of chavesPossiveis) {
+                if (objeto[chave] !== undefined) return String(objeto[chave]).trim();
+                let limpaAlvo = chave.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+                for (let prop in objeto) {
+                    let limpaProp = prop.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+                    if (limpaProp === limpaAlvo) return String(objeto[prop]).trim();
+                }
+            }
+            return "";
+        }
+
+        // Dicionário de sinônimos das colunas originais do usuário
+        const DICIONARIO = {
+            persp: ['Perspectiva', 'PERSPECTIVA'],
+            obj: ['Objetivo Estratégico', 'OBJETIVO ESTRATÉGICO', 'Objetivo'],
+            kpi: ['KPI', 'Indicador', 'kpi'],
+            resp: ['Responsável', 'RESPONSÁVEL', 'Responsavel'],
+            meta: ['Meta', 'META'],
+            real: ['Resultado', 'RESULTADO', 'Realizado', 'Atual'],
+            prazo: ['Prazo', 'PRAZO'],
+            mes: ['Mês/Ano', 'MÊS/ANO', 'Mes/Ano'],
+            acao: ['AÇÃO', 'Ação', 'Acao'],
+            inicio: ['Prazo Início', 'Prazo Inicio', 'PRAZO INÍCIO'],
+            fim: ['Prazo Fim', 'PRAZO FIM'],
+            status: ['Status', 'STATUS', 'Situação', 'SITUACAO']
+        };
+
+        // ANALISADOR E CALCULO AUTOMATICO DO FAROL (VERDE, AMARELO, VERMELHO)
+        function definirFarolEstrategico(kpiObj) {
+            let meta = lerCampoPlanilha(kpiObj, DICIONARIO.meta);
+            let real = lerCampoPlanilha(kpiObj, DICIONARIO.real);
+            let statusFixo = lerCampoPlanilha(kpiObj, DICIONARIO.status);
+
+            // Se você criar uma coluna de status e preencher diretamente, o código obedece ela primeiro!
+            if(statusFixo.toLowerCase().includes('verd')) return 'farol-verde';
+            if(statusFixo.toLowerCase().includes('amar')) return 'farol-amarelo';
+            if(statusFixo.toLowerCase().includes('verm')) return 'farol-vermelho';
+
+            // Regra matemática inteligente de contingência caso não haja coluna de Status escrita
+            let nMeta = parseFloat(meta.replace(/[^0-9.,]/g, '').replace(',', '.'));
+            let nReal = parseFloat(real.replace(/[^0-9.,]/g, '').replace(',', '.'));
+
+            if (!isNaN(nMeta) && !isNaN(nReal)) {
+                if(nMeta === 0) return 'farol-verde';
+                let performance = nReal / nMeta;
+                // Se a meta for de redução (ex: turnover), inverte a lógica
+                if (meta.includes('<') || meta.toLowerCase().includes('reduzir') || meta.includes('-')) {
+                    if (nReal <= nMeta) return 'farol-verde';
+                    if (nReal <= nMeta * 1.15) return 'farol-amarelo';
+                    return 'farol-vermelho';
+                }
+                if (performance >= 1.0) return 'farol-verde';
+                if (performance >= 0.85) return 'farol-amarelo';
+                return 'farol-vermelho';
+            }
+            
+            // Fallback elegante caso seja texto
+            if(real.toLowerCase() === meta.toLowerCase() && meta !== "") return 'farol-verde';
+            return 'farol-amarelo'; 
+        }
+
+        window.onload = function() {
+            const urlSalva = localStorage.getItem('nh_script_url');
+            if(urlSalva) {
+                document.getElementById('urlInputScript').value = urlSalva;
+                buscarDadosOnline(urlSalva);
+            } else {
+                popularDropdowns(dadosGlobais);
+                filtrarERenderizar();
+            }
+        };
+
+        function conectarPlanilha() {
+            const url = document.getElementById('urlInputScript').value.trim();
+            if(url) {
+                localStorage.setItem('nh_script_url', url);
+                buscarDadosOnline(url);
+            } else {
+                alert("Por favor, insira a URL do Script para conectar.");
+            }
+        }
+
+        function buscarDadosOnline(url) {
+            document.getElementById('statusSinc').innerHTML = `<i class="fa-solid fa-spinner fa-spin text-blue-600"></i> Atualizando...`;
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.indicadores && data.planoAcao) {
+                        dadosGlobais = data;
+                        document.getElementById('statusSinc').innerHTML = `<i class="fa-solid fa-circle-check text-green-500"></i> Atualizado em Tempo Real`;
+                        popularDropdowns(dadosGlobais);
+                        filtrarERenderizar();
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('statusSinc').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Erro de Conexão`;
+                    alert("Atenção! Não foi possível baixar os dados novos. Verifique se a implantação do Apps Script foi feita para 'Qualquer Pessoa'. Mostrando dados locais salvos.");
+                    popularDropdowns(dadosGlobais);
+                    filtrarERenderizar();
+                });
+        }
+
+        function popularDropdowns(data) {
+            const fUser = document.getElementById('filtroUser');
+            const fKpi = document.getElementById('filtroKpi');
+            
+            fUser.innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
+            fKpi.innerHTML = '<option value="Todos">-- Todos os KPIs / Objetivos --</option>';
+
+            let usuarios = new Set();
+            let kpisLista = new Set();
+
+            data.indicadores.forEach(i => {
+                let r = lerCampoPlanilha(i, DICIONARIO.resp);
+                let k = lerCampoPlanilha(i, DICIONARIO.obj);
+                if(r) usuarios.add(r);
+                if(k) kpisLista.add(k);
+            });
+
+            data.planoAcao.forEach(p => {
+                let r = lerCampoPlanilha(p, DICIONARIO.resp);
+                if(r) usuarios.add(r);
+            });
+
+            Array.from(usuarios).sort().forEach(u => {
+                fUser.innerHTML += `<option value="${u}">${u}</option>`;
+            });
+            Array.from(kpisLista).sort().forEach(k => {
+                fKpi.innerHTML += `<option value="${k}">${k}</option>`;
+            });
+        }
+
+        function limparPainelFiltros() {
+            document.getElementById('filtroUser').value = "Todos";
+            document.getElementById('filtroKpi').value = "Todos";
+            filtrarERenderizar();
+        }
+
+        // RENDERIZAÇÃO DO LAYOUT EM FORMATO DE MAPA ESTRATÉGICO COMPACTO
+        function filtrarERenderizar() {
+            const userSel = document.getElementById('filtroUser').value;
+            const kpiSel = document.getElementById('filtroKpi').value;
+            const container = document.getElementById('gridBscContainer');
+            container.innerHTML = "";
+
+            const categoriasBSC = [
+                { id: "Financeira", titulo: "Perspectiva Financeira", bg: "border-t-4 border-t-emerald-500", icon: "fa-solid fa-money-bill-trend-up text-emerald-500" },
+                { id: "Clientes", titulo: "Perspectiva de Clientes", bg: "border-t-4 border-t-sky-500", icon: "fa-solid fa-handshake text-sky-500" },
+                { id: "Processos Internos", titulo: "Processos Internos", bg: "border-t-4 border-t-indigo-500", icon: "fa-solid fa-gears text-indigo-500" },
+                { id: "Aprendizado e Crescimento", titulo: "Aprendizado e Crescimento", bg: "border-t-4 border-t-amber-500", icon: "fa-solid fa-graduation-cap text-amber-500" }
+            ];
+
+            categoriasBSC.forEach(cat => {
+                let indsFiltrados = dadosGlobais.indicadores.filter(i => {
+                    let p = lerCampoPlanilha(i, DICIONARIO.persp);
+                    let r = lerCampoPlanilha(i, DICIONARIO.resp);
+                    let o = lerCampoPlanilha(i, DICIONARIO.obj);
+                    
+                    let bateP = p.toLowerCase().includes(cat.id.toLowerCase().substring(0,5));
+                    let bateU = (userSel === "Todos") || (r === userSel);
+                    let bateK = (kpiSel === "Todos") || (o === kpiSel);
+
+                    return bateP && bateU && bateK;
+                });
+
+                if (indsFiltrados.length === 0 && userSel === "Todos" && kpiSel === "Todos") return;
+
+                let cardHtml = `
+                    <div class="bg-white rounded-2xl shadow-xs border border-slate-200/60 overflow-hidden persp-card ${cat.bg}">
+                        <div class="bg-slate-50/70 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2"><i class="${cat.icon}"></i> ${cat.titulo}</h3>
+                            <span class="text-[10px] bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-bold">${indsFiltrados.length}</span>
+                        </div>
+                        <div class="p-4 space-y-3">
+                `;
+
+                if(indsFiltrados.length === 0) {
+                    cardHtml += `<p class="text-xs text-slate-400 text-center py-4">Nenhum registro para os filtros selecionados.</p>`;
+                }
+
+                indsFiltrados.forEach(i => {
+                    let farolClass = definirFarolEstrategico(i);
+                    cardHtml += `
+                        <div class="p-3 bg-slate-50/50 border border-slate-200/70 rounded-xl flex items-center justify-between gap-4">
+                            <div class="flex-1 min-w-0">
+                                <h4 class="text-xs font-bold text-slate-900 truncate" title="${lerCampoPlanilha(i, DICIONARIO.obj)}">${lerCampoPlanilha(i, DICIONARIO.obj)}</h4>
+                                <p class="text-[11px] text-slate-500 font-medium mt-0.5">KPI: <span class="text-slate-700 font-semibold">${lerCampoPlanilha(i, DICIONARIO.kpi)}</span></p>
+                                <div class="grid grid-cols-3 gap-1 mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-500">
+                                    <div>Meta: <span class="font-bold text-slate-700 block text-xs">${lerCampoPlanilha(i, DICIONARIO.meta)}</span></div>
+                                    <div>Real: <span class="font-black text-slate-900 block text-xs">${lerCampoPlanilha(i, DICIONARIO.real)}</span></div>
+                                    <div>Líder: <span class="font-medium text-blue-600 block truncate">${lerCampoPlanilha(i, DICIONARIO.resp)}</span></div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center shrink-0">
+                                <div class="w-4 h-4 rounded-full ${farolClass}"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                cardHtml += `</div></div>`;
+                container.innerHTML += cardHtml;
+            });
+
+            // RENDERIZAÇÃO DA TABELA DO PLANO DE AÇÃO
+            const tabelaCorpo = document.getElementById('tabelaPlanoCorpo');
+            tabelaCorpo.innerHTML = "";
+
+            let planosFiltrados = dadosGlobais.planoAcao.filter(p => {
+                let r = lerCampoPlanilha(p, DICIONARIO.resp);
+                return (userSel === "Todos") || (r === userSel);
+            });
+
+            if (planosFiltrados.length === 0) {
+                tabelaCorpo.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 text-xs font-medium">Nenhum plano de ação encontrado para o líder selecionado.</td></tr>`;
+            } else {
+                planosFiltrados.forEach(p => {
+                    let stText = lerCampoPlanilha(p, DICIONARIO.status);
+                    let badgeColor = "bg-slate-100 text-slate-700";
+                    if(stText.toLowerCase().includes('concl') || stText.toLowerCase().includes('pronto')) badgeColor = "bg-emerald-100 text-emerald-800";
+                    if(stText.toLowerCase().includes('andam') || stText.toLowerCase().includes('exec')) badgeColor = "bg-amber-100 text-amber-800";
+                    if(stText.toLowerCase().includes('atras')) badgeColor = "bg-rose-100 text-rose-800";
+
+                    tabelaCorpo.innerHTML += `
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="p-4 text-xs font-semibold text-slate-900 max-w-sm whitespace-normal break-words">${lerCampoPlanilha(p, DICIONARIO.acao)}</td>
+                            <td class="p-4 text-xs text-slate-600 font-medium">${lerCampoPlanilha(p, DICIONARIO.obj) || '-'}</td>
+                            <td class="p-4 text-xs font-bold text-slate-700">${lerCampoPlanilha(p, DICIONARIO.resp)}</td>
+                            <td class="p-4 text-xs text-slate-500 whitespace-nowrap">
+                                <span class="block"><span class="text-slate-400 text-[10px]">Início:</span> ${lerCampoPlanilha(p, DICIONARIO.inicio) || '-'}</span>
+                                <span class="block"><span class="text-slate-400 text-[10px]">Fim:</span> ${lerCampoPlanilha(p, DICIONARIO.fim) || '-'}</span>
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold inline-block min-w-[100px] text-center ${badgeColor}">
+                                    ${stText || 'Não Iniciado'}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
