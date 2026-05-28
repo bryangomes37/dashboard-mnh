@@ -125,7 +125,7 @@
         </section>
     </main>
 
-    <!-- MODAL INTERATIVO EVOLUÍDO PARA MÚLTIPLOS KPIS -->
+    <!-- MODAL INTERATIVO COM FILTRAGEM ESTRITA DE AÇÕES -->
     <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
             
@@ -147,14 +147,14 @@
                     </div>
                 </div>
 
-                <!-- CARDS DE INFORMAÇÕES RÁPIDAS DO KPI SELECIONADO -->
+                <!-- CARDS DE INFORMAÇÕES RÁPIDAS -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div><span class="text-slate-400 block font-medium">Líder do Indicador:</span> <strong id="modalLider" class="text-slate-800 text-sm">--</strong></div>
                     <div><span class="text-slate-400 block font-medium">Meta Alvo Recente:</span> <strong id="modalMetaValor" class="text-slate-700 text-sm">--</strong></div>
                     <div><span class="text-slate-400 block font-medium">Último Realizado:</span> <strong id="modalRealValor" class="text-slate-900 text-sm">--</strong></div>
                 </div>
 
-                <!-- GRÁFICO HISTÓRICO MÊS A MÊS COM DATA CORRIGIDA -->
+                <!-- GRÁFICO HISTÓRICO MÊS A MÊS -->
                 <div class="bg-white p-4 border border-slate-200 rounded-xl shadow-xs">
                     <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica (Mês/Ano)</h4>
                     <div class="relative h-64 w-full">
@@ -162,9 +162,9 @@
                     </div>
                 </div>
 
-                <!-- TABELA DE PLANOS DE AÇÃO DO KPI SELECIONADO -->
+                <!-- TABELA DE PLANOS DE AÇÃO RESTRITA -->
                 <div>
-                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas Vinculadas a este Indicador</h4>
+                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas Vinculadas Exclusivamente a este Indicador</h4>
                     <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
                         <table class="w-full text-left text-xs divide-y divide-slate-200">
                             <thead class="bg-slate-50 text-slate-500 font-bold">
@@ -183,9 +183,8 @@
         </div>
     </div>
 
-    <!-- LÓGICA INTELLIGENT CORE -->
+    <!-- LÓGICA CORE -->
     <script>
-        // Dados locais de contingência estruturados com múltiplos KPIs por objetivo para teste inicial
         let dadosOriginais = {
             indicadores: [
                 { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "Meta": "20%", "Resultado": "16%", "Mês": "2026-04-01T03:00:00.000Z", "Responsável": "Leonardo" },
@@ -195,8 +194,7 @@
                 { "ID": "OBJ 3.2", "Perspectiva": "Processos Internos", "Objetivo": "Melhorar estrutura de custos industriais", "KPI": "Redução de Perda de Chapa", "Meta": "3%", "Resultado": "5.4%", "Mês": "2026-05-01T03:00:00.000Z", "Responsável": "Raphael" }
             ],
             planoAcao: [
-                { "AÇÃO": "Implementar sensor de refugo na prensa 02", "OBJETIVO ESTRATÉGICO": "Melhorar estrutura de custos industriais", "KPI": "Redução de Perda de Chapa", "RESPONSÁVEL": "Raphael", "Prazo Início": "01/05", "Prazo Fim": "30/06", "Status": "Em Andamento" },
-                { "AÇÃO": "Reunião de alinhamento de margem trimestral", "OBJETIVO ESTRATÉGICO": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "RESPONSÁVEL": "Leonardo", "Prazo Início": "10/04", "Prazo Fim": "20/05", "Status": "Concluído" }
+                { "AÇÃO": "Implementar sensor de refugo na prensa 02", "OBJETIVO ESTRATÉGICO": "Melhorar estrutura de custos industriais", "KPI": "Redução de Perda de Chapa", "RESPONSÁVEL": "Raphael", "Prazo Início": "2026-05-01T03:00:00.000Z", "Prazo Fim": "2026-06-30T03:00:00.000Z", "Status": "Em Andamento" }
             ]
         };
 
@@ -207,7 +205,7 @@
             id: ['ID', 'Id', 'Id_Objetivo'],
             persp: ['Perspectiva', 'PERSPECTIVA'],
             obj: ['Objetivo Estratégico', 'OBJETIVO ESTRATÉGICO', 'Objetivo'],
-            kpi: ['KPI', 'Indicador', 'Meta Estratégica', 'META ESTRATÉGICA'],
+            kpi: ['KPI', 'Indicador', 'INDICADOR', 'Meta', 'Meta Estratégica', 'META ESTRATÉGICA', 'Meta Estrategica'],
             resp: ['Responsável', 'RESPONSÁVEL', 'Líder'],
             meta: ['Meta', 'META'],
             real: ['Resultado', 'RESULTADO', 'Realizado'],
@@ -227,16 +225,43 @@
             return "";
         }
 
-        // TRATAMENTO DA DATA DO PLANILHÃO (image_e55fd4.png)
         function formatarDataMesAno(textoData) {
-            if (!textoData) return "S/D";
+            if (!textoData) return "";
             let data = new Date(textoData);
-            if (isNaN(data.getTime())) return textoData; // Fallback caso seja string pura
+            if (isNaN(data.getTime())) return textoData;
             
             const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-            let nomeMes = meses[data.getUTCMonth()];
-            let anoCurto = String(data.getUTCFullYear()).slice(-2);
-            return `${nomeMes}/${anoCurto}`;
+            return `${meses[data.getUTCMonth()]}/${String(data.getUTCFullYear()).slice(-2)}`;
+        }
+
+        // FUNÇÃO DE TRATAMENTO MANUAL VIA REGEX - TOTALMENTE PROTEGIDA CONTRA FORMATOS BRUTOS DO GOOGLE
+        function extrairDataLimpa(texto) {
+            if (!texto) return "";
+            let str = String(texto).trim();
+            if (str === "" || str.toLowerCase() === "s/d" || str === "undefined" || str === "null") return "";
+            
+            // Pega o padrão ISO YYYY-MM-DD enviado pelo Sheets
+            let matchISO = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (matchISO) {
+                return `${matchISO[3]}/${matchISO[2]}/${matchISO[1]}`;
+            }
+            
+            // Verifica se já está no formato BR DD/MM/AAAA
+            let matchBR = str.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+            if (matchBR) {
+                return matchBR[0];
+            }
+            
+            // Fallback para conversão de data nativa caso falhe nos regex
+            let data = new Date(str);
+            if (!isNaN(data.getTime())) {
+                let dia = String(data.getUTCDate()).padStart(2, '0');
+                let mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+                let ano = data.getUTCFullYear();
+                return `${dia}/${mes}/${ano}`;
+            }
+            
+            return str;
         }
 
         function calcularFarol(metaRaw, realRaw) {
@@ -250,7 +275,7 @@
         }
 
         window.onload = function() {
-            const urlSalva = localStorage.getItem('nh_script_url_v3');
+            const urlSalva = localStorage.getItem('nh_script_url_v6');
             if(urlSalva) {
                 document.getElementById('urlInputScript').value = urlSalva;
                 buscarDadosOnline(urlSalva);
@@ -263,7 +288,7 @@
         function conectarPlanilha() {
             const url = document.getElementById('urlInputScript').value.trim();
             if(url) {
-                localStorage.setItem('nh_script_url_v3', url);
+                localStorage.setItem('nh_script_url_v6', url);
                 buscarDadosOnline(url);
             }
         }
@@ -328,8 +353,6 @@
 
             for (let nomeObj in objetivosAgrupados) {
                 let linhasDoObj = objetivosAgrupados[nomeObj];
-                
-                // Descobre a saúde geral calculando o farol do último mês de CADA KPI único desse objetivo
                 let kpisUnicos = [...new Set(linhasDoObj.map(l => lerCampo(l, CHAVES.kpi)))];
                 let coresFaroisKpis = [];
                 let ultimoResponsavel = "--";
@@ -338,7 +361,6 @@
 
                 kpisUnicos.forEach(kpiNome => {
                     let historicoKpi = linhasDoObj.filter(l => lerCampo(l, CHAVES.kpi) === kpiNome);
-                    // Ordena por data para pegar o mais recente
                     historicoKpi.sort((a,b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
                     let maisRecente = historicoKpi[historicoKpi.length - 1];
                     
@@ -348,7 +370,6 @@
                     perspectivaCard = lerCampo(maisRecente, CHAVES.persp);
                 });
 
-                // Regra de Governança: Se qualquer KPI estiver crítico (vermelho), o objetivo acende Alerta Vermelho
                 let farolFinalObj = "farol-verde";
                 if(coresFaroisKpis.includes("farol-vermelho")) farolFinalObj = "farol-vermelho";
                 else if(coresFaroisKpis.includes("farol-amarelo")) farolFinalObj = "farol-amarelo";
@@ -381,17 +402,15 @@
             }
         }
 
-        // ABERTURA DO MODAL MONTANDO O DROPDOWN DE KPIS EXCLUSIVOS
         function abrirDetalhesObjetivo(nomeDoObjetivo) {
             objetivoSelecionadoAtual = nomeDoObjetivo;
-            let linhasDoObj = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === nomeDoObjetivo);
-            if(linhasDoObj.length === 0) return;
+            let linesDoObj = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === nomeDoObjetivo);
+            if(linesDoObj.length === 0) return;
 
-            document.getElementById('modalIdObj').innerText = lerCampo(linhasDoObj[0], CHAVES.id) || "OBJETIVO";
+            document.getElementById('modalIdObj').innerText = lerCampo(linesDoObj[0], CHAVES.id) || "OBJETIVO";
             document.getElementById('modalNomeObj').innerText = nomeDoObjetivo;
 
-            // Extrai e popula todos os KPIs únicos associados a esse objetivo específico
-            let kpisUnicos = [...new Set(linhasDoObj.map(l => lerCampo(l, CHAVES.kpi)))];
+            let kpisUnicos = [...new Set(linesDoObj.map(l => lerCampo(l, CHAVES.kpi)))];
             const selectKpi = document.getElementById('modalSelectKpi');
             selectKpi.innerHTML = "";
             
@@ -399,29 +418,21 @@
                 selectKpi.innerHTML += `<option value="${kpi.replace(/'/g, "\\'")}">${kpi}</option>`;
             });
 
-            // Força o carregamento dos gráficos e ações do primeiro KPI da lista
             mudarIndicadorNoModal();
-
             document.getElementById('modalObjetivo').style.display = 'flex';
         }
 
-        // ATUALIZAÇÃO SINCADA: ALTERNA O KPI -> MUDA O GRÁFICO -> FILTRA OS PLANOS DE AÇÃO DO KPI
         function mudarIndicadorNoModal() {
             let kpiSelecionado = document.getElementById('modalSelectKpi').value;
-            
-            // Filtra o histórico mensal exclusivo deste KPI
             let historicoKpi = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
             
-            // ORDENAÇÃO CRONOLÓGICA DAS DATAS PARA NÃO EMBALHAR O GRÁFICO (image_e55fd4.png)
             historicoKpi.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
-
-            let topo = historicoKpi[historicoKpi.length - 1]; // Registro mais recente do KPI
+            let topo = historicoKpi[historicoKpi.length - 1];
             
             document.getElementById('modalLider').innerText = lerCampo(topo, CHAVES.resp) || "--";
             document.getElementById('modalMetaValor').innerText = lerCampo(topo, CHAVES.meta) || "--";
             document.getElementById('modalRealValor').innerText = lerCampo(topo, CHAVES.real) || "--";
 
-            // Monta as coordenadas do Gráfico com datas limpas
             let eixoXLabels = [];
             let dadosMeta = [];
             let dadosResultado = [];
@@ -469,31 +480,45 @@
                 }
             });
 
-            // FILTRAGEM RIGOROSA DO PLANO DE AÇÃO LINKADO AO KPI/INDICADOR SELECIONADO
             const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
             tCorpo.innerHTML = "";
 
             let planosFiltrados = dadosOriginais.planoAcao.filter(p => {
                 let vObj = lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo Estratégico', 'Objetivo']);
-                let vKpi = lerCampo(p, ['KPI', 'Indicador', 'INDICADOR', 'Meta', 'Meta Estratégica']);
+                let vKpi = lerCampo(p, ['KPI', 'Indicador', 'INDICADOR', 'Meta', 'Meta Estratégica', 'META ESTRATÉGICA', 'Meta Estrategica']);
                 
-                // Linkagem direta: precisa pertencer ao mesmo Objetivo e bater com o KPI selecionado
-                return vObj.toLowerCase() === objetivoSelecionadoAtual.toLowerCase() && 
-                       (vKpi.toLowerCase() === kpiSelecionado.toLowerCase() || vKpi === "");
+                return vObj.toLowerCase().trim() === objetivoSelecionadoAtual.toLowerCase().trim() && 
+                       vKpi.toLowerCase().trim() === kpiSelecionado.toLowerCase().trim();
             });
 
             if(planosFiltrados.length === 0) {
-                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-medium">Nenhum plano de ação pendente ou diretamente vinculado a este KPI.</td></tr>`;
+                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-semibold">Nenhuma iniciativa vinculada especificamente a esta meta estratégica.</td></tr>`;
             } else {
                 planosFiltrados.forEach(p => {
                     let st = lerCampo(p, CHAVES.status);
                     let corBadge = st.toLowerCase().includes('concl') ? "bg-green-100 text-green-800" : (st.toLowerCase().includes('andam') ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-700");
 
+                    // Extração limpa dos prazos
+                    let dataInicioFormatada = extrairDataLimpa(lerCampo(p, ['Prazo Início', 'Prazo Inicio', 'Inicio', 'Data Início', 'Data Inicio']));
+                    let dataFimFormatada = extrairDataLimpa(lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo', 'Data Fim']));
+
+                    // SISTEMA DE EXIBIÇÃO INTELIGENTE: SEM TRAILING HYPHENS OU TEXTOS EXTRAS
+                    let prazoExibicao = "";
+                    if (dataInicioFormatada && dataFimFormatada) {
+                        prazoExibicao = `${dataInicioFormatada} - ${dataFimFormatada}`;
+                    } else if (dataInicioFormatada) {
+                        prazoExibicao = dataInicioFormatada;
+                    } else if (dataFimFormatada) {
+                        prazoExibicao = dataFimFormatada;
+                    } else {
+                        prazoExibicao = ""; // Deixa completamente em branco se não houver datas
+                    }
+
                     tCorpo.innerHTML += `
                         <tr class="hover:bg-slate-50">
                             <td class="p-3 font-medium text-slate-800 whitespace-normal">${lerCampo(p, ['AÇÃO', 'Acao', 'Açao'])}</td>
                             <td class="p-3 text-slate-600 font-bold">${lerCampo(p, CHAVES.resp)}</td>
-                            <td class="p-3 text-slate-400 whitespace-nowrap">${lerCampo(p, ['Prazo Início', 'Prazo Inicio'])} - ${lerCampo(p, ['Prazo Fim'])}</td>
+                            <td class="p-3 text-slate-500 font-medium whitespace-nowrap">${prazoExibicao}</td>
                             <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-sm text-[10px] font-black uppercase ${corBadge}">${st || 'Não Iniciado'}</span></td>
                         </tr>
                     `;
