@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Estratégico | Móveis Novo Horizonte</title>
-    <!-- Tailwind CSS para Estilização Premium -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js para os gráficos de Linha + Barra -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Cores Fiéis ao Mapa Estratégico */
@@ -27,11 +25,9 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased">
 
-    <!-- HEADER INSTITUCIONAL -->
     <header class="bg-white border-b border-slate-200 shadow-xs px-6 py-4">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
             
-            <!-- LOGO MÓVEIS NOVO HORIZONTE -->
             <div class="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-start">
                 <img src="MNH%204.png" alt="Móveis Novo Horizonte" class="h-11 w-auto object-contain">
                 <div class="hidden sm:block border-l border-slate-200 pl-4 py-1">
@@ -40,14 +36,12 @@
                 </div>
             </div>
 
-            <!-- CAMPO DE CONEXÃO COM O SHEETS -->
             <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl text-xs border border-slate-200 w-full lg:w-auto">
                 <i class="fa-solid fa-link text-slate-400 ml-1"></i>
                 <input type="text" id="urlInputScript" placeholder="Cole a URL do Apps Script aqui..." class="bg-transparent border-none outline-none w-full lg:w-64 text-slate-700 font-mono text-[11px]">
                 <button onclick="conectarPlanilha()" class="bg-[#1a2e4c] text-white px-4 py-1.5 rounded-lg font-bold hover:bg-slate-800 transition cursor-pointer shrink-0">Conectar Base</button>
             </div>
             
-            <!-- LOGO IGHER CONSULTORIA -->
             <div class="flex items-center gap-3 shrink-0 w-full lg:w-auto justify-center lg:justify-end border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
                 <div class="text-right hidden sm:block">
                     <span class="text-[9px] text-slate-400 block tracking-widest font-bold uppercase">Parceiro de Governança</span>
@@ -63,7 +57,6 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- FILTROS SUPERIORES -->
         <section class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200 mb-6 flex flex-col sm:flex-row flex-wrap gap-4 items-end justify-between">
             <div class="w-full sm:w-auto grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
                 <div class="flex flex-col">
@@ -95,29 +88,24 @@
             <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2 rounded-xl transition cursor-pointer w-full sm:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar</button>
         </section>
 
-        <!-- MAPA ESTRATÉGICO -->
         <div class="mb-4 flex justify-between items-center">
             <h2 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-map text-slate-500"></i> Mapa Estratégico Corporativo</h2>
             <span id="indicadorStatusBase" class="text-[10px] font-bold text-slate-400 bg-slate-200 px-3 py-1 rounded-full">Exibindo Dados de Demonstração</span>
         </div>
 
         <section class="space-y-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs overflow-x-auto min-w-[800px]">
-            <!-- FINANCEIRA -->
             <div id="linha-financeira" class="flex items-stretch gap-4 min-h-[100px]">
                 <div class="w-40 bg-persp-financeira text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Financeira</div>
                 <div id="cards-financeira" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-            <!-- CLIENTES -->
             <div id="linha-clientes" class="flex items-stretch gap-4 min-h-[100px]">
                 <div class="w-40 bg-persp-clientes text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Clientes</div>
                 <div id="cards-clientes" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-            <!-- PROCESSOS INTERNOS -->
             <div id="linha-processos" class="flex items-stretch gap-4 min-h-[100px]">
                 <div class="w-40 bg-persp-processos text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Processos Internos</div>
                 <div id="cards-processos" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-            <!-- APRENDIZADO E CRESCIMENTO -->
             <div id="linha-aprendizado" class="flex items-stretch gap-4 min-h-[100px]">
                 <div class="w-40 bg-persp-aprendizado text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Aprendizado & Crescimento</div>
                 <div id="cards-aprendizado" class="flex flex-wrap items-center gap-4 flex-1"></div>
@@ -125,7 +113,6 @@
         </section>
     </main>
 
-    <!-- MODAL INTERATIVO COM FILTRAGEM ESTRITA DE AÇÕES -->
     <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
             
@@ -139,7 +126,6 @@
             
             <div class="p-6 space-y-5 overflow-y-auto flex-1">
                 
-                <!-- SELETOR DINÂMICO DE META / KPI -->
                 <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="flex-1">
                         <label class="text-[10px] text-amber-700 font-black uppercase tracking-wider block mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Selecione a Meta / KPI Cadastrado para este Objetivo:</label>
@@ -147,14 +133,12 @@
                     </div>
                 </div>
 
-                <!-- CARDS DE INFORMAÇÕES RÁPIDAS -->
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div><span class="text-slate-400 block font-medium">Líder do Indicador:</span> <strong id="modalLider" class="text-slate-800 text-sm">--</strong></div>
                     <div><span class="text-slate-400 block font-medium">Meta Alvo Recente:</span> <strong id="modalMetaValor" class="text-slate-700 text-sm">--</strong></div>
                     <div><span class="text-slate-400 block font-medium">Último Realizado:</span> <strong id="modalRealValor" class="text-slate-900 text-sm">--</strong></div>
                 </div>
 
-                <!-- GRÁFICO HISTÓRICO MÊS A MÊS -->
                 <div class="bg-white p-4 border border-slate-200 rounded-xl shadow-xs">
                     <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica (Mês/Ano)</h4>
                     <div class="relative h-64 w-full">
@@ -162,7 +146,6 @@
                     </div>
                 </div>
 
-                <!-- TABELA DE PLANOS DE AÇÃO RESTRITA -->
                 <div>
                     <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas Vinculadas Exclusivamente a este Indicador</h4>
                     <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
@@ -171,7 +154,7 @@
                                 <tr>
                                     <th class="p-3">Ação Estratégica</th>
                                     <th class="p-3">Responsável</th>
-                                    <th class="p-3">Prazos</th>
+                                    <th class="p-3">Prazos de Execução</th>
                                     <th class="p-3 text-center">Status</th>
                                 </tr>
                             </thead>
@@ -183,7 +166,6 @@
         </div>
     </div>
 
-    <!-- LÓGICA CORE -->
     <script>
         let dadosOriginais = {
             indicadores: [
@@ -234,34 +216,34 @@
             return `${meses[data.getUTCMonth()]}/${String(data.getUTCFullYear()).slice(-2)}`;
         }
 
-        // FUNÇÃO DE TRATAMENTO MANUAL VIA REGEX - TOTALMENTE PROTEGIDA CONTRA FORMATOS BRUTOS DO GOOGLE
-        function extrairDataLimpa(texto) {
-            if (!texto) return "";
-            let str = String(texto).trim();
+        // FUNÇÃO SCANNER REGEX ULTRA-RESISTENTE CONTRA FORMATAÇÃO ISO DO GOOGLE
+        function formatarParaDiaMesAno(valor) {
+            if (!valor) return "";
+            let str = String(valor).trim();
             if (str === "" || str.toLowerCase() === "s/d" || str === "undefined" || str === "null") return "";
             
-            // Pega o padrão ISO YYYY-MM-DD enviado pelo Sheets
-            let matchISO = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
-            if (matchISO) {
-                return `${matchISO[3]}/${matchISO[2]}/${matchISO[1]}`;
+            // Varre o texto procurando o formato ISO YYYY-MM-DD em qualquer posição da string
+            let correspondenciaISO = str.match(/(\d{4})-(\d{2})-(\d{2})/);
+            if (correspondenciaISO) {
+                return `${correspondenciaISO[3]}/${correspondenciaISO[2]}/${correspondenciaISO[1]}`;
             }
             
-            // Verifica se já está no formato BR DD/MM/AAAA
-            let matchBR = str.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
-            if (matchBR) {
-                return matchBR[0];
+            // Procura o padrão padrão BR caso já esteja formatado DD/MM/AAAA
+            let correspondenciaBR = str.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+            if (correspondenciaBR) {
+                return correspondenciaBR[0];
             }
             
-            // Fallback para conversão de data nativa caso falhe nos regex
-            let data = new Date(str);
-            if (!isNaN(data.getTime())) {
-                let dia = String(data.getUTCDate()).padStart(2, '0');
-                let mes = String(data.getUTCMonth() + 1).padStart(2, '0');
-                let ano = data.getUTCFullYear();
-                return `${dia}/${mes}/${ano}`;
+            // Fallback secundário usando motor de data universal do navegador
+            let dataNativa = new Date(str);
+            if (!isNaN(dataNativa.getTime())) {
+                let d = String(dataNativa.getUTCDate()).padStart(2, '0');
+                let m = String(dataNativa.getUTCMonth() + 1).padStart(2, '0');
+                let a = dataNativa.getUTCFullYear();
+                return `${d}/${m}/${a}`;
             }
             
-            return str;
+            return ""; // Força ficar completamente em branco se não for uma data válida
         }
 
         function calcularFarol(metaRaw, realRaw) {
@@ -275,7 +257,7 @@
         }
 
         window.onload = function() {
-            const urlSalva = localStorage.getItem('nh_script_url_v6');
+            const urlSalva = localStorage.getItem('nh_script_url_v7');
             if(urlSalva) {
                 document.getElementById('urlInputScript').value = urlSalva;
                 buscarDadosOnline(urlSalva);
@@ -288,7 +270,7 @@
         function conectarPlanilha() {
             const url = document.getElementById('urlInputScript').value.trim();
             if(url) {
-                localStorage.setItem('nh_script_url_v6', url);
+                localStorage.setItem('nh_script_url_v7', url);
                 buscarDadosOnline(url);
             }
         }
@@ -498,27 +480,25 @@
                     let st = lerCampo(p, CHAVES.status);
                     let corBadge = st.toLowerCase().includes('concl') ? "bg-green-100 text-green-800" : (st.toLowerCase().includes('andam') ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-700");
 
-                    // Extração limpa dos prazos
-                    let dataInicioFormatada = extrairDataLimpa(lerCampo(p, ['Prazo Início', 'Prazo Inicio', 'Inicio', 'Data Início', 'Data Inicio']));
-                    let dataFimFormatada = extrairDataLimpa(lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo', 'Data Fim']));
+                    // Processamento limpo e isolado de cada data
+                    let dataInicioFormatada = formatarParaDiaMesAno(lerCampo(p, ['Prazo Início', 'Prazo Inicio', 'Inicio', 'Data Início', 'Data Inicio']));
+                    let dataFimFormatada = formatarParaDiaMesAno(lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo', 'Data Fim']));
 
-                    // SISTEMA DE EXIBIÇÃO INTELIGENTE: SEM TRAILING HYPHENS OU TEXTOS EXTRAS
-                    let prazoExibicao = "";
-                    if (dataInicioFormatada && dataFimFormatada) {
-                        prazoExibicao = `${dataInicioFormatada} - ${dataFimFormatada}`;
-                    } else if (dataInicioFormatada) {
-                        prazoExibicao = dataInicioFormatada;
-                    } else if (dataFimFormatada) {
-                        prazoExibicao = dataFimFormatada;
-                    } else {
-                        prazoExibicao = ""; // Deixa completamente em branco se não houver datas
+                    // MONTAGEM DO LAYOUT EXCLUSIVO DE INÍCIO E FIM DENTRO DA CÉLULA
+                    let blocoPrazosHtml = "";
+                    if (dataInicioFormatada) {
+                        blocoPrazosHtml += `<div class="text-[11px] leading-tight"><span class="text-slate-400 font-normal">Prazo Início:</span> <span class="font-bold text-slate-700">${dataInicioFormatada}</span></div>`;
                     }
+                    if (dataFimFormatada) {
+                        blocoPrazosHtml += `<div class="text-[11px] leading-tight mt-0.5"><span class="text-slate-400 font-normal">Prazo Fim:</span> <span class="font-bold text-slate-700">${dataFimFormatada}</span></div>`;
+                    }
+                    // Se ambos estiverem em branco na planilha, a variável blocoPrazosHtml continuará vazia "" (deixando em branco)
 
                     tCorpo.innerHTML += `
                         <tr class="hover:bg-slate-50">
                             <td class="p-3 font-medium text-slate-800 whitespace-normal">${lerCampo(p, ['AÇÃO', 'Acao', 'Açao'])}</td>
                             <td class="p-3 text-slate-600 font-bold">${lerCampo(p, CHAVES.resp)}</td>
-                            <td class="p-3 text-slate-500 font-medium whitespace-nowrap">${prazoExibicao}</td>
+                            <td class="p-3 text-slate-500 font-medium whitespace-nowrap">${blocoPrazosHtml}</td>
                             <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-sm text-[10px] font-black uppercase ${corBadge}">${st || 'Não Iniciado'}</span></td>
                         </tr>
                     `;
