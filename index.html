@@ -27,11 +27,11 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased">
 
-    <!-- HEADER INSTITUCIONAL COM AS SUAS LOGOS -->
+    <!-- HEADER INSTITUCIONAL -->
     <header class="bg-white border-b border-slate-200 shadow-xs px-6 py-4">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
             
-            <!-- LADO ESQUERDO: LOGO MÓVEIS NOVO HORIZONTE -->
+            <!-- LOGO MÓVEIS NOVO HORIZONTE -->
             <div class="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-start">
                 <img src="MNH%204.png" alt="Móveis Novo Horizonte" class="h-11 w-auto object-contain">
                 <div class="hidden sm:block border-l border-slate-200 pl-4 py-1">
@@ -40,14 +40,14 @@
                 </div>
             </div>
 
-            <!-- CENTRO: CAMPO DE CONEXÃO DIRETA COM O SHEETS -->
+            <!-- CAMPO DE CONEXÃO COM O SHEETS -->
             <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl text-xs border border-slate-200 w-full lg:w-auto">
                 <i class="fa-solid fa-link text-slate-400 ml-1"></i>
                 <input type="text" id="urlInputScript" placeholder="Cole a URL do Apps Script aqui..." class="bg-transparent border-none outline-none w-full lg:w-64 text-slate-700 font-mono text-[11px]">
                 <button onclick="conectarPlanilha()" class="bg-[#1a2e4c] text-white px-4 py-1.5 rounded-lg font-bold hover:bg-slate-800 transition cursor-pointer shrink-0">Conectar Base</button>
             </div>
             
-            <!-- LADO DIREITO: LOGO IGHER CONSULTORIA (COM CONTRASTE PARA LOGO BRANCA) -->
+            <!-- LOGO IGHER CONSULTORIA -->
             <div class="flex items-center gap-3 shrink-0 w-full lg:w-auto justify-center lg:justify-end border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
                 <div class="text-right hidden sm:block">
                     <span class="text-[9px] text-slate-400 block tracking-widest font-bold uppercase">Parceiro de Governança</span>
@@ -63,17 +63,15 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- FILTROS: RESPONSÁVEL, PERSPECTIVA, STATUS -->
+        <!-- FILTROS SUPERIORES -->
         <section class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200 mb-6 flex flex-col sm:flex-row flex-wrap gap-4 items-end justify-between">
             <div class="w-full sm:w-auto grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
-                <!-- Filtro de Responsáveis -->
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-user-tie mr-1"></i> Responsável</label>
                     <select id="filtroResponsavel" onchange="renderizarMapaEstrategico()" class="bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold outline-none cursor-pointer focus:bg-white">
                         <option value="Todos">-- Todos os Líderes --</option>
                     </select>
                 </div>
-                <!-- Filtro de Perspectiva -->
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-layer-group mr-1"></i> Perspectiva</label>
                     <select id="filtroPerspectiva" onchange="renderizarMapaEstrategico()" class="bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold outline-none cursor-pointer focus:bg-white">
@@ -84,12 +82,11 @@
                         <option value="Aprendizado e Crescimento">Aprendizado e Crescimento</option>
                     </select>
                 </div>
-                <!-- Filtro de Status -->
                 <div class="flex flex-col">
-                    <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-circle-dot mr-1"></i> Status Atual</label>
+                    <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-circle-dot mr-1"></i> Status Crítico</label>
                     <select id="filtroStatus" onchange="renderizarMapaEstrategico()" class="bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold outline-none cursor-pointer focus:bg-white">
                         <option value="Todos">-- Todos os Status --</option>
-                        <option value="Verde">Verde (Meta Atingida)</option>
+                        <option value="Verde">Verde (Em Dia)</option>
                         <option value="Amarelo">Amarelo (Atenção)</option>
                         <option value="Vermelho">Vermelho (Crítico)</option>
                     </select>
@@ -105,43 +102,30 @@
         </div>
 
         <section class="space-y-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs overflow-x-auto min-w-[800px]">
-            
             <!-- FINANCEIRA -->
             <div id="linha-financeira" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-financeira text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">
-                    Financeira
-                </div>
+                <div class="w-40 bg-persp-financeira text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Financeira</div>
                 <div id="cards-financeira" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-
             <!-- CLIENTES -->
             <div id="linha-clientes" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-clientes text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">
-                    Clientes
-                </div>
+                <div class="w-40 bg-persp-clientes text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Clientes</div>
                 <div id="cards-clientes" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-
             <!-- PROCESSOS INTERNOS -->
             <div id="linha-processos" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-processos text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">
-                    Processos Internos
-                </div>
+                <div class="w-40 bg-persp-processos text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Processos Internos</div>
                 <div id="cards-processos" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-
             <!-- APRENDIZADO E CRESCIMENTO -->
             <div id="linha-aprendizado" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-aprendizado text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">
-                    Aprendizado & Crescimento
-                </div>
+                <div class="w-40 bg-persp-aprendizado text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Aprendizado & Crescimento</div>
                 <div id="cards-aprendizado" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-
         </section>
     </main>
 
-    <!-- MODAL INTERATIVO (GRÁFICO MÊS A MÊS + PLANOS) -->
+    <!-- MODAL INTERATIVO EVOLUÍDO PARA MÚLTIPLOS KPIS -->
     <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
             
@@ -153,30 +137,41 @@
                 <button onclick="fecharModalObjetivo()" class="text-slate-400 hover:text-white transition text-xl cursor-pointer p-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="p-6 space-y-6 overflow-y-auto flex-1">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div><span class="text-slate-400 block font-medium">Indicador:</span> <strong id="modalKpiNome" class="text-slate-800 text-sm">--</strong></div>
-                    <div><span class="text-slate-400 block font-medium">Líder:</span> <strong id="modalLider" class="text-slate-800 text-sm">--</strong></div>
-                    <div><span class="text-slate-400 block font-medium">Meta Recente:</span> <strong id="modalMetaValor" class="text-slate-800 text-sm">--</strong></div>
-                    <div><span class="text-slate-400 block font-medium">Último Realizado:</span> <strong id="modalRealValor" class="text-slate-800 text-sm">--</strong></div>
+            <div class="p-6 space-y-5 overflow-y-auto flex-1">
+                
+                <!-- SELETOR DINÂMICO DE META / KPI -->
+                <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <label class="text-[10px] text-amber-700 font-black uppercase tracking-wider block mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Selecione a Meta / KPI Cadastrado para este Objetivo:</label>
+                        <select id="modalSelectKpi" onchange="mudarIndicadorNoModal()" class="w-full bg-white border border-amber-300 rounded-lg p-2.5 text-xs font-bold text-slate-800 outline-none cursor-pointer shadow-xs"></select>
+                    </div>
                 </div>
 
+                <!-- CARDS DE INFORMAÇÕES RÁPIDAS DO KPI SELECIONADO -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div><span class="text-slate-400 block font-medium">Líder do Indicador:</span> <strong id="modalLider" class="text-slate-800 text-sm">--</strong></div>
+                    <div><span class="text-slate-400 block font-medium">Meta Alvo Recente:</span> <strong id="modalMetaValor" class="text-slate-700 text-sm">--</strong></div>
+                    <div><span class="text-slate-400 block font-medium">Último Realizado:</span> <strong id="modalRealValor" class="text-slate-900 text-sm">--</strong></div>
+                </div>
+
+                <!-- GRÁFICO HISTÓRICO MÊS A MÊS COM DATA CORRIGIDA -->
                 <div class="bg-white p-4 border border-slate-200 rounded-xl shadow-xs">
-                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica Mês a Mês</h4>
+                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica (Mês/Ano)</h4>
                     <div class="relative h-64 w-full">
                         <canvas id="graficoMensalCanvas"></canvas>
                     </div>
                 </div>
 
+                <!-- TABELA DE PLANOS DE AÇÃO DO KPI SELECIONADO -->
                 <div>
-                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas e Planos de Ação Cadastrados</h4>
+                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas Vinculadas a este Indicador</h4>
                     <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
                         <table class="w-full text-left text-xs divide-y divide-slate-200">
                             <thead class="bg-slate-50 text-slate-500 font-bold">
                                 <tr>
                                     <th class="p-3">Ação Estratégica</th>
                                     <th class="p-3">Responsável</th>
-                                    <th class="p-3">Início / Fim</th>
+                                    <th class="p-3">Prazos</th>
                                     <th class="p-3 text-center">Status</th>
                                 </tr>
                             </thead>
@@ -188,46 +183,35 @@
         </div>
     </div>
 
-    <!-- LOGICA DO CORE DO SISTEMA -->
+    <!-- LÓGICA INTELLIGENT CORE -->
     <script>
+        // Dados locais de contingência estruturados com múltiplos KPIs por objetivo para teste inicial
         let dadosOriginais = {
             indicadores: [
-                { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "Meta": "20%", "Resultado": "16%", "Mês": "Jan", "Responsável": "Leonardo" },
-                { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "Meta": "20%", "Resultado": "18.5%", "Mês": "Fev", "Responsável": "Leonardo" },
-                { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "Meta": "20%", "Resultado": "21%", "Mês": "Mar", "Responsável": "Leonardo" },
-                { "ID": "OBJ 1.2", "Perspectiva": "Financeira", "Objetivo": "Fortalecer governança financeira", "KPI": "Acurácia de Custos", "Meta": "95%", "Resultado": "90%", "Mês": "Mar", "Responsável": "Leonardo" },
-                { "ID": "OBJ 1.3", "Perspectiva": "Financeira", "Objetivo": "Crescer faturamento ≥ 100t/dia", "KPI": "Volume Produzido/Dia", "Meta": "100", "Resultado": "85", "Mês": "Jan", "Responsável": "Rildo" },
-                { "ID": "OBJ 1.3", "Perspectiva": "Financeira", "Objetivo": "Crescer faturamento ≥ 100t/dia", "KPI": "Volume Produzido/Dia", "Meta": "100", "Resultado": "92", "Mês": "Fev", "Responsável": "Rildo" },
-                { "ID": "OBJ 1.3", "Perspectiva": "Financeira", "Objetivo": "Crescer faturamento ≥ 100t/dia", "KPI": "Volume Produzido/Dia", "Meta": "100", "Resultado": "78", "Mês": "Mar", "Responsável": "Rildo" },
-                { "ID": "OBJ 2.1", "Perspectiva": "Clientes", "Objetivo": "Mitigar riscos de mercado", "KPI": "Índice de Inadimplência", "Meta": "3%", "Resultado": "2.8%", "Mês": "Mar", "Responsável": "Rildo" },
-                { "ID": "OBJ 2.2", "Perspectiva": "Clientes", "Objetivo": "Expandir atuação comercial", "KPI": "Novas Contas Ativas", "Meta": "10", "Resultado": "12", "Mês": "Mar", "Responsável": "Rildo" },
-                { "ID": "OBJ 2.3", "Perspectiva": "Clientes", "Objetivo": "Fortalecer proposta de valor e NPS", "KPI": "NPS Geral", "Meta": "80", "Resultado": "79", "Mês": "Mar", "Responsável": "Rildo" },
-                { "ID": "OBJ 3.1", "Perspectiva": "Processos Internos", "Objetivo": "Implantar OEE 100% das máquinas", "KPI": "% Conclusão do Projeto", "Meta": "100%", "Resultado": "100%", "Mês": "Mar", "Responsável": "Raphael" },
-                { "ID": "OBJ 3.2", "Perspectiva": "Processos Internos", "Objetivo": "Melhorar estrutura de custos industriais", "KPI": "Eficiência de Setup", "Meta": "90%", "Resultado": "65%", "Mês": "Mar", "Responsável": "Raphael" },
-                { "ID": "OBJ 3.3", "Perspectiva": "Processos Internos", "Objetivo": "Implantar S&OP integrado", "KPI": "Acurácia Forecast", "Meta": "85%", "Resultado": "87%", "Mês": "Mar", "Responsável": "IGHER / Moisés" },
-                { "ID": "OBJ 3.4", "Perspectiva": "Processos Internos", "Objetivo": "Padronizar processos (BPMN)", "KPI": "Processos Mapeados", "Meta": "15", "Resultado": "12", "Mês": "Mar", "Responsável": "Raphael" },
-                { "ID": "OBJ 4.1", "Perspectiva": "Aprendizado e Crescimento", "Objetivo": "Plano de Sucessão para lideranças", "KPI": "Mapeamento Piloto", "Meta": "100%", "Resultado": "100%", "Mês": "Mar", "Responsável": "Marcelo" },
-                { "ID": "OBJ 4.2", "Perspectiva": "Aprendizado e Crescimento", "Objetivo": "Universidade Corporativa", "KPI": "Treinamentos Concluídos", "Meta": "90%", "Resultado": "88%", "Mês": "Mar", "Responsável": "Marcelo" },
-                { "ID": "OBJ 4.3", "Perspectiva": "Aprendizado e Crescimento", "Objetivo": "Reduzir turnover e melhorar clima", "KPI": "% Turnover Global", "Meta": "5%", "Resultado": "9.2%", "Mês": "Mar", "Responsável": "Marcelo" }
+                { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "Meta": "20%", "Resultado": "16%", "Mês": "2026-04-01T03:00:00.000Z", "Responsável": "Leonardo" },
+                { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "Meta": "20%", "Resultado": "19%", "Mês": "2026-05-01T03:00:00.000Z", "Responsável": "Leonardo" },
+                { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Retorno s/ Investimento", "Meta": "15%", "Resultado": "11%", "Mês": "2026-05-01T03:00:00.000Z", "Responsável": "Leonardo" },
+                { "ID": "OBJ 3.2", "Perspectiva": "Processos Internos", "Objetivo": "Melhorar estrutura de custos industriais", "KPI": "Eficiência de Setup", "Meta": "90%", "Resultado": "75%", "Mês": "2026-04-01T03:00:00.000Z", "Responsável": "Raphael" },
+                { "ID": "OBJ 3.2", "Perspectiva": "Processos Internos", "Objetivo": "Melhorar estrutura de custos industriais", "KPI": "Redução de Perda de Chapa", "Meta": "3%", "Resultado": "5.4%", "Mês": "2026-05-01T03:00:00.000Z", "Responsável": "Raphael" }
             ],
             planoAcao: [
-                { "AÇÃO": "Definir calendário oficial de reuniões mensais de S&OP", "OBJETIVO ESTRATÉGICO": "Implantar S&OP integrado", "RESPONSÁVEL": "IGHER / Moisés", "Prazo Início": "01/05", "Prazo Fim": "30/06", "Status": "Concluído" },
-                { "AÇÃO": "Workshop prático sobre OEE para encarregados de produção", "OBJETIVO ESTRATÉGICO": "Implantar OEE 100% das máquinas", "RESPONSÁVEL": "Raphael", "Prazo Início": "10/06", "Prazo Fim": "25/07", "Status": "Em Andamento" },
-                { "AÇÃO": "Revisão da planilha de custos de matéria-prima das prensas", "OBJETIVO ESTRATÉGICO": "Melhorar estrutura de custos industriais", "RESPONSÁVEL": "Raphael", "Prazo Início": "01/06", "Prazo Fim": "30/08", "Status": "Não Iniciado" }
+                { "AÇÃO": "Implementar sensor de refugo na prensa 02", "OBJETIVO ESTRATÉGICO": "Melhorar estrutura de custos industriais", "KPI": "Redução de Perda de Chapa", "RESPONSÁVEL": "Raphael", "Prazo Início": "01/05", "Prazo Fim": "30/06", "Status": "Em Andamento" },
+                { "AÇÃO": "Reunião de alinhamento de margem trimestral", "OBJETIVO ESTRATÉGICO": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "RESPONSÁVEL": "Leonardo", "Prazo Início": "10/04", "Prazo Fim": "20/05", "Status": "Concluído" }
             ]
         };
 
         let graficoInstancia = null;
+        let objetivoSelecionadoAtual = "";
 
         const CHAVES = {
             id: ['ID', 'Id', 'Id_Objetivo'],
             persp: ['Perspectiva', 'PERSPECTIVA'],
             obj: ['Objetivo Estratégico', 'OBJETIVO ESTRATÉGICO', 'Objetivo'],
-            kpi: ['KPI', 'Indicador'],
+            kpi: ['KPI', 'Indicador', 'Meta Estratégica', 'META ESTRATÉGICA'],
             resp: ['Responsável', 'RESPONSÁVEL', 'Líder'],
             meta: ['Meta', 'META'],
             real: ['Resultado', 'RESULTADO', 'Realizado'],
-            mes: ['Mês', 'MES', 'Mês/Ano'],
+            mes: ['Mês', 'MES', 'Mês/Ano', 'Data'],
             status: ['Status', 'STATUS']
         };
 
@@ -243,6 +227,18 @@
             return "";
         }
 
+        // TRATAMENTO DA DATA DO PLANILHÃO (image_e55fd4.png)
+        function formatarDataMesAno(textoData) {
+            if (!textoData) return "S/D";
+            let data = new Date(textoData);
+            if (isNaN(data.getTime())) return textoData; // Fallback caso seja string pura
+            
+            const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            let nomeMes = meses[data.getUTCMonth()];
+            let anoCurto = String(data.getUTCFullYear()).slice(-2);
+            return `${nomeMes}/${anoCurto}`;
+        }
+
         function calcularFarol(metaRaw, realRaw) {
             let nMeta = parseFloat(metaRaw.replace(/[^0-9.,]/g, '').replace(',', '.'));
             let nReal = parseFloat(realRaw.replace(/[^0-9.,]/g, '').replace(',', '.'));
@@ -254,7 +250,7 @@
         }
 
         window.onload = function() {
-            const urlSalva = localStorage.getItem('nh_script_url_v2');
+            const urlSalva = localStorage.getItem('nh_script_url_v3');
             if(urlSalva) {
                 document.getElementById('urlInputScript').value = urlSalva;
                 buscarDadosOnline(urlSalva);
@@ -267,13 +263,13 @@
         function conectarPlanilha() {
             const url = document.getElementById('urlInputScript').value.trim();
             if(url) {
-                localStorage.setItem('nh_script_url_v2', url);
+                localStorage.setItem('nh_script_url_v3', url);
                 buscarDadosOnline(url);
             }
         }
 
         function buscarDadosOnline(url) {
-            document.getElementById('indicadorStatusBase').innerText = "Carregando dados do Google Sheets...";
+            document.getElementById('indicadorStatusBase').innerText = "Atualizando base...";
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
@@ -284,8 +280,8 @@
                         renderizarMapaEstrategico();
                     }
                 })
-                .catch(err => {
-                    document.getElementById('indicadorStatusBase').innerText = "Erro de conexão. Exibindo demonstração.";
+                .catch(() => {
+                    document.getElementById('indicadorStatusBase').innerText = "Erro ao conectar. Usando dados locais.";
                 });
         }
 
@@ -331,24 +327,40 @@
             Object.values(containers).forEach(c => c.innerHTML = "");
 
             for (let nomeObj in objetivosAgrupados) {
-                let historico = objetivosAgrupados[nomeObj];
-                let maisRecente = historico[historico.length - 1];
+                let linhasDoObj = objetivosAgrupados[nomeObj];
+                
+                // Descobre a saúde geral calculando o farol do último mês de CADA KPI único desse objetivo
+                let kpisUnicos = [...new Set(linhasDoObj.map(l => lerCampo(l, CHAVES.kpi)))];
+                let coresFaroisKpis = [];
+                let ultimoResponsavel = "--";
+                let idCard = "OBJ";
+                let perspectivaCard = "";
 
-                let id = lerCampo(maisRecente, CHAVES.id) || "OBJ";
-                let perspectiva = lerCampo(maisRecente, CHAVES.persp);
-                let responsavel = lerCampo(maisRecente, CHAVES.resp);
-                let meta = lerCampo(maisRecente, CHAVES.meta);
-                let real = lerCampo(maisRecente, CHAVES.real);
+                kpisUnicos.forEach(kpiNome => {
+                    let historicoKpi = linhasDoObj.filter(l => lerCampo(l, CHAVES.kpi) === kpiNome);
+                    // Ordena por data para pegar o mais recente
+                    historicoKpi.sort((a,b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+                    let maisRecente = historicoKpi[historicoKpi.length - 1];
+                    
+                    coresFaroisKpis.push(calcularFarol(lerCampo(maisRecente, CHAVES.meta), lerCampo(maisRecente, CHAVES.real)));
+                    ultimoResponsavel = lerCampo(maisRecente, CHAVES.resp);
+                    idCard = lerCampo(maisRecente, CHAVES.id) || idCard;
+                    perspectivaCard = lerCampo(maisRecente, CHAVES.persp);
+                });
 
-                let farolCor = calcularFarol(meta, real);
-                let farolNomeStr = farolCor === 'farol-verde' ? 'Verde' : (farolCor === 'farol-amarelo' ? 'Amarelo' : 'Vermelho');
+                // Regra de Governança: Se qualquer KPI estiver crítico (vermelho), o objetivo acende Alerta Vermelho
+                let farolFinalObj = "farol-verde";
+                if(coresFaroisKpis.includes("farol-vermelho")) farolFinalObj = "farol-vermelho";
+                else if(coresFaroisKpis.includes("farol-amarelo")) farolFinalObj = "farol-amarelo";
 
-                if(fPersp !== "Todos" && !perspectiva.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
-                if(fResp !== "Todos" && responsavel !== fResp) continue;
-                if(fStat !== "Todos" && farolNomeStr !== fStat) continue;
+                let statusTextoStr = farolFinalObj === 'farol-verde' ? 'Verde' : (farolFinalObj === 'farol-amarelo' ? 'Amarelo' : 'Vermelho');
+
+                if(fPersp !== "Todos" && !perspectivaCard.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
+                if(fResp !== "Todos" && ultimoResponsavel !== fResp) continue;
+                if(fStat !== "Todos" && statusTextoStr !== fStat) continue;
 
                 let containerAlvo = containers.processos; 
-                let pLower = perspectiva.toLowerCase();
+                let pLower = perspectivaCard.toLowerCase();
                 if(pLower.includes('finan')) containerAlvo = containers.financeira;
                 else if(pLower.includes('clien')) containerAlvo = containers.clientes;
                 else if(pLower.includes('apren') || pLower.includes('cresc')) containerAlvo = containers.aprendizado;
@@ -356,47 +368,70 @@
                 let cardHtml = `
                     <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-white border border-slate-200 p-3 rounded-lg w-64 min-h-[90px] obj-card relative flex flex-col justify-between shadow-xs">
                         <div>
-                            <div class="text-[10px] font-black text-slate-400 tracking-wider">${id}</div>
+                            <div class="text-[10px] font-black text-slate-400 tracking-wider">${idCard}</div>
                             <div class="text-[11px] font-bold text-slate-700 leading-tight mt-0.5">${nomeObj}</div>
                         </div>
                         <div class="flex justify-between items-center mt-2 pt-1.5 border-t border-slate-100">
-                            <span class="text-[9px] text-blue-600 font-bold truncate max-w-[120px]"><i class="fa-solid fa-user text-[8px] mr-0.5"></i>${responsavel}</span>
-                            <div class="w-3 h-3 rounded-full ${farolCor}"></div>
+                            <span class="text-[9px] text-blue-600 font-bold truncate max-w-[120px]"><i class="fa-solid fa-layer-group text-[8px] mr-0.5"></i>Metas: ${kpisUnicos.length}</span>
+                            <div class="w-3 h-3 rounded-full ${farolFinalObj}"></div>
                         </div>
                     </div>
                 `;
                 containerAlvo.innerHTML += cardHtml;
             }
-
-            document.getElementById('linha-financeira').style.display = containers.financeira.innerHTML === "" && fPersp !== "Todos" ? "none" : "flex";
-            document.getElementById('linha-clientes').style.display = containers.clientes.innerHTML === "" && fPersp !== "Todos" ? "none" : "flex";
-            document.getElementById('linha-processos').style.display = containers.processos.innerHTML === "" && fPersp !== "Todos" ? "none" : "flex";
-            document.getElementById('linha-aprendizado').style.display = containers.aprendizado.innerHTML === "" && fPersp !== "Todos" ? "none" : "flex";
         }
 
+        // ABERTURA DO MODAL MONTANDO O DROPDOWN DE KPIS EXCLUSIVOS
         function abrirDetalhesObjetivo(nomeDoObjetivo) {
-            let registrosMeses = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === nomeDoObjetivo);
-            if(registrosMeses.length === 0) return;
+            objetivoSelecionadoAtual = nomeDoObjetivo;
+            let linhasDoObj = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === nomeDoObjetivo);
+            if(linhasDoObj.length === 0) return;
 
-            let topo = registrosMeses[registrosMeses.length - 1];
-
-            document.getElementById('modalIdObj').innerText = lerCampo(topo, CHAVES.id) || "OBJETIVO";
+            document.getElementById('modalIdObj').innerText = lerCampo(linhasDoObj[0], CHAVES.id) || "OBJETIVO";
             document.getElementById('modalNomeObj').innerText = nomeDoObjetivo;
-            document.getElementById('modalKpiNome').innerText = lerCampo(topo, CHAVES.kpi) || "--";
+
+            // Extrai e popula todos os KPIs únicos associados a esse objetivo específico
+            let kpisUnicos = [...new Set(linhasDoObj.map(l => lerCampo(l, CHAVES.kpi)))];
+            const selectKpi = document.getElementById('modalSelectKpi');
+            selectKpi.innerHTML = "";
+            
+            kpisUnicos.forEach(kpi => {
+                selectKpi.innerHTML += `<option value="${kpi.replace(/'/g, "\\'")}">${kpi}</option>`;
+            });
+
+            // Força o carregamento dos gráficos e ações do primeiro KPI da lista
+            mudarIndicadorNoModal();
+
+            document.getElementById('modalObjetivo').style.display = 'flex';
+        }
+
+        // ATUALIZAÇÃO SINCADA: ALTERNA O KPI -> MUDA O GRÁFICO -> FILTRA OS PLANOS DE AÇÃO DO KPI
+        function mudarIndicadorNoModal() {
+            let kpiSelecionado = document.getElementById('modalSelectKpi').value;
+            
+            // Filtra o histórico mensal exclusivo deste KPI
+            let historicoKpi = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
+            
+            // ORDENAÇÃO CRONOLÓGICA DAS DATAS PARA NÃO EMBALHAR O GRÁFICO (image_e55fd4.png)
+            historicoKpi.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+
+            let topo = historicoKpi[historicoKpi.length - 1]; // Registro mais recente do KPI
+            
             document.getElementById('modalLider').innerText = lerCampo(topo, CHAVES.resp) || "--";
             document.getElementById('modalMetaValor').innerText = lerCampo(topo, CHAVES.meta) || "--";
             document.getElementById('modalRealValor').innerText = lerCampo(topo, CHAVES.real) || "--";
 
-            let mesesLabels = [];
+            // Monta as coordenadas do Gráfico com datas limpas
+            let eixoXLabels = [];
             let dadosMeta = [];
             let dadosResultado = [];
 
-            registrosMeses.forEach(reg => {
-                let m = lerCampo(reg, CHAVES.mes) || "Mês";
+            historicoKpi.forEach(reg => {
+                let dataFormatada = formatarDataMesAno(lerCampo(reg, CHAVES.mes));
                 let vMeta = parseFloat(lerCampo(reg, CHAVES.meta).replace(/[^0-9.,]/g, '').replace(',', '.'));
                 let vReal = parseFloat(lerCampo(reg, CHAVES.real).replace(/[^0-9.,]/g, '').replace(',', '.'));
 
-                mesesLabels.push(m);
+                eixoXLabels.push(dataFormatada);
                 dadosMeta.push(isNaN(vMeta) ? 0 : vMeta);
                 dadosResultado.push(isNaN(vReal) ? 0 : vReal);
             });
@@ -407,7 +442,7 @@
             graficoInstancia = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: mesesLabels,
+                    labels: eixoXLabels,
                     datasets: [
                         {
                             label: 'Meta Alvo (Linha)',
@@ -434,24 +469,29 @@
                 }
             });
 
+            // FILTRAGEM RIGOROSA DO PLANO DE AÇÃO LINKADO AO KPI/INDICADOR SELECIONADO
             const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
             tCorpo.innerHTML = "";
 
-            let planosDoObj = dadosOriginais.planoAcao.filter(p => {
-                let vinculo = lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo Estratégico', 'Objetivo', 'OBJETIVO']);
-                return vinculo.toLowerCase().trim() === nomeDoObjetivo.toLowerCase().trim();
+            let planosFiltrados = dadosOriginais.planoAcao.filter(p => {
+                let vObj = lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo Estratégico', 'Objetivo']);
+                let vKpi = lerCampo(p, ['KPI', 'Indicador', 'INDICADOR', 'Meta', 'Meta Estratégica']);
+                
+                // Linkagem direta: precisa pertencer ao mesmo Objetivo e bater com o KPI selecionado
+                return vObj.toLowerCase() === objetivoSelecionadoAtual.toLowerCase() && 
+                       (vKpi.toLowerCase() === kpiSelecionado.toLowerCase() || vKpi === "");
             });
 
-            if(planosDoObj.length === 0) {
-                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-medium">Nenhum plano de ação ativo para este objetivo.</td></tr>`;
+            if(planosFiltrados.length === 0) {
+                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-medium">Nenhum plano de ação pendente ou diretamente vinculado a este KPI.</td></tr>`;
             } else {
-                planosDoObj.forEach(p => {
+                planosFiltrados.forEach(p => {
                     let st = lerCampo(p, CHAVES.status);
                     let corBadge = st.toLowerCase().includes('concl') ? "bg-green-100 text-green-800" : (st.toLowerCase().includes('andam') ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-700");
 
                     tCorpo.innerHTML += `
                         <tr class="hover:bg-slate-50">
-                            <td class="p-3 font-medium text-slate-800 whitespace-normal">${lerCampo(p, ['AÇÃO', 'Acao'])}</td>
+                            <td class="p-3 font-medium text-slate-800 whitespace-normal">${lerCampo(p, ['AÇÃO', 'Acao', 'Açao'])}</td>
                             <td class="p-3 text-slate-600 font-bold">${lerCampo(p, CHAVES.resp)}</td>
                             <td class="p-3 text-slate-400 whitespace-nowrap">${lerCampo(p, ['Prazo Início', 'Prazo Inicio'])} - ${lerCampo(p, ['Prazo Fim'])}</td>
                             <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-sm text-[10px] font-black uppercase ${corBadge}">${st || 'Não Iniciado'}</span></td>
@@ -459,8 +499,6 @@
                     `;
                 });
             }
-
-            document.getElementById('modalObjetivo').style.display = 'flex';
         }
 
         function fecharModalObjetivo() {
