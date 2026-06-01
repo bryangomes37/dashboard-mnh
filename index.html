@@ -249,6 +249,7 @@
                                 <tr>
                                     <th class="p-2.5">Ação Estratégica</th>
                                     <th class="p-2.5">Responsável</th>
+                                    <th class="p-2.5">Prazo Início</th>
                                     <th class="p-2.5">Prazo Fim</th>
                                     <th class="p-2.5 text-center">Status</th>
                                 </tr>
@@ -293,7 +294,6 @@
             return "";
         }
 
-        // TRATAMENTO REFORÇADO DE DATAS PARA COMPATIBILIDADE TOTAL (CÓDIGO E TELA)
         function converterParaData(textoData) {
             if (!textoData) return new Date(0);
             if (typeof textoData === 'string' && textoData.includes('/')) {
@@ -485,7 +485,6 @@
             for (let chave in agrupados) {
                 let historico = agrupados[chave];
                 
-                // Ordenação cronológica à prova de falhas
                 historico.sort((a, b) => converterParaData(lerCampo(a, CHAVES.mes)) - converterParaData(lerCampo(b, CHAVES.mes)));
                 
                 let recente = historico.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historico[historico.length - 1];
@@ -587,7 +586,7 @@
 
             let objetivosAgrupados = {};
             listaKpis.forEach(linha => {
-                let nomeObj = lerCampo(linha, CHAVES.obj);
+                let nomeObj = lerCampo(linha, CHACES.obj);
                 if(!nomeObj) return;
                 if(!objetivosAgrupados[nomeObj]) objetivosAgrupados[nomeObj] = [];
                 objetivosAgrupados[nomeObj].push(linha);
@@ -623,7 +622,7 @@
                     idCard = lerCampo(topo, CHAVES.id) || idCard;
                     perspectivaCard = lerCampo(topo, CHAVES.persp);
 
-                    if (fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
+                    if (fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autoradiadoPorLider = true;
                 });
 
                 let ytdMedioObjetivo = contKpisValidosParaFiltro > 0 ? Math.round(somaYtdKpis / contKpisValidosParaFiltro) : 0;
@@ -768,17 +767,19 @@
             );
 
             if(!planosFiltrados.length) {
-                tCorpo.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-400 font-medium">Nenhuma iniciativa vinculada.</td></tr>`;
+                tCorpo.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-slate-400 font-medium">Nenhuma iniciativa vinculada.</td></tr>`;
             } else {
                 planosFiltrados.forEach(p => {
                     let st = lerCampo(p, CHAVES.status);
                     let corBadge = st.toLowerCase().includes('concl') ? "bg-green-50 text-green-700 border border-green-200" : (st.toLowerCase().includes('andam') ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-600 border border-slate-200");
+                    let dataInicio = lerCampo(p, ['Prazo Início', 'Início', 'Inicio', 'Data Inicio']);
                     let dataFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo']);
 
                     tCorpo.innerHTML += `
                         <tr class="hover:bg-slate-50/60 text-[11px]">
                             <td class="p-2.5 font-semibold text-slate-700">${lerCampo(p, ['AÇÃO', 'Acao', 'Atividade'])}</td>
                             <td class="p-2.5 font-bold text-slate-500">${lerCampo(p, ['RESPONSÁVEL', 'Responsável'])}</td>
+                            <td class="p-2.5 font-mono text-slate-500">${formatarDataBr(dataInicio)}</td>
                             <td class="p-2.5 font-mono text-slate-500">${formatarDataBr(dataFim)}</td>
                             <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${corBadge}">${st || 'Pendente'}</span></td>
                         </tr>
