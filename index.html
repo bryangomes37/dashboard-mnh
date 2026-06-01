@@ -24,7 +24,7 @@
         .obj-card { transition: all 0.2s ease-in-out; cursor: pointer; }
         .obj-card:hover { transform: scale(1.03); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08); }
         
-        /* Estilo da Aba Ativa igual ao arquivo image_e17609.png */
+        /* Estilo da Aba Ativa igual ao arquivo image_e1010a.png */
         .tab-ativa { background-color: #ffffff !important; color: #0f172a !important; font-weight: 800; }
     </style>
 </head>
@@ -256,8 +256,15 @@
                     <div><span class="text-slate-400 block font-medium">Último Realizado:</span> <strong id="modalRealValor" class="text-slate-900">--</strong></div>
                 </div>
 
+                <!-- SEÇÃO GRÁFICA COM FILTRO DE TIMELINE INTEGRADO -->
                 <div class="bg-white p-4 border border-slate-200 rounded-xl">
-                    <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-2"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica</h4>
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-wider"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica</h4>
+                        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-1 rounded-lg">
+                            <label for="modalFiltroAno" class="text-[9px] font-black text-slate-400 uppercase pl-1">Filtrar Período:</label>
+                            <select id="modalFiltroAno" onchange="renderizarGraficoModal()" class="bg-white border border-slate-200 rounded-md p-1 text-[11px] font-bold text-slate-700 outline-none cursor-pointer shadow-3xs"></select>
+                        </div>
+                    </div>
                     <div class="relative h-48 w-full">
                         <canvas id="graficoMensalCanvas"></canvas>
                     </div>
@@ -287,6 +294,7 @@
     <script>
         let dadosOriginais = { indicadores: [], planoAcao: [] };
         let graficoInstancia = null;
+        let cacheHistoricoModal = [];
         let objetivoSelecionadoAtual = "";
         let telaAtivaAtual = "resumo";
 
@@ -437,7 +445,13 @@
 
             for (let chave in agrupados) {
                 let historico = agrupados[chave];
-                let recente = historico[historico.length - 1];
+                
+                // CRUCIAL: Ordena cronologicamente por data para evitar misturas
+                historico.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+                
+                // INTELIGÊNCIA DE MAPEAMENTO: Busca o último registro que de fato CONTÉM resultado preenchido. 
+                // Se tudo estiver vazio, ele adota o último absoluto por padrão. Evita erros da primeira tela!
+                let recente = historico.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historico[historico.length - 1];
 
                 let nObj = lerCampo(recente, CHAVES.obj);
                 let nKpi = lerCampo(recente, CHAVES.kpi);
@@ -565,7 +579,9 @@
 
                 kpisUnicos.forEach(kpiNome => {
                     let historicoKpi = linhasDoObj.filter(l => lerCampo(l, CHAVES.kpi) === kpiNome);
-                    let maisRecente = historicoKpi[historicoKpi.length - 1];
+                    historicoKpi.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+                    
+                    let maisRecente = historicoKpi.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historicoKpi[historicoKpi.length - 1];
                     
                     coresFaroisKpis.push(calcularFarol(lerCampo(maisRecente, CHAVES.meta), lerCampo(maisRecente, CHAVES.real)));
                     idCard = lerCampo(maisRecente, CHAVES.id) || idCard;
@@ -590,7 +606,6 @@
                 else if(pLower.includes('clien')) containerAlvo = containers.clientes;
                 else if(pLower.includes('apren') || pLower.includes('cresc')) containerAlvo = containers.aprendizado;
 
-                /* CAIXAS PADRONIZADAS: w-60 h-32 fixos + line-clamp-3 evitam distorções visuais no GRID */
                 containerAlvo.innerHTML += `
                     <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-white border border-slate-200 p-3.5 rounded-xl w-60 h-32 obj-card relative flex flex-col justify-between shadow-2xs">
                         <div class="overflow-hidden">
@@ -627,20 +642,51 @@
 
         function mudarIndicadorNoModal() {
             let kpiSelecionado = document.getElementById('modalSelectKpi').value;
-            let historicoKpi = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
+            cacheHistoricoModal = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
             
-            historicoKpi.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
-            let topo = historicoKpi[historicoKpi.length - 1];
+            cacheHistoricoModal.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+            let topo = cacheHistoricoModal.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || cacheHistoricoModal[cacheHistoricoModal.length - 1];
             
             document.getElementById('modalLider').innerText = lerCampo(topo, CHAVES.resp) || "--";
             document.getElementById('modalMetaValor').innerText = lerCampo(topo, CHAVES.meta) || "--";
             document.getElementById('modalRealValor').innerText = lerCampo(topo, CHAVES.real) || "--";
 
+            // CONSTRUÇÃO DINÂMICA DO SELETOR DE ANOS (EVITA POLUIÇÃO VISUAL)
+            const selectAno = document.getElementById('modalFiltroAno');
+            selectAno.innerHTML = '<option value="Total">Histórico Total</option>';
+            
+            let anosUnicos = new Set();
+            cacheHistoricoModal.forEach(reg => {
+                let data = new Date(lerCampo(reg, CHAVES.mes));
+                if (!isNaN(data.getTime())) {
+                    anosUnicos.add(data.getUTCFullYear());
+                }
+            });
+            
+            Array.from(anosUnicos).sort((a, b) => b - a).forEach(ano => {
+                selectAno.innerHTML += `<option value="${ano}">${ano}</option>`;
+            });
+
+            renderizarGraficoModal();
+            renderizarIniciativasModal(kpiSelecionado);
+        }
+
+        function renderizarGraficoModal() {
+            const filtroAno = document.getElementById('modalFiltroAno').value;
+            let dadosFiltrados = cacheHistoricoModal;
+
+            if (filtroAno !== "Total") {
+                dadosFiltrados = cacheHistoricoModal.filter(reg => {
+                    let data = new Date(lerCampo(reg, CHAVES.mes));
+                    return !isNaN(data.getTime()) && data.getUTCFullYear() === parseInt(filtroAno);
+                });
+            }
+
             let eixoXLabels = [];
             let dadosMeta = [];
             let dadosResultado = [];
 
-            historicoKpi.forEach(reg => {
+            dadosFiltrados.forEach(reg => {
                 eixoXLabels.push(formatarDataMesAno(lerCampo(reg, CHAVES.mes)));
                 let vMeta = parseFloat(lerCampo(reg, CHAVES.meta).replace(/[^0-9.,]/g, '').replace(',', '.'));
                 let vReal = parseFloat(lerCampo(reg, CHAVES.real).replace(/[^0-9.,]/g, '').replace(',', '.'));
@@ -661,7 +707,9 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
             });
+        }
 
+        function renderizarIniciativasModal(kpiSelecionado) {
             const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
             tCorpo.innerHTML = "";
 
