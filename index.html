@@ -3,79 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Governança Estratégica | Móveis Novo Horizonte</title>
+    <title>Resumo do Plano Estratégico | Novo Horizonte</title>
+    <!-- Tailwind CSS e FontAwesome para design idêntico à imagem -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Cores fiéis ao Mapa Estratégico */
         .bg-persp-financeira { background-color: #c69232; }
         .bg-persp-clientes { background-color: #2d7a78; }
         .bg-persp-processos { background-color: #1a2e4c; }
         .bg-persp-aprendizado { background-color: #e59834; }
         
-        .farol-verde { background-color: #22c55e; box-shadow: 0 0 10px #22c55e; }
-        .farol-amarelo { background-color: #eab308; box-shadow: 0 0 10px #eab308; }
-        .farol-vermelho { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
+        /* Cores do Farol Executivo */
+        .farol-verde { background-color: #22c55e; border: 2px solid #16a34a; }
+        .farol-amarelo { background-color: #eab308; border: 2px solid #ca8a04; }
+        .farol-vermelho { background-color: #ef4444; border: 2px solid #dc2626; }
         
         .obj-card { transition: all 0.2s ease-in-out; cursor: pointer; }
         .obj-card:hover { transform: scale(1.02); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .tab-ativa { border-bottom: 3px solid #1a2e4c; color: #1a2e4c; font-weight: 900; }
+        .tab-ativa { background-color: #ffffff; color: #0f172a; font-weight: 900; border-radius: 8px 8px 0 0; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
-    <header class="bg-white border-b border-slate-200 shadow-xs px-6 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-start">
-                <img src="MNH%204.png" alt="Móveis Novo Horizonte" class="h-11 w-auto object-contain">
-                <div class="hidden sm:block border-l border-slate-200 pl-4 py-1">
-                    <h1 class="text-lg font-black text-slate-900 tracking-tight">Painel Executivo de Governança</h1>
-                    <p class="text-xs text-slate-500 font-medium">Planejamento Estratégico 2026-2028 | Gestão à Vista</p>
+    <!-- CABEÇALHO IDÊNTICO À IMAGEM FORNECIDA -->
+    <header class="bg-[#0a1d37] text-white px-6 py-5 border-b border-slate-800 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <div class="bg-blue-600 p-2.5 rounded-full flex items-center justify-center text-white text-xl shadow-inner">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black uppercase tracking-tight leading-none">RESUMO DO PLANO ESTRATÉGICO</h1>
+                    <p class="text-xs text-slate-300 font-medium mt-1">Visão geral do desempenho dos principais indicadores</p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl text-xs border border-slate-200 w-full lg:w-auto">
+            <!-- CONTROLE DE INTEGRAÇÃO DA PLANILHA -->
+            <div class="flex items-center gap-2 bg-slate-900/60 p-2 rounded-xl text-xs border border-slate-700 w-full md:w-auto">
                 <i class="fa-solid fa-link text-slate-400 ml-1"></i>
-                <input type="text" id="urlInputScript" placeholder="Cole a URL do Apps Script aqui..." class="bg-transparent border-none outline-none w-full lg:w-64 text-slate-700 font-mono text-[11px]">
-                <button onclick="conectarPlanilha()" class="bg-[#1a2e4c] text-white px-4 py-1.5 rounded-lg font-bold hover:bg-slate-800 transition cursor-pointer shrink-0">Conectar Base</button>
-            </div>
-            
-            <div class="flex items-center gap-3 shrink-0 w-full lg:w-auto justify-center lg:justify-end border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
-                <div class="text-right hidden sm:block">
-                    <span class="text-[9px] text-slate-400 block tracking-widest font-bold uppercase">Parceiro de Governança</span>
-                    <span class="font-black text-slate-900 tracking-tighter text-xs">IGHER CONSULTORIA</span>
-                </div>
-                <div class="bg-slate-900 p-2 rounded-xl flex items-center justify-center h-11 px-3 shadow-xs">
-                    <img src="Logo%20Branca%20Sem%20Fundo.png" alt="IGHER Consultoria" class="h-full w-auto object-contain">
-                </div>
+                <input type="text" id="urlInputScript" placeholder="Cole a URL do Apps Script aqui..." class="bg-transparent border-none outline-none w-full md:w-64 text-slate-200 font-mono text-[11px]">
+                <button onclick="conectarPlanilha()" class="bg-blue-600 text-white px-4 py-1.5 rounded-lg font-bold hover:bg-blue-700 transition cursor-pointer shrink-0">Conectar Base</button>
             </div>
         </div>
     </header>
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-        <div class="max-w-7xl mx-auto flex px-6">
-            <button onclick="alternarTela('resumo')" id="btn-tab-resumo" class="px-6 py-4 text-xs uppercase tracking-wider font-bold text-slate-500 hover:text-slate-900 transition cursor-pointer tab-ativa flex items-center gap-2">
-                <i class="fa-solid fa-chart-pie"></i> 1. Resumo Executivo Geral
+    <!-- ABAS DE NAVEGAÇÃO SUPERIOR -->
+    <div class="bg-[#0a1d37] px-6">
+        <div class="max-w-7xl mx-auto flex gap-2">
+            <button onclick="alternarTela('resumo')" id="btn-tab-resumo" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-400 hover:text-white transition cursor-pointer tab-ativa">
+                <i class="fa-solid fa-table-list mr-1"></i> 1. Painel de Resumo
             </button>
-            <button onclick="alternarTela('mapa')" id="btn-tab-mapa" class="px-6 py-4 text-xs uppercase tracking-wider font-bold text-slate-500 hover:text-slate-900 transition cursor-pointer flex items-center gap-2">
-                <i class="fa-solid fa-map"></i> 2. Visão Mapa Estratégico
+            <button onclick="alternarTela('mapa')" id="btn-tab-mapa" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-400 hover:text-white transition cursor-pointer">
+                <i class="fa-solid fa-map-location-dot mr-1"></i> 2. Mapa Estratégico
             </button>
         </div>
-    </nav>
+    </div>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
+        <!-- BARRA DE FILTRAGEM CORPORATIVA -->
         <section class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200 mb-6 flex flex-col md:flex-row flex-wrap gap-4 items-end justify-between">
             <div class="w-full md:w-auto grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-user-tie mr-1"></i> Líder Responsável</label>
-                    <select id="filtroResponsavel" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer focus:bg-white">
+                    <select id="filtroResponsavel" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer">
                         <option value="Todos">-- Todos os Líderes --</option>
                     </select>
                 </div>
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-layer-group mr-1"></i> Perspectiva</label>
-                    <select id="filtroPerspectiva" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer focus:bg-white">
+                    <select id="filtroPerspectiva" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer">
                         <option value="Todos">-- Todas as Perspectivas --</option>
                         <option value="Financeira">Financeira</option>
                         <option value="Clientes">Clientes</option>
@@ -84,96 +83,142 @@
                     </select>
                 </div>
                 <div class="flex flex-col">
-                    <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-circle-dot mr-1"></i> Status de Desempenho</label>
-                    <select id="filtroStatus" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer focus:bg-white">
+                    <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-circle-dot mr-1"></i> Status do Indicador</label>
+                    <select id="filtroStatus" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer">
                         <option value="Todos">-- Todos os Status --</option>
-                        <option value="Verde">Verde (Em Dia)</option>
+                        <option value="Verde">Verde (No Alvo)</option>
                         <option value="Amarelo">Amarelo (Atenção)</option>
                         <option value="Vermelho">Vermelho (Crítico)</option>
                     </select>
                 </div>
             </div>
 
-            <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center gap-3 w-full md:w-auto">
-                <input type="checkbox" id="filtroPrazoReuniao" onchange="atualizarPainelGeral()" class="w-4 h-4 text-slate-900 border-slate-300 rounded-sm cursor-pointer">
-                <label for="filtroPrazoReuniao" class="text-xs font-bold text-slate-700 cursor-pointer">
-                    Exibir apenas ações vigentes até a data de hoje
+            <!-- FILTRO DE CORTE TEMPORAL EXECUTIVO -->
+            <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center gap-3 w-full md:w-auto shadow-2xs">
+                <input type="checkbox" id="filtroPrazoReuniao" onchange="atualizarPainelGeral()" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer">
+                <label for="filtroPrazoReuniao" class="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                    Exibir apenas ações vencidas/vigentes até hoje
                 </label>
             </div>
 
             <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-xl transition cursor-pointer w-full md:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar</button>
         </section>
 
-        <div class="mb-4 flex justify-between items-center">
-            <span class="text-xs text-slate-400 font-medium">Gestão à Vista Corporativa</span>
-            <span id="indicadorStatusBase" class="text-[10px] font-bold text-slate-400 bg-slate-200 px-3 py-1 rounded-full">Exibindo Dados de Demonstração</span>
-        </div>
-
+        <!-- TELA 1: PAINEL DE RESUMO (ESTRUTURA BASEADA NA IMAGEM ENVIADA) -->
         <section id="tela-resumo" class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-                    <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider">Objetivos Mapeados</span>
-                    <h3 id="card-total-objetivos" class="text-2xl font-black text-slate-900 mt-1">0</h3>
+            
+            <!-- CONTADORES ANALÍTICOS DO TOPO -->
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-chart-simple"></i></div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider leading-none">TOTAL DE INDICADORES</span>
+                        <h3 id="card-total-kpis" class="text-2xl font-black text-slate-900 mt-1">0</h3>
+                    </div>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-                    <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider">Metas Monitoradas</span>
-                    <h3 id="card-total-kpis" class="text-2xl font-black text-slate-900 mt-1">0</h3>
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs flex items-center justify-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="flex-1">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider leading-none">NO ALVO</span>
+                        <div class="flex items-baseline gap-2 mt-1">
+                            <h3 id="card-total-verde" class="text-2xl font-black text-slate-900">0</h3>
+                            <span id="pct-card-verde" class="text-xs font-bold text-green-600">0%</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs border-l-4 border-l-emerald-500">
-                    <span class="text-[10px] text-emerald-600 font-bold uppercase block tracking-wider">Metas em Dia (Verde)</span>
-                    <h3 id="card-total-verde" class="text-2xl font-black text-emerald-600 mt-1">0</h3>
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs flex items-center justify-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="flex-1">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider leading-none">ATENÇÃO</span>
+                        <div class="flex items-baseline gap-2 mt-1">
+                            <h3 id="card-total-amarelo" class="text-2xl font-black text-slate-900">0</h3>
+                            <span id="pct-card-amarelo" class="text-xs font-bold text-amber-600">0%</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs border-l-4 border-l-rose-500">
-                    <span class="text-[10px] text-rose-600 font-bold uppercase block tracking-wider">Metas Críticas (Vermelho)</span>
-                    <h3 id="card-total-vermelho" class="text-2xl font-black text-rose-600 mt-1">0</h3>
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs flex items-center justify-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-circle-xmark"></i></div>
+                    <div class="flex-1">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider leading-none">CRÍTICO</span>
+                        <div class="flex items-baseline gap-2 mt-1">
+                            <h3 id="card-total-vermelho" class="text-2xl font-black text-slate-900">0</h3>
+                            <span id="pct-card-vermelho" class="text-xs font-bold text-rose-600">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-xs flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <div>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider leading-none">% MÉDIO EXECUÇÃO P.A.</span>
+                        <h3 id="card-media-planos" class="text-2xl font-black text-purple-600 mt-1">0%</h3>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-                <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
-                    <h3 class="text-xs font-black uppercase tracking-wider"><i class="fa-solid fa-list text-amber-400 mr-1"></i> Resumo de Todos os Indicadores Ativos</h3>
-                </div>
+            <!-- ARQUITETURA DA TABELA CONSOLIDADA EM ABAS -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                        <thead class="bg-[#1a2e4c] text-white font-bold uppercase tracking-wider text-[11px]">
                             <tr>
-                                <th class="p-3">Cód</th>
-                                <th class="p-3">Perspectiva</th>
-                                <th class="p-3">Objetivo Estratégico</th>
-                                <th class="p-3">Indicador (KPI)</th>
-                                <th class="p-3">Líder</th>
-                                <th class="p-3 text-right">Meta Alvo</th>
-                                <th class="p-3 text-right">Realizado</th>
-                                <th class="p-3 text-center">Farol</th>
+                                <th class="p-3.5 pl-5">Perspectiva</th>
+                                <th class="p-3.5">Indicador</th>
+                                <th class="p-3.5">Responsável</th>
+                                <th class="p-3.5 text-right">Meta (Mês)</th>
+                                <th class="p-3.5 text-right">Resultado Mês</th>
+                                <th class="p-3.5 text-center">YTD (% Atingimento)</th>
+                                <th class="p-3.5">Percentual Execução do P.A.</th>
+                                <th class="p-3.5 text-center">Farol Indicador</th>
+                                <th class="p-3.5 text-center">Farol P.A.</th>
                             </tr>
                         </thead>
-                        <tbody id="tabela-resumo-corpo" class="divide-y divide-slate-100 font-medium text-slate-700">
-                            </tbody>
+                        <tbody id="tabela-resumo-corpo" class="divide-y divide-slate-200 font-medium text-slate-700">
+                            <!-- Construído via JavaScript de forma automatizada -->
+                        </tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- LEGENDA DA PARTE INFERIOR DA IMAGEM -->
+            <div class="flex justify-between items-center bg-white p-3 border border-slate-200 rounded-xl text-[11px] font-bold text-slate-500 shadow-2xs">
+                <div class="flex gap-6">
+                    <span class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-green-500"></div> No alvo (>= 90%)</span>
+                    <span class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-yellow-500"></div> Atenção (70% a 89%)</span>
+                    <span class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-red-500"></div> Crítico (< 70%)</span>
+                </div>
+                <div id="data-atualizacao-footer" class="text-slate-400"><i class="fa-solid fa-rotate mr-1"></i>ÚLTIMA ATUALIZAÇÃO: S/D</div>
+            </div>
         </section>
 
-        <section id="tela-mapa" class="space-y-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs overflow-x-auto min-w-[800px] hidden">
+        <!-- TELA 2: VISÃO DO MAPA ESTRATÉGICO -->
+        <section id="tela-mapa" class="space-y-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs overflow-x-auto min-w-[850px] hidden">
+            <div class="mb-2">
+                <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Mapa Estratégico Corporativo</h2>
+            </div>
+            <!-- FINANCEIRA -->
             <div id="linha-financeira" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-financeira text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Financeira</div>
+                <div class="w-40 bg-persp-financeira text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-xs">Financeira</div>
                 <div id="cards-financeira" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
+            <!-- CLIENTES -->
             <div id="linha-clientes" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-clientes text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Clientes</div>
+                <div class="w-40 bg-persp-clientes text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-xs">Clientes</div>
                 <div id="cards-clientes" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
+            <!-- PROCESSOS INTERNOS -->
             <div id="linha-processos" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-processos text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Processos Internos</div>
+                <div class="w-40 bg-persp-processos text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-xs">Processos Internos</div>
                 <div id="cards-processos" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
+            <!-- APRENDIZADO E CRESCIMENTO -->
             <div id="linha-aprendizado" class="flex items-stretch gap-4 min-h-[100px]">
-                <div class="w-40 bg-persp-aprendizado text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0">Aprendizado & Crescimento</div>
+                <div class="w-40 bg-persp-aprendizado text-white font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-xs">Aprendizado & Crescimento</div>
                 <div id="cards-aprendizado" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
         </section>
     </main>
 
+    <!-- MODAL DETALHADO DO INDICADOR -->
     <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
             <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
@@ -187,7 +232,7 @@
             <div class="p-6 space-y-5 overflow-y-auto flex-1">
                 <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="flex-1">
-                        <label class="text-[10px] text-amber-700 font-black uppercase tracking-wider block mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Selecione a Meta para este Objetivo:</label>
+                        <label class="text-[10px] text-amber-700 font-black uppercase tracking-wider block mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Selecione a Meta / KPI:</label>
                         <select id="modalSelectKpi" onchange="mudarIndicadorNoModal()" class="w-full bg-white border border-amber-300 rounded-lg p-2.5 text-xs font-bold text-slate-800 outline-none cursor-pointer shadow-xs"></select>
                     </div>
                 </div>
@@ -206,7 +251,7 @@
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Planos de Ação e Iniciativas Próprias</h4>
+                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas Vinculadas</h4>
                     <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
                         <table class="w-full text-left text-xs divide-y divide-slate-200">
                             <thead class="bg-slate-50 text-slate-500 font-bold">
@@ -225,14 +270,11 @@
         </div>
     </div>
 
+    <!-- ENGINE DE MAPEAMENTO E CRUZA DE DADOS -->
     <script>
         let dadosOriginais = {
-            indicadores: [
-                { "ID": "OBJ 1.1", "Perspectiva": "Financeira", "Objetivo": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "Meta": "20%", "Resultado": "16%", "Mês": "2026-04-01T03:00:00.000Z", "Responsável": "Leonardo" }
-            ],
-            planoAcao: [
-                { "AÇÃO": "Ação Demonstrativa", "OBJETIVO ESTRATÉGICO": "Elevar rentabilidade operacional (EBITDA 20%)", "KPI": "Margem EBITDA", "RESPONSÁVEL": "Leonardo", "Prazo Início": "2026-01-01T03:00:00.000Z", "Prazo Fim": "2026-12-31T03:00:00.000Z", "Status": "Em Andamento" }
-            ]
+            indicadores: [],
+            planoAcao: []
         };
 
         let graficoInstancia = null;
@@ -243,7 +285,7 @@
             id: ['ID', 'Id', 'Id_Objetivo'],
             persp: ['Perspectiva', 'PERSPECTIVA'],
             obj: ['Objetivo Estratégico', 'OBJETIVO ESTRATÉGICO', 'Objetivo'],
-            kpi: ['KPI', 'Indicador', 'INDICADOR', 'Meta', 'Meta Estratégica', 'META ESTRATÉGICA'],
+            kpi: ['KPI', 'Indicador', 'INDICADOR', 'Meta Estratégica'],
             resp: ['Responsável', 'RESPONSÁVEL', 'Líder'],
             meta: ['Meta', 'META'],
             real: ['Resultado', 'RESULTADO', 'Realizado'],
@@ -301,42 +343,42 @@
         }
 
         window.onload = function() {
-            const urlSalva = localStorage.getItem('nh_script_url_v8');
+            // Seta data atual do footer automaticamente
+            let agora = new Date();
+            document.getElementById('data-atualizacao-footer').innerHTML = `<i class="fa-solid fa-rotate mr-1"></i>ÚLTIMA ATUALIZAÇÃO: ${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}`;
+
+            const urlSalva = localStorage.getItem('nh_script_url_v9');
             if(urlSalva) {
                 document.getElementById('urlInputScript').value = urlSalva;
                 buscarDadosOnline(urlSalva);
-            } else {
-                processarEAlimentarFiltros(dadosOriginais);
-                atualizarPainelGeral();
             }
         };
 
         function conectarPlanilha() {
             const url = document.getElementById('urlInputScript').value.trim();
             if(url) {
-                localStorage.setItem('nh_script_url_v8', url);
+                localStorage.setItem('nh_script_url_v9', url);
                 buscarDadosOnline(url);
             }
         }
 
         function buscarDadosOnline(url) {
-            document.getElementById('indicadorStatusBase').innerText = "Carregando dados estruturados...";
+            document.getElementById('indicadorStatusBase').innerText = "Carregando base unificada...";
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
                     if(data.indicadores && data.planoAcao) {
                         dadosOriginais = data;
-                        document.getElementById('indicadorStatusBase').innerHTML = `<i class="fa-solid fa-cloud-check text-green-600 mr-1"></i> Dados Integrados Corretamente`;
+                        document.getElementById('indicadorStatusBase').innerHTML = `<i class="fa-solid fa-cloud-check text-green-600 mr-1"></i> Conectado com Sucesso`;
                         processarEAlimentarFiltros(dadosOriginais);
                         atualizarPainelGeral();
                     }
                 })
                 .catch(() => {
-                    document.getElementById('indicadorStatusBase').innerText = "Falha de conexão. Utilizando cache.";
+                    document.getElementById('indicadorStatusBase').innerText = "Erro ao ler link do Script.";
                 });
         }
 
-        // UNIFICAÇÃO DOS FILTROS DA LISTAGEM DE RESPONSÁVEIS DOS DOIS BANCOS (METAS + PLANOS DE AÇÃO)
         function processarEAlimentarFiltros(data) {
             const selectResp = document.getElementById('filtroResponsavel');
             selectResp.innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
@@ -358,21 +400,20 @@
             atualizarPainelGeral();
         }
 
-        // REQUISITO 3: FUNÇÃO CENTRAL DE ATUALIZAÇÃO QUE CRUZA AS FILTRAGENS EM AMBAS AS TELAS
         function atualizarPainelGeral() {
             renderizarResumoTabela();
             renderizarMapaEstrategico();
         }
 
-        // REQUISITO 1: GERAÇÃO DA TABELA EXECUTIVA PEDIDA PELO DIRETOR
+        // INTEGRAÇÃO MATEMÁTICA REAL DAS DUAS BASES
         function renderizarResumoTabela() {
             const fResp = document.getElementById('filtroResponsavel').value;
             const fPersp = document.getElementById('filtroPerspectiva').value;
             const fStat = document.getElementById('filtroStatus').value;
+            const fPrazoCheckbox = document.getElementById('filtroPrazoReuniao').checked;
             const corpo = document.getElementById('tabela-resumo-corpo');
             corpo.innerHTML = "";
 
-            // Agrupa os dados para capturar apenas a foto mais recente de cada indicador
             let agrupados = {};
             dadosOriginais.indicadores.forEach(linha => {
                 let chaveUnica = lerCampo(linha, CHAVES.obj) + "||" + lerCampo(linha, CHAVES.kpi);
@@ -380,8 +421,8 @@
                 agrupados[chaveUnica].push(linha);
             });
 
-            let totalObj = new Set();
-            let countKpi = 0, countVerde = 0, countVermelho = 0;
+            let countKpi = 0, countVerde = 0, countAmarelo = 0, countVermelho = 0;
+            let somaGlobalProgressoPlanos = 0, totalKpisComPlanos = 0;
 
             for (let chave in agrupados) {
                 let historico = agrupados[chave];
@@ -394,49 +435,108 @@
                 let nResp = lerCampo(recente, CHAVES.resp);
                 let nMeta = lerCampo(recente, CHAVES.meta);
                 let nReal = lerCampo(recente, CHAVES.real);
-                let nId = lerCampo(recente, CHAVES.id) || "OBJ";
 
                 let classeFarol = calcularFarol(nMeta, nReal);
                 let textoFarol = classeFarol === 'farol-verde' ? 'Verde' : (classeFarol === 'farol-amarelo' ? 'Amarelo' : 'Vermelho');
 
-                // FILTRAGEM DINÂMICA COMPLETA DE RESPONSÁVEL (REQUISITO 3)
-                // Se filtrado por responsável, verifica se a meta é dele OU se ele tem alguma ação vinculada a esse KPI
-                let responsavelTemAcaoNesseKpi = dadosOriginais.planoAcao.some(p => 
+                // Vínculo dos Planos de Ação próprios desta linha
+                let acoesDoKpi = dadosOriginais.planoAcao.filter(p => 
                     lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']) === nObj && 
-                    lerCampo(p, CHAVES.kpi) === nKpi && 
-                    lerCampo(p, ['RESPONSÁVEL', 'Responsável']) === fResp
+                    lerCampo(p, CHAVES.kpi) === nKpi
                 );
 
-                if (fResp !== "Todos" && nResp !== fResp && !responsavelTemAcaoNesseKpi) continue;
+                // Se checkbox de prazo ativo, elimina ações futuras antes do cálculo
+                if (fPrazoCheckbox) {
+                    let hoje = new Date();
+                    acoesDoKpi = acoesDoKpi.filter(p => {
+                        let rawFim = lerCampo(p, ['Prazo Fim', 'Fim']);
+                        if(!rawFim) return false;
+                        return new Date(rawFim) <= hoje;
+                    });
+                }
+
+                // Filtragem cruzada inteligente (Líder da meta ou executor da ação)
+                let responsavelTemParticipacao = (fResp === "Todos" || nResp === fResp || acoesDoKpi.some(p => lerCampo(p, ['RESPONSÁVEL', 'Responsável']) === fResp));
+
+                if (!responsavelTemParticipacao) continue;
                 if (fPersp !== "Todos" && !nPersp.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
                 if (fStat !== "Todos" && textoFarol !== fStat) continue;
 
-                totalObj.add(nObj);
+                // Cálculos de Percentual de Execução do Plano de Ação
+                let totalAcoes = acoesDoKpi.length;
+                let concluídas = acoesDoKpi.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
+                let pctPA = totalAcoes > 0 ? Math.round((concluídas / totalAcoes) * 100) : 0;
+
+                if(totalAcoes > 0) {
+                    somaGlobalProgressoPlanos += pctPA;
+                    totalKpisComPlanos++;
+                }
+
+                let farolPA = 'bg-slate-200';
+                if(totalAcoes > 0) {
+                    farolPA = pctPA >= 90 ? 'farol-verde' : (pctPA >= 70 ? 'farol-amarelo' : 'farol-vermelho');
+                }
+
+                // Cálculo do YTD de Atingimento
+                let numMeta = parseFloat(nMeta.replace(/[^0-9.,]/g, '').replace(',', '.'));
+                let numReal = parseFloat(nReal.replace(/[^0-9.,]/g, '').replace(',', '.'));
+                let ytdPct = 0;
+                if(!isNaN(numMeta) && numMeta > 0 && !isNaN(numReal)) {
+                    ytdPct = Math.round((numReal / numMeta) * 100);
+                }
+
                 countKpi++;
                 if (classeFarol === 'farol-verde') countVerde++;
+                if (classeFarol === 'farol-amarelo') countAmarelo++;
                 if (classeFarol === 'farol-vermelho') countVermelho++;
 
+                // Definição de Cores das Perspectivas como a imagem enviada
+                let corTextoPersp = "text-blue-700";
+                let iconePersp = "fa-chart-line";
+                if(nPersp.toLowerCase().includes('clien')) { corTextoPersp = "text-green-600"; iconePersp = "fa-user-group"; }
+                else if(nPersp.toLowerCase().includes('proc')) { corTextoPersp = "text-orange-600"; iconePersp = "fa-gears"; }
+                else if(nPersp.toLowerCase().includes('apren') || nPersp.toLowerCase().includes('cresc')) { corTextoPersp = "text-purple-600"; iconePersp = "fa-graduation-cap"; }
+
                 corpo.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100">
-                        <td class="p-3 font-bold text-slate-400">${nId}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-slate-100">${nPersp}</span></td>
-                        <td class="p-3 font-semibold text-slate-900">${nObj}</td>
-                        <td class="p-3 text-blue-800 font-bold">${nKpi}</td>
-                        <td class="p-3 font-bold text-slate-600">${nResp}</td>
-                        <td class="p-3 text-right font-mono">${nMeta}</td>
-                        <td class="p-3 text-right font-mono font-bold">${nReal}</td>
-                        <td class="p-3 text-center"><div class="w-3 h-3 rounded-full mx-auto ${classeFarol}"></div></td>
+                    <tr class="hover:bg-slate-50 border-b border-slate-200 text-[11px]">
+                        <td class="p-3.5 pl-5 font-black uppercase tracking-tight ${corTextoPersp} flex items-center gap-2">
+                            <i class="fa-solid ${iconePersp} text-xs"></i> ${nPersp}
+                        </td>
+                        <td class="p-3.5 font-bold text-slate-900">${nKpi}</td>
+                        <td class="p-3.5 font-medium text-slate-600">${nResp}</td>
+                        <td class="p-3.5 text-right font-mono font-bold">${nMeta}</td>
+                        <td class="p-3.5 text-right font-mono font-bold">${nReal}</td>
+                        <td class="p-3.5 text-center">
+                            <span class="px-2.5 py-1 rounded-full border border-slate-300 font-bold bg-slate-50 text-slate-800">${ytdPct}%</span>
+                        </td>
+                        <td class="p-3.5">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-slate-700 w-8">${pctPA}%</span>
+                                <div class="w-24 bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div class="h-full ${pctPA >= 90 ? 'bg-green-500' : (pctPA >= 70 ? 'bg-amber-500' : 'bg-red-500')}" style="width: ${pctPA}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-3.5 text-center"><div class="w-3.5 h-3.5 rounded-full mx-auto ${classeFarol}"></div></td>
+                        <td class="p-3.5 text-center"><div class="w-3.5 h-3.5 rounded-full mx-auto ${farolPA}"></div></td>
                     </tr>
                 `;
             }
 
-            document.getElementById('card-total-objetivos').innerText = totalObj.size;
+            // Alimentando os cards superiores conforme a proporção real da imagem
             document.getElementById('card-total-kpis').innerText = countKpi;
             document.getElementById('card-total-verde').innerText = countVerde;
+            document.getElementById('card-total-amarelo').innerText = countAmarelo;
             document.getElementById('card-total-vermelho').innerText = countVermelho;
+
+            document.getElementById('pct-card-verde').innerText = countKpi > 0 ? Math.round((countVerde / countKpi) * 100) + "%" : "0%";
+            document.getElementById('pct-card-amarelo').innerText = countKpi > 0 ? Math.round((countAmarelo / countKpi) * 100) + "%" : "0%";
+            document.getElementById('pct-card-vermelho').innerText = countKpi > 0 ? Math.round((countVermelho / countKpi) * 100) + "%" : "0%";
+
+            let mediaPlanosGlobal = totalKpisComPlanos > 0 ? Math.round(somaGlobalProgressoPlanos / totalKpisComPlanos) : 0;
+            document.getElementById('card-media-planos').innerText = mediaPlanosGlobal + "%";
         }
 
-        // RENDERIZAÇÃO DO MAPA COM SUPORTE A FILTRO DE RESPONSABILIDADE EXPANDIDA
         function renderizarMapaEstrategico() {
             const fResp = document.getElementById('filtroResponsavel').value;
             const fPersp = document.getElementById('filtroPerspectiva').value;
@@ -464,27 +564,26 @@
                 let coresFaroisKpis = [];
                 let idCard = "OBJ";
                 let perspectivaCard = "";
-                let possuiParticipacaoDoLider = false;
+                let participacaoConfirmada = false;
 
                 kpisUnicos.forEach(kpiNome => {
                     let historicoKpi = linhasDoObj.filter(l => lerCampo(l, CHAVES.kpi) === kpiNome);
                     historicoKpi.sort((a,b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
                     let maisRecente = historicoKpi[historicoKpi.length - 1];
                     
-                    coresFaroisKpis.push(calcularFarol(lerCampo(maisRecente, CHAVES.meta), lerCampo(maisRecente, CHAVES.real)));
+                    coresFaroisKpis.push(calcularFarol(lerCampo(maisRecente, CHAVES.meta), lerCampo(maisRecente, CHACES.real || CHAVES.real)));
                     idCard = lerCampo(maisRecente, CHAVES.id) || idCard;
                     perspectivaCard = lerCampo(maisRecente, CHAVES.persp);
 
-                    // Valida se o líder é o dono do KPI ou dono de alguma ação vinculada
-                    let donoDoKpi = lerCampo(maisRecente, CHAVES.resp);
-                    let temAcaoVinculada = dadosOriginais.planoAcao.some(p => 
+                    let liderKpi = lerCampo(maisRecente, CHAVES.resp);
+                    let temAcaoLider = dadosOriginais.planoAcao.some(p => 
                         lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']) === nomeObj && 
                         lerCampo(p, CHAVES.kpi) === kpiNome && 
                         lerCampo(p, ['RESPONSÁVEL', 'Responsável']) === fResp
                     );
 
-                    if (fResp === "Todos" || donoDoKpi === fResp || temAcaoVinculada) {
-                        possuiParticipacaoDoLider = true;
+                    if (fResp === "Todos" || liderKpi === fResp || temAcaoLider) {
+                        participacaoConfirmada = true;
                     }
                 });
 
@@ -494,7 +593,7 @@
 
                 let statusTextoStr = farolFinalObj === 'farol-verde' ? 'Verde' : (farolFinalObj === 'farol-amarelo' ? 'Amarelo' : 'Vermelho');
 
-                if (!possuiParticipacaoDoLider) continue;
+                if (!participacaoConfirmada) continue;
                 if (fPersp !== "Todos" && !perspectivaCard.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
                 if (fStat !== "Todos" && statusTextoStr !== fStat) continue;
 
@@ -576,12 +675,11 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // REQUISITO 2: FILTRAGEM DINÂMICA DE PLANOS DE AÇÃO (POR CORTE CRONOLÓGICO DA REUNIÃO)
             const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
             tCorpo.innerHTML = "";
 
             let fPrazoCheckbox = document.getElementById('filtroPrazoReuniao').checked;
-            let dataHoje = new Date(); // Captura o marco temporal atual da reunião
+            let dataHoje = new Date();
 
             let planosFiltrados = dadosOriginais.planoAcao.filter(p => {
                 let vObj = lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']);
@@ -592,19 +690,16 @@
                 
                 if(!bateMeta) return false;
 
-                // Executa filtro de corte temporal se o checkbox estiver ativo
                 if (fPrazoCheckbox) {
-                    let rawFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Data Fim']);
+                    let rawFim = lerCampo(p, ['Prazo Fim', 'Fim']);
                     if (!rawFim) return false; 
-                    let dataFimAcao = new Date(rawFim);
-                    // Se o fim da ação for posterior ao dia de hoje, ela fica oculta
-                    if (isNaN(dataFimAcao.getTime()) || dataFimAcao > dataHoje) return false;
+                    if (new Date(rawFim) > dataHoje) return false;
                 }
                 return true;
             });
 
             if(planosFiltrados.length === 0) {
-                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-semibold">Nenhuma iniciativa vigente ou planejada para este período.</td></tr>`;
+                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-semibold">Nenhuma iniciativa vigente ou planejada para este marco temporal.</td></tr>`;
             } else {
                 planosFiltrados.forEach(p => {
                     let st = lerCampo(p, CHAVES.status);
