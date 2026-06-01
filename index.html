@@ -180,13 +180,12 @@
             </div>
         </section>
 
-        <!-- TELA 2: MAPA ESTRATÉGICO MODIFICADO -->
+        <!-- TELA 2: MAPA ESTRATÉGICO -->
         <section id="tela-mapa" class="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-2xs overflow-x-auto min-w-[850px] hidden">
             <div class="mb-2">
                 <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos por Perspectiva</h2>
             </div>
             
-            <!-- Linhas de perspectiva idênticas ao modelo da imagem image_e00926.png -->
             <div class="flex items-stretch gap-4 min-h-[140px] border-b border-slate-100 pb-4">
                 <div class="w-36 bg-persp-financeira text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Financeira</div>
                 <div id="cards-financeira" class="flex flex-wrap items-center gap-4 flex-1"></div>
@@ -294,20 +293,63 @@
             return "";
         }
 
-        // Função de formatação dinâmica baseada no tipo do indicador para herdar o visual da planilha
+        // TRATAMENTO REFORÇADO DE DATAS PARA COMPATIBILIDADE TOTAL (CÓDIGO E TELA)
+        function converterParaData(textoData) {
+            if (!textoData) return new Date(0);
+            if (typeof textoData === 'string' && textoData.includes('/')) {
+                let partes = textoData.split('/');
+                if (partes.length === 3) {
+                    return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+                }
+            }
+            let d = new Date(textoData);
+            return isNaN(d.getTime()) ? new Date(0) : d;
+        }
+
+        function formatarDataBr(textoData) {
+            if (!textoData) return "--";
+            if (typeof textoData === 'string' && textoData.includes('/') && textoData.split('/').length === 3) {
+                return textoData;
+            }
+            let data = new Date(textoData);
+            if (isNaN(data.getTime())) return textoData;
+            
+            let dia = ("0" + data.getUTCDate()).slice(-2);
+            let mes = ("0" + (data.getUTCMonth() + 1)).slice(-2);
+            let ano = data.getUTCFullYear();
+            return dia + "/" + mes + "/" + ano;
+        }
+
+        function formatarDataMesAno(textoData) {
+            if (!textoData) return "";
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            
+            if (typeof textoData === 'string' && textoData.includes('/')) {
+                let partes = textoData.split('/');
+                if (partes.length === 3) {
+                    let mesIdx = parseInt(partes[1]) - 1;
+                    let anoDigitos = partes[2].slice(-2);
+                    return meses[mesIdx] + '/' + anoDigitos;
+                }
+                return textoData;
+            }
+            
+            let data = new Date(textoData);
+            if (isNaN(data.getTime())) return textoData;
+            return `${meses[data.getUTCMonth()]}/${String(data.getUTCFullYear()).slice(-2)}`;
+        }
+
         function formatarNumeroVisual(valor, ehPercentual) {
             if (valor === undefined || valor === null || valor === "") return "--";
             let num = parseFloat(valor);
-            if (isNaN(num)) return valor; // Se já vier tratado, mantém text
+            if (isNaN(num)) return valor;
             
             if (ehPercentual) {
-                // Trata taxas de porcentagem do getValues (ex: 0.30 vira 30% ou 30 vira 30%)
                 if (num <= 1.1 && num > -1.1 && num !== 0) {
                     return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num);
                 }
                 return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num) + "%";
             } else {
-                // Formatação padrão brasileira para valores grandes (ex: 2072420.123 -> 2.072.420)
                 return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
             }
         }
@@ -317,7 +359,6 @@
             return n.includes('%') || n.includes('margem') || n.includes('taxa') || n.includes('percentual');
         }
 
-        // Calcula o YTD exato cortando até o mês que possui resultado preenchido
         function calcularYTDInteligente(historicoLinhas, ehPercentual) {
             let metasValidas = [];
             let resultadosValidos = [];
@@ -337,16 +378,11 @@
             if (resultadosValidos.length === 0) return 0;
 
             if (ehPercentual) {
-                // Regra para Percentual: Média dos Resultados / Média das Metas
                 let mediaReal = resultadosValidos.reduce((a,b)=>a+b, 0) / resultadosValidos.length;
                 let mediaMeta = metasValidas.reduce((a,b)=>a+b, 0) / metasValidas.length;
-                
-                // Se as metas vierem como base decimal (ex: 0.8), calcula proporção direta
                 if (mediaMeta === 0) return 0;
-                let proporcao = mediaReal / mediaMeta;
-                return Math.round(proporcao * 100);
+                return Math.round((mediaReal / mediaMeta) * 100);
             } else {
-                // Regra para Valor Padrão/Financeiro: Soma dos Resultados / Soma das Metas
                 let somaReal = resultadosValidos.reduce((a,b)=>a+b, 0);
                 let somaMeta = metasValidas.reduce((a,b)=>a+b, 0);
                 return somaMeta === 0 ? 0 : Math.round((somaReal / somaMeta) * 100);
@@ -357,15 +393,6 @@
             if (pct >= 90) return 'farol-verde';
             if (pct >= 70) return 'farol-amarelo';
             return 'farol-vermelho';
-        }
-
-        function formatarDataMesAno(textoData) {
-            if (!textoData) return "";
-            if (textoData.includes('/')) return textoData.substring(0, 7);
-            let data = new Date(textoData);
-            if (isNaN(data.getTime())) return textoData;
-            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-            return `${meses[data.getUTCMonth()]}/${String(data.getUTCFullYear()).slice(-2)}`;
         }
 
         function alternarTela(tela) {
@@ -458,8 +485,8 @@
             for (let chave in agrupados) {
                 let historico = agrupados[chave];
                 
-                // CORREÇÃO DA VARIÁVEL DE ERRO SILENCIOSO (CHACES corrigido para CHAVES)
-                historico.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+                // Ordenação cronológica à prova de falhas
+                historico.sort((a, b) => converterParaData(lerCampo(a, CHAVES.mes)) - converterParaData(lerCampo(b, CHAVES.mes)));
                 
                 let recente = historico.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historico[historico.length - 1];
 
@@ -487,9 +514,11 @@
 
                 if (fPrazoCheckbox) {
                     let hoje = new Date();
+                    hoje.setHours(23,59,59,999);
                     acoesDoKpi = acoesDoKpi.filter(p => {
                         let rawFim = lerCampo(p, ['Prazo Fim', 'Fim']);
-                        return rawFim ? new Date(rawFim) <= hoje : false;
+                        if(!rawFim) return false;
+                        return converterParaData(rawFim) <= hoje;
                     });
                 }
 
@@ -548,7 +577,6 @@
             document.getElementById('card-media-planos').innerText = totalKpisComPlanos > 0 ? Math.round(somaGlobalProgressoPlanos / totalKpisComPlanos) + "%" : "0%";
         }
 
-        // EXECUÇÃO DO NOVO RODAPÉ DUPLO COMPACTO PARA OS CARDS DO MAPA ESTRATÉGICO
         function renderizarMapaEstrategico() {
             let listaKpis = dadosOriginais.indicadores || [];
             if(!listaKpis.length) return;
@@ -595,7 +623,7 @@
                     idCard = lerCampo(topo, CHAVES.id) || idCard;
                     perspectivaCard = lerCampo(topo, CHAVES.persp);
 
-                    if (fResp === "Tomar" || fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
+                    if (fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
                 });
 
                 let ytdMedioObjetivo = contKpisValidosParaFiltro > 0 ? Math.round(somaYtdKpis / contKpisValidosParaFiltro) : 0;
@@ -621,7 +649,6 @@
                 else if(pLower.includes('clien')) containerAlvo = containers.clientes;
                 else if(pLower.includes('apren') || pLower.includes('cresc')) containerAlvo = containers.aprendizado;
 
-                // DESIGN ENRIQUECIDO DO NOVO CARD DO MAPA ESTRATÉGICO
                 containerAlvo.innerHTML += `
                     <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-white border border-slate-200 p-3 rounded-xl w-64 h-36 obj-card relative flex flex-col justify-between shadow-2xs">
                         <div class="overflow-hidden">
@@ -632,7 +659,6 @@
                             <div class="text-[11px] font-bold text-slate-700 leading-snug mt-1 line-clamp-2" title="${nomeObj}">${nomeObj}</div>
                         </div>
                         
-                        <!-- FILTRO DUPLO DO RODAPÉ COM % RESULTADO + FAROL E % PLANO AÇÃO + FAROL -->
                         <div class="pt-2 border-t border-slate-100 space-y-1 text-[10px] font-bold">
                             <div class="flex justify-between items-center text-slate-500">
                                 <span class="flex items-center gap-1"><i class="fa-solid fa-chart-line text-slate-400 w-3.5"></i>Resultados (YTD): <strong class="text-slate-800 ml-0.5">${ytdMedioObjetivo}%</strong></span>
@@ -673,7 +699,7 @@
             let listaKpis = dadosOriginais.indicadores || [];
             cacheHistoricoModal = listaKpis.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
             
-            cacheHistoricoModal.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+            cacheHistoricoModal.sort((a, b) => converterParaData(lerCampo(a, CHAVES.mes)) - converterParaData(lerCampo(b, CHAVES.mes)));
             let topo = cacheHistoricoModal.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || cacheHistoricoModal[cacheHistoricoModal.length - 1];
             
             let ehPct = verificarSeEhPercentual(kpiSelecionado);
@@ -685,8 +711,8 @@
             selectAno.innerHTML = '<option value="Total">Histórico Total</option>';
             let anosUnicos = new Set();
             cacheHistoricoModal.forEach(reg => {
-                let data = new Date(lerCampo(reg, CHAVES.mes));
-                if (!isNaN(data.getTime())) anosUnicos.add(data.getUTCFullYear());
+                let data = converterParaData(lerCampo(reg, CHAVES.mes));
+                if (data.getFullYear() > 1970) anosUnicos.add(data.getFullYear());
             });
             Array.from(anosUnicos).sort((a, b) => b - a).forEach(ano => {
                 selectAno.innerHTML += `<option value="${ano}">${ano}</option>`;
@@ -702,8 +728,8 @@
 
             if (filtroAno !== "Total") {
                 dadosFiltrados = cacheHistoricoModal.filter(reg => {
-                    let data = new Date(lerCampo(reg, CHAVES.mes));
-                    return !isNaN(data.getTime()) && data.getUTCFullYear() === parseInt(filtroAno);
+                    let data = converterParaData(lerCampo(reg, CHAVES.mes));
+                    return data.getFullYear() === parseInt(filtroAno);
                 });
             }
 
@@ -753,7 +779,7 @@
                         <tr class="hover:bg-slate-50/60 text-[11px]">
                             <td class="p-2.5 font-semibold text-slate-700">${lerCampo(p, ['AÇÃO', 'Acao', 'Atividade'])}</td>
                             <td class="p-2.5 font-bold text-slate-500">${lerCampo(p, ['RESPONSÁVEL', 'Responsável'])}</td>
-                            <td class="p-2.5 font-mono text-slate-400">${dataFim || '--'}</td>
+                            <td class="p-2.5 font-mono text-slate-500">${formatarDataBr(dataFim)}</td>
                             <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${corBadge}">${st || 'Pendente'}</span></td>
                         </tr>
                     `;
