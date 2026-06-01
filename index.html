@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo de Governança | Novo Horizonte</title>
+    <!-- Tailwind CSS e FontAwesome para design profissional e scannable -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,50 +21,55 @@
         .farol-vermelho { background-color: #ef4444; border: 2px solid #dc2626; }
         
         .obj-card { transition: all 0.2s ease-in-out; cursor: pointer; }
-        .obj-card:hover { transform: scale(1.02); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
-        .tab-ativa { background-color: #1a2e4c; color: #ffffff !important; font-weight: 800; }
+        .obj-card:hover { transform: scale(1.02); background-color: #253047 !important; }
+        .tab-ativa { background-color: #1e293b; color: #ffffff !important; font-weight: 800; border-bottom: 2px solid #3b82f6; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<body class="bg-[#090e1a] text-slate-100 font-sans antialiased">
 
-    <header class="bg-white border-b border-slate-200 px-6 py-4 shadow-2xs">
+    <!-- TOPO INSTITUCIONAL PREMIUM EM AZUL ESCURO -->
+    <header class="bg-[#111827] border-b border-slate-800 px-6 py-4 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
             
+            <!-- LADO ESQUERDO: LOGO NOVO HORIZONTE E TÍTULO -->
             <div class="flex items-center gap-4 w-full lg:w-auto">
-                <img src="MNH 4.png" alt="Novo Horizonte" class="h-9 object-contain onerror-fallback" onerror="this.style.display='none'">
-                <div class="h-8 w-px bg-slate-200 hidden sm:block"></div>
+                <img src="MNH 4.png" alt="Novo Horizonte" class="h-9 object-contain onerror-fallback" style="filter: brightness(0) invert(1);" onerror="this.style.display='none'">
+                <div class="h-8 w-px bg-slate-700 hidden sm:block"></div>
                 <div>
-                    <h1 class="text-base font-black text-slate-900 tracking-tight leading-none uppercase">Painel Executivo de Governança</h1>
-                    <p class="text-xs text-slate-500 font-medium mt-1">Planejamento Estratégico | Gestão à Vista</p>
+                    <h1 class="text-base font-black text-white tracking-tight leading-none uppercase">Painel Executivo de Governança</h1>
+                    <p class="text-xs text-slate-400 font-medium mt-1">Planejamento Estratégico | Gestão à Vista</p>
                 </div>
             </div>
 
+            <!-- CENTRO: BARRA DE CONEXÃO DIRETA COM GOOGLE SHEETS -->
             <div class="flex flex-col gap-1 w-full lg:w-auto items-center lg:items-end">
-                <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl text-xs border border-slate-200 w-full md:w-80 shadow-inner">
-                    <i class="fa-solid fa-link text-slate-400 ml-1.5"></i>
-                    <input type="text" id="urlInputScript" placeholder="URL do Apps Script..." class="bg-transparent border-none outline-none w-full text-slate-700 font-mono text-[11px]">
-                    <button onclick="conectarPlanilha()" class="bg-[#1a2e4c] text-white px-3 py-1.5 rounded-lg font-bold hover:bg-slate-800 transition cursor-pointer shrink-0">Conectar</button>
+                <div class="flex items-center gap-2 bg-[#1f2937] p-1.5 rounded-xl text-xs border border-slate-700 w-full md:w-80 shadow-inner">
+                    <i class="fa-solid fa-link text-slate-500 ml-1.5"></i>
+                    <input type="text" id="urlInputScript" placeholder="URL do Apps Script..." class="bg-transparent border-none outline-none w-full text-slate-100 font-mono text-[11px] placeholder-slate-500">
+                    <button onclick="conectarPlanilha()" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-blue-500 transition cursor-pointer shrink-0">Conectar</button>
                 </div>
                 <span id="indicadorStatusBase" class="text-[10px] font-bold text-slate-400 tracking-wide mt-0.5"><i class="fa-solid fa-circle-notch mr-1"></i>Aguardando link de sincronização</span>
             </div>
 
-            <div class="flex items-center gap-3 w-full lg:w-auto justify-end bg-slate-50/50 p-2 rounded-xl border border-slate-100">
+            <!-- LADO DIREITO: PARCEIRO DE GOVERNANÇA -->
+            <div class="flex items-center gap-3 w-full lg:w-auto justify-end bg-[#1f2937]/50 p-2 rounded-xl border border-slate-800">
                 <div class="text-right">
                     <span class="text-[9px] text-slate-400 font-bold block tracking-wider leading-none">PARCEIRO DE GOVERNANÇA</span>
-                    <strong class="text-[11px] text-slate-700 font-black tracking-tight block mt-0.5">IGHER CONSULTORIA</strong>
+                    <strong class="text-[11px] text-slate-200 font-black tracking-tight block mt-0.5">IGHER CONSULTORIA</strong>
                 </div>
-                <img src="Logo Branca Sem Fundo.png" alt="Igher" class="h-7 object-contain" style="filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.1));">
+                <img src="Logo Branca Sem Fundo.png" alt="Igher" class="h-7 object-contain">
             </div>
 
         </div>
     </header>
 
-    <nav class="bg-slate-100 border-b border-slate-200 px-6">
+    <!-- NAVEGAÇÃO ENTRE TELAS (ESTILO ABAS DARK) -->
+    <nav class="bg-[#111827] border-b border-slate-800 px-6">
         <div class="max-w-7xl mx-auto flex gap-1">
-            <button onclick="alternarTela('resumo')" id="btn-tab-resumo" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer tab-ativa rounded-t-lg mt-1.5">
+            <button onclick="alternarTela('resumo')" id="btn-tab-resumo" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-400 hover:text-slate-200 transition cursor-pointer rounded-t-lg mt-1.5">
                 <i class="fa-solid fa-table-list mr-1"></i> 1. Painel de Resumo
             </button>
-            <button onclick="alternarTela('mapa')" id="btn-tab-mapa" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer rounded-t-lg mt-1.5">
+            <button onclick="alternarTela('mapa')" id="btn-tab-mapa" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-400 hover:text-slate-200 transition cursor-pointer rounded-t-lg mt-1.5">
                 <i class="fa-solid fa-map-location-dot mr-1"></i> 2. Mapa Estratégico
             </button>
         </div>
@@ -71,15 +77,16 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <section class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex flex-col lg:flex-row gap-4 items-end justify-between shadow-2xs">
+        <!-- FILTROS EXECUTIVOS ESCUROS -->
+        <section class="bg-[#111827] p-4 rounded-xl border border-slate-800 mb-6 flex flex-col lg:flex-row gap-4 items-end justify-between shadow-md">
             <div class="w-full lg:w-auto grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-user-tie mr-1"></i> Líder Responsável</label>
-                    <select id="filtroResponsavel" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-700"></select>
+                    <select id="filtroResponsavel" onchange="atualizarPainelGeral()" class="bg-[#1f2937] border border-slate-700 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-200"></select>
                 </div>
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-layer-group mr-1"></i> Perspectiva</label>
-                    <select id="filtroPerspectiva" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-700">
+                    <select id="filtroPerspectiva" onchange="atualizarPainelGeral()" class="bg-[#1f2937] border border-slate-700 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-200">
                         <option value="Todos">-- Todas as Perspectivas --</option>
                         <option value="Financeira">Financeira</option>
                         <option value="Clientes">Clientes</option>
@@ -89,7 +96,7 @@
                 </div>
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-circle-dot mr-1"></i> Status do Indicador</label>
-                    <select id="filtroStatus" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-700">
+                    <select id="filtroStatus" onchange="atualizarPainelGeral()" class="bg-[#1f2937] border border-slate-700 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-200">
                         <option value="Todos">-- Todos os Status --</option>
                         <option value="Verde">Verde (No Alvo)</option>
                         <option value="Amarelo">Amarelo (Atenção)</option>
@@ -98,69 +105,72 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-2.5 rounded-lg w-full lg:w-auto shadow-3xs">
-                <input type="checkbox" id="filtroPrazoReuniao" onchange="atualizarPainelGeral()" class="w-4 h-4 text-blue-600 border-slate-300 rounded cursor-pointer">
-                <label for="filtroPrazoReuniao" class="text-xs font-bold text-slate-600 cursor-pointer select-none">
+            <div class="flex items-center gap-2 bg-[#1f2937]/60 border border-slate-700 p-2.5 rounded-lg w-full lg:w-auto shadow-sm">
+                <input type="checkbox" id="filtroPrazoReuniao" onchange="atualizarPainelGeral()" class="w-4 h-4 text-blue-500 bg-slate-800 border-slate-600 rounded cursor-pointer">
+                <label for="filtroPrazoReuniao" class="text-xs font-bold text-slate-300 cursor-pointer select-none">
                     Exibir apenas ações vencidas/vigentes até hoje
                 </label>
             </div>
 
-            <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar</button>
+            <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-400 bg-rose-950/30 hover:bg-rose-950/60 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center border border-rose-900/50"><i class="fa-solid fa-trash-can mr-1"></i> Limpar</button>
         </section>
 
+        <!-- TELA 1: PAINEL DE RESUMO -->
         <section id="tela-resumo" class="space-y-6">
             
+            <!-- CARDS DE METRICAS SUPERIORES -->
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-chart-simple"></i></div>
+                <div class="bg-[#111827] border border-slate-800 p-4 rounded-xl shadow-md flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-950 text-blue-400 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-chart-simple"></i></div>
                     <div>
                         <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">TOTAL DE INDICADORES</span>
-                        <h3 id="card-total-kpis" class="text-xl font-black text-slate-900 mt-1">0</h3>
+                        <h3 id="card-total-kpis" class="text-xl font-black text-white mt-1">0</h3>
                     </div>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="bg-[#111827] border border-slate-800 p-4 rounded-xl shadow-md flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-950 text-green-400 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-circle-check"></i></div>
                     <div class="flex-1">
                         <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">NO ALVO</span>
                         <div class="flex items-baseline gap-2 mt-1">
-                            <h3 id="card-total-verde" class="text-xl font-black text-slate-900">0</h3>
-                            <span id="pct-card-verde" class="text-xs font-bold text-green-600">0%</span>
+                            <h3 id="card-total-verde" class="text-xl font-black text-white">0</h3>
+                            <span id="pct-card-verde" class="text-xs font-bold text-green-400">0%</span>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="bg-[#111827] border border-slate-800 p-4 rounded-xl shadow-md flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-amber-950 text-amber-400 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></div>
                     <div class="flex-1">
                         <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">ATENÇÃO</span>
                         <div class="flex items-baseline gap-2 mt-1">
-                            <h3 id="card-total-amarelo" class="text-xl font-black text-slate-900">0</h3>
-                            <span id="pct-card-amarelo" class="text-xs font-bold text-amber-600">0%</span>
+                            <h3 id="card-total-amarelo" class="text-xl font-black text-white">0</h3>
+                            <span id="pct-card-amarelo" class="text-xs font-bold text-amber-400">0%</span>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-circle-xmark"></i></div>
+                <div class="bg-[#111827] border border-slate-800 p-4 rounded-xl shadow-md flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-rose-950 text-rose-400 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-circle-xmark"></i></div>
                     <div class="flex-1">
                         <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">CRÍTICO</span>
                         <div class="flex items-baseline gap-2 mt-1">
-                            <h3 id="card-total-vermelho" class="text-xl font-black text-slate-900">0</h3>
-                            <span id="pct-card-vermelho" class="text-xs font-bold text-rose-600">0%</span>
+                            <h3 id="card-total-vermelho" class="text-xl font-black text-white">0</h3>
+                            <span id="pct-card-vermelho" class="text-xs font-bold text-rose-400">0%</span>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-clipboard-list"></i></div>
+                <div class="bg-[#111827] border border-slate-800 p-4 rounded-xl shadow-md flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-950 text-purple-400 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-clipboard-list"></i></div>
                     <div>
                         <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">% MÉDIO EXECUÇÃO P.A.</span>
-                        <h3 id="card-media-planos" class="text-xl font-black text-purple-600 mt-1">0%</h3>
+                        <h3 id="card-media-planos" class="text-xl font-black text-purple-400 mt-1">0%</h3>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
+            <!-- TABELA CONSOLIDADA ESCURA E COMPACTA -->
+            <div class="bg-[#111827] border border-slate-800 rounded-xl shadow-md overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-slate-900 text-white font-bold uppercase tracking-wider text-[10px]">
+                        <thead class="bg-[#0b0f19] text-slate-300 font-bold uppercase tracking-wider text-[10px] border-b border-slate-800">
                             <tr>
                                 <th class="p-3 pl-5">Perspectiva</th>
                                 <th class="p-3">Indicador</th>
@@ -173,13 +183,15 @@
                                 <th class="p-3 text-center">Farol P.A.</th>
                             </tr>
                         </thead>
-                        <tbody id="tabela-resumo-corpo" class="divide-y divide-slate-100 font-medium text-slate-600">
-                            </tbody>
+                        <tbody id="tabela-resumo-corpo" class="divide-y divide-slate-800 font-medium text-slate-300">
+                            <!-- Inserção Automática -->
+                        </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row justify-between items-center bg-white px-4 py-3 border border-slate-200 rounded-xl text-[10px] font-bold text-slate-400 gap-2 shadow-3xs">
+            <!-- LEGENDA DA BASE -->
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-[#111827] px-4 py-3 border border-slate-800 rounded-xl text-[10px] font-bold text-slate-400 gap-2 shadow-sm">
                 <div class="flex gap-4">
                     <span class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-green-500"></div> No alvo (>= 90%)</span>
                     <span class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div> Atenção (70% a 89%)</span>
@@ -189,32 +201,38 @@
             </div>
         </section>
 
-        <section id="tela-mapa" class="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-2xs overflow-x-auto min-w-[850px] hidden">
+        <!-- TELA 2: MAPA ESTRATÉGICO -->
+        <section id="tela-mapa" class="space-y-4 bg-[#111827] p-5 rounded-xl border border-slate-800 shadow-md overflow-x-auto min-w-[850px] hidden">
             <div class="mb-2">
-                <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos por Perspectiva</h2>
+                <h2 class="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-500"></i> Visão de Objetivos por Perspectiva</h2>
             </div>
+            <!-- FINANCEIRA -->
             <div class="flex items-stretch gap-4 min-h-[90px]">
-                <div class="w-36 bg-persp-financeira text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Financeira</div>
+                <div class="w-36 bg-persp-financeira text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Financeira</div>
                 <div id="cards-financeira" class="flex flex-wrap items-center gap-3 flex-1"></div>
             </div>
+            <!-- CLIENTES -->
             <div class="flex items-stretch gap-4 min-h-[90px]">
-                <div class="w-36 bg-persp-clientes text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Clientes</div>
+                <div class="w-36 bg-persp-clientes text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Clientes</div>
                 <div id="cards-clientes" class="flex flex-wrap items-center gap-3 flex-1"></div>
             </div>
+            <!-- PROCESSOS INTERNOS -->
             <div class="flex items-stretch gap-4 min-h-[90px]">
-                <div class="w-36 bg-persp-processos text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Processos Internos</div>
+                <div class="w-36 bg-persp-processos text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Processos Internos</div>
                 <div id="cards-processos" class="flex flex-wrap items-center gap-3 flex-1"></div>
             </div>
+            <!-- APRENDIZADO E CRESCIMENTO -->
             <div class="flex items-stretch gap-4 min-h-[90px]">
-                <div class="w-36 bg-persp-aprendizado text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Aprendizado & Crescimento</div>
+                <div class="w-36 bg-persp-aprendizado text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Reforço / Aprendizado</div>
                 <div id="cards-aprendizado" class="flex flex-wrap items-center gap-3 flex-1"></div>
             </div>
         </section>
     </main>
 
-    <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
-            <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
+    <!-- MODAL DETALHADO DO INDICADOR ESCURO -->
+    <div id="modalObjetivo" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
+        <div class="bg-[#111827] w-full max-w-4xl rounded-xl shadow-2xl border border-slate-800 overflow-hidden my-8 max-h-[90vh] flex flex-col">
+            <div class="bg-[#0b0f19] text-white p-4 flex justify-between items-center border-b border-slate-800">
                 <div>
                     <span id="modalIdObj" class="text-[10px] font-bold text-amber-400 block tracking-wider uppercase">OBJETIVO</span>
                     <h3 id="modalNomeObj" class="text-sm font-black tracking-tight">Nome do Objetivo</h3>
@@ -222,30 +240,30 @@
                 <button onclick="fecharModalObjetivo()" class="text-slate-400 hover:text-white transition text-lg cursor-pointer p-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="p-5 space-y-4 overflow-y-auto flex-1">
-                <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl">
-                    <label class="text-[9px] text-slate-500 font-black uppercase tracking-wider block mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Selecione a Meta / KPI Cadastrado para este objetivo:</label>
-                    <select id="modalSelectKpi" onchange="mudarIndicadorNoModal()" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs font-bold text-slate-800 outline-none cursor-pointer shadow-3xs"></select>
+            <div class="p-5 space-y-4 overflow-y-auto flex-1 bg-[#111827]">
+                <div class="bg-[#1f2937]/50 border border-slate-700 p-3.5 rounded-xl">
+                    <label class="text-[9px] text-slate-400 font-black uppercase tracking-wider block mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Selecione a Meta / KPI Cadastrado para este objetivo:</label>
+                    <select id="modalSelectKpi" onchange="mudarIndicadorNoModal()" class="w-full bg-[#111827] border border-slate-700 rounded-lg p-2 text-xs font-bold text-slate-200 outline-none cursor-pointer shadow-inner"></select>
                 </div>
 
-                <div class="grid grid-cols-3 gap-4 text-[11px] bg-slate-50 p-3 rounded-lg border border-slate-100">
-                    <div><span class="text-slate-400 block font-medium">Líder do Indicador:</span> <strong id="modalLider" class="text-slate-800">--</strong></div>
-                    <div><span class="text-slate-400 block font-medium">Meta Alvo Recente:</span> <strong id="modalMetaValor" class="text-slate-700">--</strong></div>
-                    <div><span class="text-slate-400 block font-medium">Último Realizado:</span> <strong id="modalRealValor" class="text-slate-900">--</strong></div>
+                <div class="grid grid-cols-3 gap-4 text-[11px] bg-[#1f2937]/30 p-3 rounded-lg border border-slate-800">
+                    <div><span class="text-slate-400 block font-medium">Líder do Indicador:</span> <strong id="modalLider" class="text-slate-200">--</strong></div>
+                    <div><span class="text-slate-400 block font-medium">Meta Alvo Recente:</span> <strong id="modalMetaValor" class="text-slate-300">--</strong></div>
+                    <div><span class="text-slate-400 block font-medium">Último Realizado:</span> <strong id="modalRealValor" class="text-white">--</strong></div>
                 </div>
 
-                <div class="bg-white p-4 border border-slate-200 rounded-xl">
-                    <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-2"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica</h4>
+                <div class="bg-[#1f2937]/20 border border-slate-800 p-4 rounded-xl">
+                    <h4 class="text-[10px] font-black text-white uppercase tracking-wider mb-2"><i class="fa-solid fa-chart-bar text-blue-400 mr-1"></i> Evolução Histórica</h4>
                     <div class="relative h-48 w-full">
                         <canvas id="graficoMensalCanvas"></canvas>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-2"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas Vinculadas Exclusivamente a este indicador</h4>
-                    <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
-                        <table class="w-full text-left text-xs divide-y divide-slate-200">
-                            <thead class="bg-slate-50 text-slate-500 font-bold text-[10px]">
+                    <h4 class="text-[10px] font-black text-white uppercase tracking-wider mb-2"><i class="fa-solid fa-list-check text-emerald-400 mr-1"></i> Iniciativas Vinculadas</h4>
+                    <div class="border border-slate-800 rounded-xl overflow-hidden bg-[#111827]">
+                        <table class="w-full text-left text-xs divide-y divide-slate-800">
+                            <thead class="bg-[#0b0f19] text-slate-400 font-bold text-[10px]">
                                 <tr>
                                     <th class="p-2.5">Ação Estratégica</th>
                                     <th class="p-2.5">Responsável</th>
@@ -253,7 +271,7 @@
                                     <th class="p-2.5 text-center">Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="modalTabelaPlanoCorpo" class="divide-y divide-slate-100 font-medium text-slate-600"></tbody>
+                            <tbody id="modalTabelaPlanoCorpo" class="divide-y divide-slate-800 font-medium text-slate-300"></tbody>
                         </table>
                     </div>
                 </div>
@@ -261,6 +279,7 @@
         </div>
     </div>
 
+    <!-- ENGINE JAVASCRIPT EXECUTIVA INTEGRADA -->
     <script>
         let dadosOriginais = { indicadores: [], planoAcao: [] };
         let graficoInstancia = null;
@@ -293,7 +312,7 @@
 
         function formatarDataMesAno(textoData) {
             if (!textoData) return "";
-            if (textoData.includes('/')) return textoData; // Já formatado
+            if (textoData.includes('/')) return textoData;
             let data = new Date(textoData);
             if (isNaN(data.getTime())) return textoData;
             const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -350,22 +369,22 @@
 
         function buscarDadosOnline(url) {
             const ind = document.getElementById('indicadorStatusBase');
-            ind.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-blue-600 mr-1"></i> Carregando dados da governança...`;
+            ind.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-blue-400 mr-1"></i> Sincronizando dados da governança...`;
             
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
                     if(data.indicadores && data.planoAcao) {
                         dadosOriginais = data;
-                        ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Conectada e Sincronizada`;
+                        ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-500 mr-1"></i> Base Conectada e Sincronizada`;
                         processarEAlimentarFiltros(dadosOriginais);
                         atualizarPainelGeral();
                     } else {
-                        ind.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-600 mr-1"></i> Estrutura de JSON inválida.`;
+                        ind.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-500 mr-1"></i> Estrutura de JSON inválida.`;
                     }
                 })
                 .catch(err => {
-                    ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 mr-1"></i> Erro de comunicação com o Script.`;
+                    ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Erro de comunicação com o Script.`;
                 });
         }
 
@@ -452,7 +471,7 @@
                     totalKpisComPlanos++;
                 }
 
-                let farolPA = 'bg-slate-200';
+                let farolPA = 'bg-slate-700';
                 if(totalAcoes > 0) {
                     farolPA = pctPA >= 90 ? 'farol-verde' : (pctPA >= 70 ? 'farol-amarelo' : 'farol-vermelho');
                 }
@@ -469,25 +488,25 @@
                 if (classeFarol === 'farol-amarelo') countAmarelo++;
                 if (classeFarol === 'farol-vermelho') countVermelho++;
 
-                let corTextoPersp = "text-amber-600";
-                if(nPersp.toLowerCase().includes('clien')) corTextoPersp = "text-teal-700";
-                else if(nPersp.toLowerCase().includes('proc')) corTextoPersp = "text-[#1a2e4c]";
-                else if(nPersp.toLowerCase().includes('apren') || nPersp.toLowerCase().includes('cresc')) corTextoPersp = "text-orange-500";
+                let corTextoPersp = "text-amber-400";
+                if(nPersp.toLowerCase().includes('clien')) corTextoPersp = "text-teal-400";
+                else if(nPersp.toLowerCase().includes('proc')) corTextoPersp = "text-blue-400";
+                else if(nPersp.toLowerCase().includes('apren') || nPersp.toLowerCase().includes('cresc')) corTextoPersp = "text-orange-400";
 
                 corpo.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100 text-[11px]">
+                    <tr class="hover:bg-slate-800/40 border-b border-slate-800 text-[11px]">
                         <td class="p-3 pl-5 font-black uppercase tracking-tight ${corTextoPersp}">${nPersp}</td>
-                        <td class="p-3 font-bold text-slate-800">${nKpi}</td>
-                        <td class="p-3 text-slate-500 font-medium">${nResp}</td>
-                        <td class="p-3 text-right font-mono font-bold text-slate-700">${nMeta}</td>
-                        <td class="p-3 text-right font-mono font-bold text-slate-900">${nReal}</td>
+                        <td class="p-3 font-bold text-slate-100">${nKpi}</td>
+                        <td class="p-3 text-slate-400 font-medium">${nResp}</td>
+                        <td class="p-3 text-right font-mono font-bold text-slate-300">${nMeta}</td>
+                        <td class="p-3 text-right font-mono font-bold text-white">${nReal}</td>
                         <td class="p-3 text-center">
-                            <span class="px-2 py-0.5 rounded-full border border-slate-200 font-bold bg-slate-50 text-slate-700">${ytdPct}%</span>
+                            <span class="px-2 py-0.5 rounded-full border border-slate-700 font-bold bg-slate-800 text-slate-300">${ytdPct}%</span>
                         </td>
                         <td class="p-3">
                             <div class="flex items-center gap-2">
-                                <span class="font-bold text-slate-700 w-8">${pctPA}%</span>
-                                <div class="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden border border-slate-200/60">
+                                <span class="font-bold text-slate-300 w-8">${pctPA}%</span>
+                                <div class="w-20 bg-slate-800 h-1.5 rounded-full overflow-hidden border border-slate-700">
                                     <div class="h-full ${pctPA >= 90 ? 'bg-green-500' : (pctPA >= 70 ? 'bg-amber-500' : 'bg-red-500')}" style="width: ${pctPA}%"></div>
                                 </div>
                             </div>
@@ -568,13 +587,13 @@
                 else if(pLower.includes('apren') || pLower.includes('cresc')) containerAlvo = containers.aprendizado;
 
                 containerAlvo.innerHTML += `
-                    <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-white border border-slate-200 p-3 rounded-xl w-60 min-h-[85px] obj-card relative flex flex-col justify-between shadow-3xs">
+                    <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-[#1f2937] border border-slate-700 p-3 rounded-xl w-60 min-h-[85px] obj-card relative flex flex-col justify-between shadow-md">
                         <div>
                             <div class="text-[9px] font-black text-slate-400 tracking-wider">${idCard}</div>
-                            <div class="text-[11px] font-bold text-slate-700 leading-snug mt-0.5">${nomeObj}</div>
+                            <div class="text-[11px] font-bold text-slate-100 leading-snug mt-0.5">${nomeObj}</div>
                         </div>
-                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100">
-                            <span class="text-[9px] text-blue-600 font-bold"><i class="fa-solid fa-layer-group mr-0.5"></i>Metas: ${kpisUnicos.length}</span>
+                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-700">
+                            <span class="text-[9px] text-blue-400 font-bold"><i class="fa-solid fa-layer-group mr-0.5"></i>Metas: ${kpisUnicos.length}</span>
                             <div class="w-2.5 h-2.5 rounded-full ${farolFinalObj}"></div>
                         </div>
                     </div>
@@ -632,10 +651,27 @@
                     labels: eixoXLabels,
                     datasets: [
                         { label: 'Meta', type: 'line', data: dadosMeta, borderColor: '#ef4444', borderWidth: 2, fill: false, tension: 0.1 },
-                        { label: 'Realizado', data: dadosResultado, backgroundColor: '#1a2e4c', borderRadius: 2 }
+                        { label: 'Realizado', data: dadosResultado, backgroundColor: '#3b82f6', borderRadius: 2 }
                     ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } }
+                    }
+                }
             });
 
             const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
@@ -647,18 +683,18 @@
             );
 
             if(!planosFiltrados.length) {
-                tCorpo.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-400 font-medium">Nenhuma iniciativa vinculada a este indicador.</td></tr>`;
+                tCorpo.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-500 font-medium">Nenhuma iniciativa vinculada a este indicador.</td></tr>`;
             } else {
                 planosFiltrados.forEach(p => {
                     let st = lerCampo(p, CHAVES.status);
-                    let corBadge = st.toLowerCase().includes('concl') ? "bg-green-50 text-green-700 border border-green-200" : (st.toLowerCase().includes('andam') ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-600 border border-slate-200");
+                    let corBadge = st.toLowerCase().includes('concl') ? "bg-green-950/40 text-green-400 border border-green-900" : (st.toLowerCase().includes('andam') ? "bg-amber-950/40 text-amber-400 border border-amber-900" : "bg-slate-800 text-slate-300 border border-slate-700");
 
                     let dataFim = formatarParaDiaMesAno(lerCampo(p, ['Prazo Fim', 'Fim']));
 
                     tCorpo.innerHTML += `
-                        <tr class="hover:bg-slate-50/60 text-[11px]">
-                            <td class="p-2.5 font-semibold text-slate-700">${lerCampo(p, ['AÇÃO', 'Acao'])}</td>
-                            <td class="p-2.5 font-bold text-slate-500">${lerCampo(p, ['RESPONSÁVEL', 'Responsável'])}</td>
+                        <tr class="hover:bg-slate-800/40 text-[11px]">
+                            <td class="p-2.5 font-semibold text-slate-200">${lerCampo(p, ['AÇÃO', 'Acao'])}</td>
+                            <td class="p-2.5 font-bold text-slate-400">${lerCampo(p, ['RESPONSÁVEL', 'Responsável'])}</td>
                             <td class="p-2.5 font-mono text-slate-400">${dataFim || '--'}</td>
                             <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${corBadge}">${st || 'Pendente'}</span></td>
                         </tr>
