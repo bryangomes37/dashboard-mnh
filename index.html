@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo de Governança | Novo Horizonte</title>
-    <!-- Tailwind CSS e FontAwesome para design scannable -->
+    <!-- Tailwind CSS e FontAwesome para design moderno e scannable -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -185,20 +185,22 @@
             <div class="mb-2">
                 <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos por Perspectiva</h2>
             </div>
-            <div class="flex items-stretch gap-4 min-h-[150px]">
-                <div class="w-36 bg-persp-financeira text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Financeira</div>
+            
+            <!-- Linhas de perspectiva idênticas ao modelo da imagem image_e00926.png -->
+            <div class="flex items-stretch gap-4 min-h-[140px] border-b border-slate-100 pb-4">
+                <div class="w-36 bg-persp-financeira text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Financeira</div>
                 <div id="cards-financeira" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-            <div class="flex items-stretch gap-4 min-h-[150px]">
-                <div class="w-36 bg-persp-clientes text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Clientes</div>
+            <div class="flex items-stretch gap-4 min-h-[140px] border-b border-slate-100 pb-4">
+                <div class="w-36 bg-persp-clientes text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Clientes</div>
                 <div id="cards-clientes" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-            <div class="flex items-stretch gap-4 min-h-[150px]">
-                <div class="w-36 bg-persp-processos text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Processos Internos</div>
+            <div class="flex items-stretch gap-4 min-h-[140px] border-b border-slate-100 pb-4">
+                <div class="w-36 bg-persp-processos text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Processos Internos</div>
                 <div id="cards-processos" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
-            <div class="flex items-stretch gap-4 min-h-[150px]">
-                <div class="w-36 bg-persp-aprendizado text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-3xs">Aprendizado & Crescimento</div>
+            <div class="flex items-stretch gap-4 min-h-[140px]">
+                <div class="w-36 bg-persp-aprendizado text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Aprendizado & Crescimento</div>
                 <div id="cards-aprendizado" class="flex flex-wrap items-center gap-4 flex-1"></div>
             </div>
         </section>
@@ -260,6 +262,7 @@
         </div>
     </div>
 
+    <!-- ENGINE LOGICA DO PAINEL -->
     <script>
         let dadosOriginais = { indicadores: [], planoAcao: [] };
         let graficoInstancia = null;
@@ -291,13 +294,22 @@
             return "";
         }
 
-        // Converte strings de planilhas ("2.000.000,50" ou "30%") em números puros seguros para math
-        function converterParaNumero(texto) {
-            if (!texto) return 0;
-            let limpo = texto.replace('%', '').trim();
-            limpo = limpo.replace(/\./g, '').replace(',', '.');
-            let num = parseFloat(limpo);
-            return isNaN(num) ? 0 : num;
+        // Função de formatação dinâmica baseada no tipo do indicador para herdar o visual da planilha
+        function formatarNumeroVisual(valor, ehPercentual) {
+            if (valor === undefined || valor === null || valor === "") return "--";
+            let num = parseFloat(valor);
+            if (isNaN(num)) return valor; // Se já vier tratado, mantém text
+            
+            if (ehPercentual) {
+                // Trata taxas de porcentagem do getValues (ex: 0.30 vira 30% ou 30 vira 30%)
+                if (num <= 1.1 && num > -1.1 && num !== 0) {
+                    return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num);
+                }
+                return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num) + "%";
+            } else {
+                // Formatação padrão brasileira para valores grandes (ex: 2072420.123 -> 2.072.420)
+                return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+            }
         }
 
         function verificarSeEhPercentual(nomeKpi) {
@@ -305,26 +317,36 @@
             return n.includes('%') || n.includes('margem') || n.includes('taxa') || n.includes('percentual');
         }
 
-        // Calcula o YTD correto cortando até onde tem dado real e decidindo entre Média ou Soma
+        // Calcula o YTD exato cortando até o mês que possui resultado preenchido
         function calcularYTDInteligente(historicoLinhas, ehPercentual) {
             let metasValidas = [];
             let resultadosValidos = [];
 
             for (let i = 0; i < historicoLinhas.length; i++) {
                 let rRaw = lerCampo(historicoLinhas[i], CHAVES.real);
-                if (rRaw !== "") {
-                    resultadosValidos.push(converterParaNumero(rRaw));
-                    metasValidas.push(converterParaNumero(lerCampo(historicoLinhas[i], CHAVES.meta)));
+                if (rRaw !== "" && rRaw !== null && rRaw !== undefined) {
+                    let rNum = parseFloat(rRaw);
+                    let mNum = parseFloat(lerCampo(historicoLinhas[i], CHAVES.meta));
+                    if (!isNaN(rNum)) {
+                        resultadosValidos.push(rNum);
+                        metasValidas.push(isNaN(mNum) ? 0 : mNum);
+                    }
                 }
             }
 
             if (resultadosValidos.length === 0) return 0;
 
             if (ehPercentual) {
+                // Regra para Percentual: Média dos Resultados / Média das Metas
                 let mediaReal = resultadosValidos.reduce((a,b)=>a+b, 0) / resultadosValidos.length;
                 let mediaMeta = metasValidas.reduce((a,b)=>a+b, 0) / metasValidas.length;
-                return mediaMeta === 0 ? 0 : Math.round((mediaReal / mediaMeta) * 100);
+                
+                // Se as metas vierem como base decimal (ex: 0.8), calcula proporção direta
+                if (mediaMeta === 0) return 0;
+                let proporcao = mediaReal / mediaMeta;
+                return Math.round(proporcao * 100);
             } else {
+                // Regra para Valor Padrão/Financeiro: Soma dos Resultados / Soma das Metas
                 let somaReal = resultadosValidos.reduce((a,b)=>a+b, 0);
                 let somaMeta = metasValidas.reduce((a,b)=>a+b, 0);
                 return somaMeta === 0 ? 0 : Math.round((somaReal / somaMeta) * 100);
@@ -339,19 +361,11 @@
 
         function formatarDataMesAno(textoData) {
             if (!textoData) return "";
-            if (textoData.includes('/')) return textoData;
+            if (textoData.includes('/')) return textoData.substring(0, 7);
             let data = new Date(textoData);
             if (isNaN(data.getTime())) return textoData;
             const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
             return `${meses[data.getUTCMonth()]}/${String(data.getUTCFullYear()).slice(-2)}`;
-        }
-
-        function formatarParaDiaMesAno(valor) {
-            if (!valor) return "";
-            let str = String(valor).trim();
-            let matchISO = str.match(/(\d{4})-(\d{2})-(\d{2})/);
-            if (matchISO) return `${matchISO[3]}/${matchISO[2]}/${matchISO[1]}`;
-            return str.split('T')[0];
         }
 
         function alternarTela(tela) {
@@ -363,7 +377,7 @@
         }
 
         window.onload = function() {
-            const urlSalva = localStorage.getItem('nh_script_url_v10');
+            const urlSalva = localStorage.getItem('nh_script_url_v11');
             if(urlSalva) {
                 document.getElementById('urlInputScript').value = urlSalva;
                 buscarDadosOnline(urlSalva);
@@ -373,7 +387,7 @@
         function conectarPlanilha() {
             const url = document.getElementById('urlInputScript').value.trim();
             if(url) {
-                localStorage.setItem('nh_script_url_v10', url);
+                localStorage.setItem('nh_script_url_v11', url);
                 buscarDadosOnline(url);
             }
         }
@@ -385,19 +399,24 @@
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
-                    if(data.indicadores && data.planoAcao) {
+                    if(data && (data.indicadores || data.status === "sucesso")) {
                         dadosOriginais = data;
                         ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Conectada e Sincronizada`;
                         
                         document.getElementById('filtroResponsavel').innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
                         let listUser = new Set();
-                        data.indicadores.forEach(i => { let r = lerCampo(i, CHAVES.resp); if(r) listUser.add(r); });
+                        let listaKpis = data.indicadores || [];
+                        listaKpis.forEach(i => { let r = lerCampo(i, CHAVES.resp); if(r) listUser.add(r); });
                         Array.from(listUser).sort().forEach(u => {
                             document.getElementById('filtroResponsavel').innerHTML += `<option value="${u}">${u}</option>`;
                         });
 
                         atualizarPainelGeral();
+                    } else {
+                        ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Falha na estrutura de dados`;
                     }
+                }).catch(err => {
+                    ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Erro de Conexão`;
                 });
         }
 
@@ -415,7 +434,9 @@
         }
 
         function renderizarResumoTabela() {
-            if(!dadosOriginais.indicadores.length) return;
+            let listaKpis = dadosOriginais.indicadores || [];
+            if(!listaKpis.length) return;
+            
             const fResp = document.getElementById('filtroResponsavel').value;
             const fPersp = document.getElementById('filtroPerspectiva').value;
             const fStat = document.getElementById('filtroStatus').value;
@@ -425,7 +446,7 @@
             corpo.innerHTML = "";
 
             let agrupados = {};
-            dadosOriginais.indicadores.forEach(linha => {
+            listaKpis.forEach(linha => {
                 let chaveUnica = lerCampo(linha, CHAVES.obj) + "||" + lerCampo(linha, CHAVES.kpi);
                 if (!agrupados[chaveUnica]) agrupados[chaveUnica] = [];
                 agrupados[chaveUnica].push(linha);
@@ -436,7 +457,9 @@
 
             for (let chave in agrupados) {
                 let historico = agrupados[chave];
-                historico.sort((a, b) => new Date(lerCampo(a, CHACES || CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
+                
+                // CORREÇÃO DA VARIÁVEL DE ERRO SILENCIOSO (CHACES corrigido para CHAVES)
+                historico.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
                 
                 let recente = historico.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historico[historico.length - 1];
 
@@ -444,8 +467,9 @@
                 let nKpi = lerCampo(recente, CHAVES.kpi);
                 let nPersp = lerCampo(recente, CHAVES.persp);
                 let nResp = lerCampo(recente, CHAVES.resp);
-                let nMetaTexto = lerCampo(recente, CHAVES.meta); // Mantém formatação textual direta da planilha
-                let nRealTexto = lerCampo(recente, CHAVES.real); // Mantém formatação textual direta da planilha
+                
+                let rawMeta = lerCampo(recente, CHAVES.meta);
+                let rawReal = lerCampo(recente, CHAVES.real);
 
                 let ehPct = verificarSeEhPercentual(nKpi);
                 let ytdPct = calcularYTDInteligente(historico, ehPct);
@@ -456,7 +480,7 @@
                 if (fPersp !== "Todos" && !nPersp.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
                 if (fStat !== "Todos" && textoFarol !== fStat) continue;
 
-                let acoesDoKpi = dadosOriginais.planoAcao.filter(p => 
+                let acoesDoKpi = (dadosOriginais.planoAcao || []).filter(p => 
                     lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === nObj.toLowerCase().trim() && 
                     lerCampo(p, CHAVES.kpi).toLowerCase().trim() === nKpi.toLowerCase().trim()
                 );
@@ -495,8 +519,8 @@
                         <td class="p-3 pl-5 font-black uppercase tracking-tight ${corTextoPersp}">${nPersp}</td>
                         <td class="p-3 font-bold text-slate-800">${nKpi}</td>
                         <td class="p-3 text-slate-500 font-medium">${nResp}</td>
-                        <td class="p-3 text-right font-mono font-black text-slate-700">${nMetaTexto}</td>
-                        <td class="p-3 text-right font-mono font-black text-slate-900">${nRealTexto || '--'}</td>
+                        <td class="p-3 text-right font-mono font-black text-slate-700">${formatarNumeroVisual(rawMeta, ehPct)}</td>
+                        <td class="p-3 text-right font-mono font-black text-slate-900">${formatarNumeroVisual(rawReal, ehPct)}</td>
                         <td class="p-3 text-center">
                             <span class="px-2 py-0.5 rounded-full border border-slate-200 font-black bg-slate-50 text-slate-700">${ytdPct}%</span>
                         </td>
@@ -524,15 +548,17 @@
             document.getElementById('card-media-planos').innerText = totalKpisComPlanos > 0 ? Math.round(somaGlobalProgressoPlanos / totalKpisComPlanos) + "%" : "0%";
         }
 
-        // ALTERAÇÃO COMPLETA DOS CARDS DO MAPA ESTRATÉGICO CONFORME SOLICITADO
+        // EXECUÇÃO DO NOVO RODAPÉ DUPLO COMPACTO PARA OS CARDS DO MAPA ESTRATÉGICO
         function renderizarMapaEstrategico() {
-            if(!dadosOriginais.indicadores.length) return;
+            let listaKpis = dadosOriginais.indicadores || [];
+            if(!listaKpis.length) return;
+            
             const fResp = document.getElementById('filtroResponsavel').value;
             const fPersp = document.getElementById('filtroPerspectiva').value;
             const fStat = document.getElementById('filtroStatus').value;
 
             let objetivosAgrupados = {};
-            dadosOriginais.indicadores.forEach(linha => {
+            listaKpis.forEach(linha => {
                 let nomeObj = lerCampo(linha, CHAVES.obj);
                 if(!nomeObj) return;
                 if(!objetivosAgrupados[nomeObj]) objetivosAgrupados[nomeObj] = [];
@@ -569,14 +595,13 @@
                     idCard = lerCampo(topo, CHAVES.id) || idCard;
                     perspectivaCard = lerCampo(topo, CHAVES.persp);
 
-                    if (fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
+                    if (fResp === "Tomar" || fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
                 });
 
                 let ytdMedioObjetivo = contKpisValidosParaFiltro > 0 ? Math.round(somaYtdKpis / contKpisValidosParaFiltro) : 0;
                 let farolResultadosObj = converterFarolPorPorcentagem(ytdMedioObjetivo);
 
-                // Captura todas as ações deste objetivo estratégico estruturado
-                let acoesDoObj = dadosOriginais.planoAcao.filter(p => 
+                let acoesDoObj = (dadosOriginais.planoAcao || []).filter(p => 
                     lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === nomeObj.toLowerCase().trim()
                 );
                 let totalAcoes = acoesDoObj.length;
@@ -596,9 +621,9 @@
                 else if(pLower.includes('clien')) containerAlvo = containers.clientes;
                 else if(pLower.includes('apren') || pLower.includes('cresc')) containerAlvo = containers.aprendizado;
 
-                // NOVO LAYOUT DO CARD DA IMAGEM image_e08c92.png COM DUPLO FILTRO % E FARÓIS INDEPENDENTES
+                // DESIGN ENRIQUECIDO DO NOVO CARD DO MAPA ESTRATÉGICO
                 containerAlvo.innerHTML += `
-                    <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-white border border-slate-200 p-3.5 rounded-xl w-64 h-36 obj-card relative flex flex-col justify-between shadow-2xs">
+                    <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-white border border-slate-200 p-3 rounded-xl w-64 h-36 obj-card relative flex flex-col justify-between shadow-2xs">
                         <div class="overflow-hidden">
                             <div class="flex justify-between items-center text-[9px] font-black text-slate-400 tracking-wider">
                                 <span>${idCard}</span>
@@ -607,8 +632,8 @@
                             <div class="text-[11px] font-bold text-slate-700 leading-snug mt-1 line-clamp-2" title="${nomeObj}">${nomeObj}</div>
                         </div>
                         
-                        <!-- NOVO RODAPÉ COM % ATINGIMENTO + FAROL E % P.A + FAROL -->
-                        <div class="pt-2 border-t border-slate-100 space-y-1.5 text-[10px] font-bold">
+                        <!-- FILTRO DUPLO DO RODAPÉ COM % RESULTADO + FAROL E % PLANO AÇÃO + FAROL -->
+                        <div class="pt-2 border-t border-slate-100 space-y-1 text-[10px] font-bold">
                             <div class="flex justify-between items-center text-slate-500">
                                 <span class="flex items-center gap-1"><i class="fa-solid fa-chart-line text-slate-400 w-3.5"></i>Resultados (YTD): <strong class="text-slate-800 ml-0.5">${ytdMedioObjetivo}%</strong></span>
                                 <div class="w-2.5 h-2.5 rounded-full ${farolResultadosObj}" title="Atingimento das Metas"></div>
@@ -625,7 +650,8 @@
 
         function abrirDetalhesObjetivo(nomeDoObjetivo) {
             objetivoSelecionadoAtual = nomeDoObjetivo;
-            let linesDoObj = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === nomeDoObjetivo);
+            let listaKpis = dadosOriginais.indicadores || [];
+            let linesDoObj = listaKpis.filter(i => lerCampo(i, CHAVES.obj) === nomeDoObjetivo);
             if(!linesDoObj.length) return;
 
             document.getElementById('modalIdObj').innerText = lerCampo(linesDoObj[0], CHAVES.id) || "OBJETIVO";
@@ -644,14 +670,16 @@
 
         function mudarIndicadorNoModal() {
             let kpiSelecionado = document.getElementById('modalSelectKpi').value;
-            cacheHistoricoModal = dadosOriginais.indicadores.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
+            let listaKpis = dadosOriginais.indicadores || [];
+            cacheHistoricoModal = listaKpis.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
             
             cacheHistoricoModal.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
             let topo = cacheHistoricoModal.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || cacheHistoricoModal[cacheHistoricoModal.length - 1];
             
+            let ehPct = verificarSeEhPercentual(kpiSelecionado);
             document.getElementById('modalLider').innerText = lerCampo(topo, CHAVES.resp) || "--";
-            document.getElementById('modalMetaValor').innerText = lerCampo(topo, CHAVES.meta) || "--";
-            document.getElementById('modalRealValor').innerText = lerCampo(topo, CHAVES.real) || "--";
+            document.getElementById('modalMetaValor').innerText = formatarNumeroVisual(lerCampo(topo, CHAVES.meta), ehPct);
+            document.getElementById('modalRealValor').innerText = formatarNumeroVisual(lerCampo(topo, CHAVES.real), ehPct);
 
             const selectAno = document.getElementById('modalFiltroAno');
             selectAno.innerHTML = '<option value="Total">Histórico Total</option>';
@@ -685,8 +713,8 @@
 
             dadosFiltrados.forEach(reg => {
                 eixoXLabels.push(formatarDataMesAno(lerCampo(reg, CHAVES.mes)));
-                dadosMeta.push(converterParaNumero(lerCampo(reg, CHAVES.meta)));
-                dadosResultado.push(converterParaNumero(lerCampo(reg, CHAVES.real)));
+                dadosMeta.push(parseFloat(lerCampo(reg, CHAVES.meta)) || 0);
+                dadosResultado.push(parseFloat(lerCampo(reg, CHAVES.real)) || 0);
             });
 
             if (graficoInstancia) graficoInstancia.destroy();
@@ -708,7 +736,7 @@
             const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
             tCorpo.innerHTML = "";
 
-            let planosFiltrados = dadosOriginais.planoAcao.filter(p => 
+            let planosFiltrados = (dadosOriginais.planoAcao || []).filter(p => 
                 lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === objetivoSelecionadoAtual.toLowerCase().trim() && 
                 lerCampo(p, CHAVES.kpi).toLowerCase().trim() === kpiSelecionado.toLowerCase().trim()
             );
@@ -719,11 +747,11 @@
                 planosFiltrados.forEach(p => {
                     let st = lerCampo(p, CHAVES.status);
                     let corBadge = st.toLowerCase().includes('concl') ? "bg-green-50 text-green-700 border border-green-200" : (st.toLowerCase().includes('andam') ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-600 border border-slate-200");
-                    let dataFim = formatarParaDiaMesAno(lerCampo(p, ['Prazo Fim', 'Fim']));
+                    let dataFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo']);
 
                     tCorpo.innerHTML += `
                         <tr class="hover:bg-slate-50/60 text-[11px]">
-                            <td class="p-2.5 font-semibold text-slate-700">${lerCampo(p, ['AÇÃO', 'Acao'])}</td>
+                            <td class="p-2.5 font-semibold text-slate-700">${lerCampo(p, ['AÇÃO', 'Acao', 'Atividade'])}</td>
                             <td class="p-2.5 font-bold text-slate-500">${lerCampo(p, ['RESPONSÁVEL', 'Responsável'])}</td>
                             <td class="p-2.5 font-mono text-slate-400">${dataFim || '--'}</td>
                             <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${corBadge}">${st || 'Pendente'}</span></td>
