@@ -18,9 +18,15 @@
         .farol-vermelho { background-color: #ef4444; border: 2px solid #dc2626; }
         .farol-sem-dados { background-color: #cbd5e1; border: 2px solid #94a3b8; }
 
-        /* Tamanho estético estrito e uniforme para os Cards */
+        /* Dimensão e Padronização Estrita dos Cards do Mapa Estratégico */
         .obj-card { 
-            height: 125px; 
+            height: 140px;
+            min-height: 140px;
+            max-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
             transition: all 0.2s ease-in-out; 
             cursor: pointer; 
         }
@@ -153,7 +159,7 @@
                 <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
                     <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-clipboard-list"></i></div>
                     <div>
-                        <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">% MÉDIO EXECUÇÃO P.A.</span>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">% GOVERNANÇA P.A.</span>
                         <h3 id="card-media-planos" class="text-xl font-black text-purple-600 mt-1">--</h3>
                     </div>
                 </div>
@@ -186,29 +192,29 @@
                 <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos com Status de Indicadores e Iniciativas</h2>
             </div>
             
-            <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[140px]">
+            <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[160px]">
                 <div class="w-40 bg-persp-financeira text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Financeira</div>
-                <div id="cards-financeira" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 flex-1 p-1"></div>
+                <div id="cards-financeira" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
             
-            <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[140px]">
+            <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[160px]">
                 <div class="w-40 bg-persp-clientes text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Clientes</div>
-                <div id="cards-clientes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 flex-1 p-1"></div>
+                <div id="cards-clientes" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
             
-            <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[140px]">
+            <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[160px]">
                 <div class="w-40 bg-persp-processos text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Processos Internos</div>
-                <div id="cards-processos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 flex-1 p-1"></div>
+                <div id="cards-processos" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
             
-            <div class="flex items-stretch gap-4 min-h-[140px]">
+            <div class="flex items-stretch gap-4 min-h-[160px]">
                 <div class="w-40 bg-persp-aprendizado text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Aprendizado & Crescimento</div>
-                <div id="cards-aprendizado" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 flex-1 p-1"></div>
+                <div id="cards-aprendizado" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
         </section>
     </main>
 
-    <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden animate-fade-in">
+    <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto shadow-2xl flex flex-col">
             
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#1a2e4c] text-white rounded-t-2xl">
@@ -220,7 +226,6 @@
             </div>
             
             <div class="p-6 space-y-6 flex-1">
-                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
                     <div>
                         <label class="text-[10px] text-slate-400 font-bold uppercase block mb-1"><i class="fa-solid fa-chart-line mr-1"></i> Selecione o Indicador</label>
@@ -330,12 +335,9 @@
             let s = String(valor).trim();
             let num = limparNumero(s);
             if (num === 0 && s !== "0" && s !== "0%") return "--";
-            
             if (ehPercentual) {
                 if (s.includes('%')) return num + "%";
-                if (num <= 1.1 && num > -1.1 && num !== 0) {
-                    return new Intl.NumberFormat('pt-BR', { style: 'percent' }).format(num);
-                }
+                if (num <= 1.1 && num > -1.1 && num !== 0) return new Intl.NumberFormat('pt-BR', { style: 'percent' }).format(num);
                 return num + "%";
             }
             return new Intl.NumberFormat('pt-BR').format(num);
@@ -346,19 +348,68 @@
             return n.includes('%') || n.includes('margem') || n.includes('taxa') || n.includes('percentual');
         }
 
+        // PARSER DE DATA ULTRA-ROBUSTO PARA GOVERNANÇA DE PRAZOS FUTUROS
+        function mapearStringParaData(str) {
+            let s = String(str).trim();
+            if (s.includes('-')) {
+                let partes = s.split('-');
+                if (partes[0].length === 4) return new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]) || 1);
+            }
+            if (s.includes('/')) {
+                let partes = s.split('/');
+                if (partes.length === 3) {
+                    return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+                } else if (partes.length === 2) {
+                    let mesStr = partes[0];
+                    let anoStr = partes[1];
+                    let ano = parseInt(anoStr);
+                    if (anoStr.length === 2 || ano < 100) ano += 2000;
+                    let mes = parseInt(mesStr) - 1;
+                    if (isNaN(mes)) mes = obterMesPorExtenso(mesStr);
+                    return new Date(ano, mes, 28);
+                }
+            }
+            let anoMatch = s.match(/\b\d{4}\b/) || s.match(/[\/\s'](\d{2})\b/);
+            let ano = anoMatch ? parseInt(anoMatch[0].replace(/[\/\s']/g, '')) : new Date().getFullYear();
+            if (ano < 100) ano += 2000;
+            let mes = obterMesPorExtenso(s);
+            return new Date(ano, mes, 28);
+        }
+
+        function obterMesPorExtenso(s) {
+            let text = s.toLowerCase();
+            let meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+            for(let i=0; i<12; i++) {
+                if (text.includes(meses[i])) return i;
+            }
+            return 0;
+        }
+
+        // REGRA DE GOVERNANÇA EXECUTIVA: Se o prazo final é superior à data de hoje, a ação está "Em Dia" (Verde)
+        function verificarAcaoEmDia(p) {
+            let st = lerCampo(p, CHAVES.status).toLowerCase();
+            if (st.includes('concl') || st.includes('feito') || st.includes('ok')) return true;
+
+            let prazoStr = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo', 'Vencimento']);
+            if (!prazoStr || prazoStr === '--') return false;
+
+            try {
+                let hoje = new Date(); 
+                let dataPrazo = mapearStringParaData(prazoStr);
+                if (dataPrazo >= hoje) return true; 
+            } catch(e) { }
+            return false;
+        }
+
         function calcularYTDInteligente(historicoLinhas) {
-            let metasValidas = [];
-            let resultadosValidos = [];
-            
+            let metasValidas = []; let resultadosValidos = [];
             historicoLinhas.forEach(l => {
-                let rRaw = lerCampo(l, CHAVES.real);
-                let mRaw = lerCampo(l, CHAVES.meta);
+                let rRaw = lerCampo(l, CHAVES.real); let mRaw = lerCampo(l, CHAVES.meta);
                 if (rRaw !== "" && rRaw !== "--") {
                     resultadosValidos.push(limparNumero(rRaw));
                     metasValidas.push(limparNumero(mRaw));
                 }
             });
-            
             if (resultadosValidos.length === 0) return 0;
             let somaReal = resultadosValidos.reduce((a,b)=>a+b, 0);
             let somaMeta = metasValidas.reduce((a,b)=>a+b, 0);
@@ -373,8 +424,8 @@
         }
 
         function converterFarolPA(pct) {
-            if (pct === 100) return 'farol-verde';
-            if (pct >= 70 && pct < 100) return 'farol-amarelo';
+            if (pct >= 90) return 'farol-verde';
+            if (pct >= 70 && pct < 90) return 'farol-amarelo';
             return 'farol-vermelho';
         }
 
@@ -384,6 +435,7 @@
             document.getElementById('tela-mapa').classList.toggle('hidden', tela !== 'mapa');
             document.getElementById('btn-tab-resumo').classList.toggle('tab-ativa', tela === 'resumo');
             document.getElementById('btn-tab-mapa').classList.toggle('tab-ativa', tela === 'mapa');
+            if(tela === 'mapa') renderMapaEstrategico();
         }
 
         window.onload = function() {
@@ -407,9 +459,7 @@
                     };
                     ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Sincronizada`;
                     
-                    let listUser = new Set();
-                    let listMeses = new Set();
-                    
+                    let listUser = new Set(); let listMeses = new Set();
                     dadosOriginais.indicadores.forEach(i => { 
                         let r = lerCampo(i, CHAVES.resp); if(r) listUser.add(r); 
                         let m = lerCampo(i, CHAVES.mes); if(m) listMeses.add(m);
@@ -417,7 +467,6 @@
 
                     document.getElementById('filtroResponsavel').innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
                     Array.from(listUser).sort().forEach(u => { document.getElementById('filtroResponsavel').innerHTML += `<option value="${u}">${u}</option>`; });
-
                     document.getElementById('filtroMesAno').innerHTML = '<option value="Todos">-- Todos os Meses --</option>';
                     Array.from(listMeses).forEach(m => { document.getElementById('filtroMesAno').innerHTML += `<option value="${m}">${m}</option>`; });
 
@@ -451,13 +500,9 @@
 
             let agrupados = {};
             listaKpis.forEach(linha => {
-                let nLider = lerCampo(linha, CHAVES.resp);
-                let nMes = lerCampo(linha, CHAVES.mes);
-                let nPersp = lerCampo(linha, CHAVES.persp);
-
-                if (fLider !== "Todos" && nLider !== fLider) return;
-                if (fMes !== "Todos" && nMes !== fMes) return;
-                if (fPersp !== "Todos" && normalizarTexto(nPersp) !== normalizarTexto(fPersp)) return;
+                if (fLider !== "Todos" && lerCampo(linha, CHAVES.resp) !== fLider) return;
+                if (fMes !== "Todos" && lerCampo(linha, CHAVES.mes) !== fMes) return;
+                if (fPersp !== "Todos" && normalizarTexto(lerCampo(linha, CHAVES.persp)) !== normalizarTexto(fPersp)) return;
 
                 let chaveUnica = lerCampo(linha, CHAVES.obj) + "||" + lerCampo(linha, CHAVES.kpi);
                 if (!agrupados[chaveUnica]) agrupados[chaveUnica] = [];
@@ -471,12 +516,9 @@
                 let historico = agrupados[chave];
                 let recente = historico.filter(l => { let r = lerCampo(l, CHAVES.real); return r !== "" && r !== "--"; }).pop() || historico[historico.length - 1];
 
-                let nObj = lerCampo(recente, CHAVES.obj);
-                let nKpi = lerCampo(recente, CHAVES.kpi);
-                let nPersp = lerCampo(recente, CHAVES.persp);
-                let nResp = lerCampo(recente, CHAVES.resp);
-                let rawMeta = lerCampo(recente, CHAVES.meta);
-                let rawReal = lerCampo(recente, CHAVES.real);
+                let nObj = lerCampo(recente, CHAVES.obj); let nKpi = lerCampo(recente, CHAVES.kpi);
+                let nPersp = lerCampo(recente, CHAVES.persp); let nResp = lerCampo(recente, CHAVES.resp);
+                let rawMeta = lerCampo(recente, CHAVES.meta); let rawReal = lerCampo(recente, CHAVES.real);
                 let ehPct = verificarSeEhPercentual(nKpi);
 
                 let ytdPct = calcularYTDInteligente(historico);
@@ -498,26 +540,17 @@
                     normalizarTexto(lerCampo(p, CHAVES.kpi)) === normalizarTexto(nKpi)
                 );
 
-                let textoPctPA = "--";
-                let farolPA = "farol-sem-dados";
-                let larguraBarra = 0;
-                let corBarra = "bg-slate-300";
+                let textoPctPA = "--"; let farolPA = "farol-sem-dados"; let larguraBarra = 0; let corBarra = "bg-slate-300";
 
                 if (acoesDoKpi.length > 0) {
-                    let totalAcoes = acoesDoKpi.length;
-                    let concluidas = acoesDoKpi.filter(p => {
-                        let st = lerCampo(p, CHAVES.status).toLowerCase();
-                        return st.includes('concl') || st.includes('feito') || st.includes('ok');
-                    }).length;
-
-                    let pctFinal = Math.round((concluidas / totalAcoes) * 100);
+                    let emDiaCount = acoesDoKpi.filter(verificarAcaoEmDia).length;
+                    let pctFinal = Math.round((emDiaCount / acoesDoKpi.length) * 100);
                     textoPctPA = pctFinal + "%";
                     larguraBarra = pctFinal;
                     farolPA = converterFarolPA(pctFinal);
-                    corBarra = pctFinal === 100 ? 'bg-green-500' : (pctFinal >= 70 ? 'bg-amber-500' : 'bg-red-500');
+                    corBarra = pctFinal >= 90 ? 'bg-green-500' : (pctFinal >= 70 ? 'bg-amber-500' : 'bg-red-500');
 
-                    somaGlobalPA += pctFinal;
-                    kpisComPaContados++;
+                    somaGlobalPA += pctFinal; kpisComPaContados++;
                 }
 
                 let corTextoPersp = "text-amber-600";
@@ -557,50 +590,35 @@
             document.getElementById('card-media-planos').innerText = kpisComPaContados > 0 ? Math.round(somaGlobalPA / kpisComPaContados) + "%" : "--";
         }
 
-        // RENDERIZAÇÃO DO MAPA COM ELEMENTOS EM DESIGN GRADE UNIFORME E DADOS DUPLOS
+        // TELA 2: MAPA ESTRATÉGICO COM CARDS RIGOROSAMENTE PADRONIZADOS
         function renderMapaEstrategico() {
-            const cFin = document.getElementById('cards-financeira');
-            const cCli = document.getElementById('cards-clientes');
-            const cPro = document.getElementById('cards-processos');
-            const cApr = document.getElementById('cards-aprendizado');
-
+            const cFin = document.getElementById('cards-financeira'); const cCli = document.getElementById('cards-clientes');
+            const cPro = document.getElementById('cards-processos'); const cApr = document.getElementById('cards-aprendizado');
             cFin.innerHTML = ""; cCli.innerHTML = ""; cPro.innerHTML = ""; cApr.innerHTML = "";
 
             let listaKpis = dadosOriginais.indicadores || [];
             let objetivosMapeados = {};
 
             listaKpis.forEach(linha => {
-                let objName = lerCampo(linha, CHAVES.obj);
-                let persp = lerCampo(linha, CHAVES.persp);
+                let objName = lerCampo(linha, CHAVES.obj); let persp = lerCampo(linha, CHAVES.persp);
                 if(!objName || !persp) return;
-
-                if(!objetivosMapeados[objName]) {
-                    objetivosMapeados[objName] = { nome: objName, perspectiva: persp, historicos: [] };
-                }
+                if(!objetivosMapeados[objName]) objetivosMapeados[objName] = { nome: objName, perspectiva: persp, historicos: [] };
                 objetivosMapeados[objName].historicos.push(linha);
             });
 
             for (let name in objetivosMapeados) {
                 let obj = objetivosMapeados[name];
-                
                 let pctObjetivo = calcularYTDInteligente(obj.historicos);
                 let farolCorKpi = converterFarolPorPorcentagem(pctObjetivo);
                 
-                // Cálculo consolidado do Plano de Ação para este objetivo
                 let acoesDoObj = (dadosOriginais.planoAcao || []).filter(p => 
                     normalizarTexto(lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo'])) === normalizarTexto(obj.nome)
                 );
 
-                let pctPA = 0;
-                let farolCorPA = "farol-sem-dados";
-                let textoPA = "--";
-
+                let pctPA = 0; let farolCorPA = "farol-sem-dados"; let textoPA = "--";
                 if (acoesDoObj.length > 0) {
-                    let concluidas = acoesDoObj.filter(p => {
-                        let st = lerCampo(p, CHAVES.status).toLowerCase();
-                        return st.includes('concl') || st.includes('feito') || st.includes('ok');
-                    }).length;
-                    pctPA = Math.round((concluidas / acoesDoObj.length) * 100);
+                    let emDiaCount = acoesDoObj.filter(verificarAcaoEmDia).length;
+                    pctPA = Math.round((emDiaCount / acoesDoObj.length) * 100);
                     farolCorPA = converterFarolPA(pctPA);
                     textoPA = pctPA + "%";
                 }
@@ -612,10 +630,10 @@
 
                 let cardHtml = `
                     <div onclick="abrirModalObjetivo('${obj.nome.replace(/'/g, "\\'")}')" class="obj-card bg-white border border-slate-200 border-l-4 ${bordaCor} p-3 rounded-r-xl flex flex-col justify-between shadow-2xs">
-                        <p class="text-[10px] font-black text-slate-800 leading-tight uppercase line-clamp-2 tracking-tight">${obj.nome}</p>
+                        <p class="text-[11px] font-black text-slate-800 leading-tight uppercase line-clamp-3 tracking-tight mb-2" title="${obj.nome}">${obj.nome}</p>
                         <div class="grid grid-cols-2 gap-1.5 pt-2 border-t border-slate-100 text-[9px] font-bold">
                             <div class="flex items-center justify-between bg-slate-50 border border-slate-100 p-1 rounded">
-                                <span class="text-slate-500">KPI: ${pctObjetivo}%</span>
+                                <span class="text-slate-500">KPI YTD: ${pctObjetivo}%</span>
                                 <div class="w-2 h-2 rounded-full ${farolCorKpi}"></div>
                             </div>
                             <div class="flex items-center justify-between bg-slate-50 border border-slate-100 p-1 rounded">
@@ -631,15 +649,8 @@
                 else if (obj.perspectiva.toLowerCase().includes('proc')) cPro.innerHTML += cardHtml;
                 else if (obj.perspectiva.toLowerCase().includes('apren')) cApr.innerHTML += cardHtml;
             }
-
-            const fallback = '<span class="text-[10px] text-slate-400 italic p-2">Nenhum objetivo ativo para este filtro</span>';
-            if(!cFin.innerHTML) cFin.innerHTML = fallback;
-            if(!cCli.innerHTML) cCli.innerHTML = fallback;
-            if(!cPro.innerHTML) cPro.innerHTML = fallback;
-            if(!cApr.innerHTML) cApr.innerHTML = fallback;
         }
 
-        // ENTRADA E GERENCIAMENTO DO MODAL DE SELEÇÃO INTERNA
         function abrirModalObjetivo(nomeObjetivo) {
             objetivoSelecionadoModal = nomeObjetivo;
             let linhasIndicadores = (dadosOriginais.indicadores || []).filter(i => 
@@ -648,26 +659,24 @@
 
             if(linhasIndicadores.length === 0) return;
 
-            // Preenche metadados do topo
             document.getElementById('modalTituloObjetivo').innerText = nomeObjetivo;
             document.getElementById('modalPerspectiva').innerText = lerCampo(linhasIndicadores[0], CHAVES.persp);
 
-            // Popula os KPIs vinculados de forma única
             let kpisUnicos = new Set();
             linhasIndicadores.forEach(l => { kpisUnicos.add(lerCampo(l, CHAVES.kpi)); });
             
             let selectKpi = document.getElementById('modalSelectKpi');
             selectKpi.innerHTML = "";
-            Array.from(kpisUnicos).forEach(k => {
-                selectKpi.innerHTML += `<option value="${k}">${k}</option>`;
-            });
+            Array.from(kpisUnicos).forEach(k => { selectKpi.innerHTML += `<option value="${k}">${k}</option>`; });
 
-            // Extração de anos inteligentes baseada no histórico de meses
+            // FILTRAGEM E MAPEAMENTO DO ANO ATUALIZADOS
             let anosUnicos = new Set();
             linhasIndicadores.forEach(l => {
                 let mStr = lerCampo(l, CHAVES.mes);
-                let extrai = mStr.match(/\d{4}/);
-                if(extrai) anosUnicos.add(extrai[0]);
+                let dObj = mapearStringParaData(mStr);
+                if(dObj && !isNaN(dObj.getFullYear())) {
+                    anosUnicos.add(dObj.getFullYear());
+                }
             });
 
             let selectAno = document.getElementById('modalSelectAno');
@@ -690,7 +699,7 @@
             renderizarPlanosDeAcaoModal();
         }
 
-        // RENDERIZAÇÃO DO GRÁFICO (CHART.JS) COM FILTRO DE ANO E EIXO MÊS/ANO
+        // GRÁFICO MISTO TOTALMENTE PROTEGIDO E CORRIGIDO
         function renderizarGraficoModal() {
             let kpiSelecionado = document.getElementById('modalSelectKpi').value;
             let anoSelecionado = document.getElementById('modalSelectAno').value;
@@ -700,21 +709,22 @@
                 lerCampo(i, CHAVES.kpi) === kpiSelecionado
             );
 
-            // Filtro dinâmico por ano no gráfico
+            // Filtragem direta pelo ano selecionado baseado na data normalizada
             if(anoSelecionado !== "Todos") {
-                linhasKpi = linhasKpi.filter(i => lerCampo(i, CHAVES.mes).includes(anoSelecionado));
+                linhasKpi = linhasKpi.filter(i => {
+                    let mStr = lerCampo(i, CHAVES.mes);
+                    let dObj = mapearStringParaData(mStr);
+                    return dObj.getFullYear() === parseInt(anoSelecionado);
+                });
             }
 
-            // Atualização dos faróis informativos superiores internos
             let ytdKpi = calcularYTDInteligente(linhasKpi);
             document.getElementById('modalFarolKpi').className = "w-4 h-4 rounded-full mx-auto mt-1 " + converterFarolPorPorcentagem(ytdKpi);
 
-            let labelsMesAno = [];
-            let dadosMetas = [];
-            let dadosRealizados = [];
+            let labelsMesAno = []; let dadosMetas = []; let dadosRealizados = [];
 
             linhasKpi.forEach(l => {
-                labelsMesAno.push(lerCampo(l, CHAVES.mes)); // Exibe o Mês/Ano real no Eixo X
+                labelsMesAno.push(lerCampo(l, CHAVES.mes)); // Injeta a data no eixo X
                 dadosMetas.push(limparNumero(lerCampo(l, CHAVES.meta)));
                 dadosRealizados.push(limparNumero(lerCampo(l, CHAVES.real)));
             });
@@ -723,43 +733,52 @@
 
             const ctx = document.getElementById('modalGraficoCanvas').getContext('2d');
             graficoInstanciaModal = new Chart(ctx, {
-                type: 'line',
                 data: {
                     labels: labelsMesAno,
                     datasets: [
                         {
-                            label: 'Meta Planejada',
-                            data: dadosMetas,
-                            borderColor: '#94a3b8',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: false,
-                            tension: 0.1
+                            label: 'Resultado Realizado (Barra)',
+                            type: 'bar',
+                            data: dadosRealizados,
+                            backgroundColor: '#1a2e4c',
+                            borderColor: '#1a2e4c',
+                            borderWidth: 1,
+                            order: 2
                         },
                         {
-                            label: 'Resultado Realizado',
-                            data: dadosRealizados,
-                            borderColor: '#1a2e4c',
-                            backgroundColor: 'rgba(26, 46, 76, 0.05)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.15
+                            label: 'Meta Planejada (Linha)',
+                            type: 'line',
+                            data: dadosMetas,
+                            borderColor: '#ef4444',
+                            borderWidth: 2.5,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.1,
+                            order: 1
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { font: { size: 10, weight: 'bold' } } } },
+                    plugins: { 
+                        legend: { labels: { font: { size: 11, weight: 'bold' } } } 
+                    },
                     scales: {
-                        x: { ticks: { font: { size: 9, weight: '600' } } },
-                        y: { ticks: { font: { size: 9 } } }
+                        x: { 
+                            display: true, 
+                            ticks: { font: { size: 10, weight: '700' }, color: '#1e293b' } 
+                        },
+                        y: { 
+                            display: true, 
+                            beginAtZero: true,
+                            ticks: { font: { size: 10, weight: '600' } }
+                        }
                     }
                 }
             });
         }
 
-        // RENDERIZAÇÃO DA TABELA DO PLANO DE AÇÃO FILTRADA ESTRITAMENTE POR INDICADOR
         function renderizarPlanosDeAcaoModal() {
             let kpiSelecionado = document.getElementById('modalSelectKpi').value;
             const tCorpo = document.getElementById('modalTabelaPaCorpo');
@@ -772,36 +791,32 @@
 
             document.getElementById('modalContadorAcoes').innerText = planosFiltrados.length + " ações";
 
-            // Cálculo do farol do plano para este indicador específico
             if(planosFiltrados.length === 0) {
                 document.getElementById('modalFarolPA').className = "w-4 h-4 rounded-full mx-auto mt-1 farol-sem-dados";
-                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-medium italic">Nenhuma ação vinculada a este indicador até o momento.</td></tr>`;
+                tCorpo.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-medium italic">Nenhuma iniciativa executiva vinculada a este indicador.</td></tr>`;
                 return;
             }
 
-            let concluidas = planosFiltrados.filter(p => {
-                let st = lerCampo(p, CHAVES.status).toLowerCase();
-                return st.includes('concl') || st.includes('feito') || st.includes('ok');
-            }).length;
-            
-            let pctFinal = Math.round((concluidas / planosFiltrados.length) * 100);
+            let emDiaCount = planosFiltrados.filter(verificarAcaoEmDia).length;
+            let pctFinal = Math.round((emDiaCount / planosFiltrados.length) * 100);
             document.getElementById('modalFarolPA').className = "w-4 h-4 rounded-full mx-auto mt-1 " + converterFarolPA(pctFinal);
 
             planosFiltrados.forEach(p => {
                 let st = lerCampo(p, CHAVES.status);
-                let corBadge = "bg-slate-50 text-slate-600 border border-slate-200";
+                let emDia = verificarAcaoEmDia(p);
+                let corBadge = "bg-rose-50 text-rose-700 border border-rose-200"; 
                 
-                if (st.toLowerCase().includes('concl') || st.toLowerCase().includes('feito')) {
-                    corBadge = "bg-green-50 text-green-700 border border-green-200";
-                } else if (st.toLowerCase().includes('andam') || st.toLowerCase().includes('atras')) {
-                    corBadge = "bg-amber-50 text-amber-700 border border-amber-200";
+                if (st.toLowerCase().includes('concl') || st.toLowerCase().includes('feito') || st.toLowerCase().includes('ok')) {
+                    corBadge = "bg-green-100 text-green-800 border border-green-200";
+                } else if (emDia) {
+                    corBadge = "bg-emerald-50 text-emerald-700 border border-emerald-200"; // Exibe verde se estiver em prazo futuro!
                 }
 
                 tCorpo.innerHTML += `
                     <tr class="hover:bg-slate-50/70 border-b border-slate-100 text-[11px]">
                         <td class="p-3 pl-4 font-bold text-slate-800">${lerCampo(p, ['AÇÃO', 'Acao', 'Atividade', 'Iniciativa'])}</td>
                         <td class="p-3 text-slate-500 font-medium">${lerCampo(p, CHAVES.resp)}</td>
-                        <td class="p-3 text-center font-mono text-slate-500">${lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo', 'Vencimento']) || '--'}</td>
+                        <td class="p-3 text-center font-mono text-slate-600 font-bold">${lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo', 'Vencimento']) || '--'}</td>
                         <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${corBadge}">${st}</span></td>
                     </tr>
                 `;
