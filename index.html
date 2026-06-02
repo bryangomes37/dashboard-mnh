@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo de Governança | Novo Horizonte</title>
+    <!-- Tailwind CSS e FontAwesome para design moderno e scannable -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -24,6 +25,7 @@
     </style>
 </head>
 <body class="bg-[#f4f6f9] text-slate-800 font-sans antialiased">
+    <!-- TOPO INSTITUCIONAL -->
     <header class="bg-[#0b1329] text-white px-6 py-4 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-4 w-full lg:w-auto">
@@ -52,6 +54,7 @@
         </div>
     </header>
 
+    <!-- NAVEGAÇÃO -->
     <nav class="bg-[#0b1329] border-b border-slate-800 px-6">
         <div class="max-w-7xl mx-auto flex gap-1">
             <button onclick="alternarTela('resumo')" id="btn-tab-resumo" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-300 hover:text-white transition cursor-pointer rounded-t-lg mt-1.5 tab-ativa">
@@ -63,7 +66,9 @@
         </div>
     </nav>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- FILTROS -->
         <section class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex flex-col lg:flex-row gap-4 items-end justify-between shadow-2xs">
             <div class="w-full lg:w-auto grid grid-cols-1 sm:grid-cols-4 gap-4 flex-1">
                 <div class="flex flex-col">
@@ -96,9 +101,14 @@
                     </select>
                 </div>
             </div>
-            <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar Filtros</button>
+            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-2.5 rounded-lg w-full lg:w-auto shadow-inner">
+                <input type="checkbox" id="filtroPrazoReuniao" onchange="atualizarPainelGeral()" class="w-4 h-4 text-blue-600 border-slate-300 rounded cursor-pointer">
+                <label for="filtroPrazoReuniao" class="text-xs font-bold text-slate-600 cursor-pointer select-none">Exibir apenas ações vencidas até hoje</label>
+            </div>
+            <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar</button>
         </section>
 
+        <!-- TELA 1: RESUMO -->
         <section id="tela-resumo" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
                 <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
@@ -147,6 +157,7 @@
                 </div>
             </div>
 
+            <!-- TABELA -->
             <div class="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
@@ -169,6 +180,7 @@
             </div>
         </section>
 
+        <!-- TELA 2: MAPA ESTRATÉGICO MODIFICADO -->
         <section id="tela-mapa" class="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-2xs overflow-x-auto min-w-[850px] hidden">
             <div class="mb-2">
                 <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos por Perspectiva</h2>
@@ -193,6 +205,7 @@
         </section>
     </main>
 
+    <!-- MODAL DETALHADO -->
     <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
             <div class="bg-[#0b1329] text-white p-4 flex justify-between items-center">
@@ -245,6 +258,7 @@
         </div>
     </div>
 
+    <!-- ENGINE LOGICA DO PAINEL -->
     <script>
         let dadosOriginais = { indicadores: [], planoAcao: [] };
         let graficoInstancia = null;
@@ -274,11 +288,6 @@
                 }
             }
             return "";
-        }
-
-        function normalizarTexto(txt) {
-            if (!txt) return "";
-            return String(txt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(/\s+/g, ' ');
         }
 
         function obterAnoRegistro(valorData) {
@@ -346,7 +355,8 @@
                 let mediaReal = resultadosValidos.reduce((a,b)=>a+b, 0) / resultadosValidos.length;
                 let mediaMeta = metasValidas.reduce((a,b)=>a+b, 0) / metasValidas.length;
                 if (mediaMeta === 0) return 0;
-                return Math.round((mediaReal / mediaMeta) * 100);
+                let proporcao = mediaReal / mediaMeta;
+                return Math.round(proporcao * 100);
             } else {
                 let somaReal = resultadosValidos.reduce((a,b)=>a+b, 0);
                 let somaMeta = metasValidas.reduce((a,b)=>a+b, 0);
@@ -357,13 +367,6 @@
         function converterFarolPorPorcentagem(pct) {
             if (pct >= 90) return 'farol-verde';
             if (pct >= 70) return 'farol-amarelo';
-            return 'farol-vermelho';
-        }
-
-        // NOVO: Regra de Farol para Plano de Ação definida por você
-        function converterFarolPA(pct) {
-            if (pct === 100) return 'farol-verde';
-            if (pct >= 90 && pct < 100) return 'farol-amarelo';
             return 'farol-vermelho';
         }
 
@@ -424,6 +427,7 @@
                         
                         ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Conectada e Sincronizada`;
 
+                        // Popular filtro de líderes
                         document.getElementById('filtroResponsavel').innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
                         let listUser = new Set();
                         let listaKpis = dadosOriginais.indicadores || [];
@@ -432,6 +436,7 @@
                             document.getElementById('filtroResponsavel').innerHTML += `<option value="${u}">${u}</option>`;
                         });
 
+                        // NOVO: Alimentação dinâmica do filtro Mês/Ano superior
                         const selectMesAno = document.getElementById('filtroMesAno');
                         selectMesAno.innerHTML = '<option value="Todos">-- Todos os Meses --</option>';
                         let mesesUnicos = new Set();
@@ -467,6 +472,7 @@
             document.getElementById('filtroMesAno').value = "Todos";
             document.getElementById('filtroPerspectiva').value = "Todos";
             document.getElementById('filtroStatus').value = "Todos";
+            document.getElementById('filtroPrazoReuniao').checked = false;
             atualizarPainelGeral();
         }
 
@@ -483,6 +489,7 @@
             const fPersp = document.getElementById('filtroPerspectiva').value;
             const fStat = document.getElementById('filtroStatus').value;
             const fMesAno = document.getElementById('filtroMesAno').value;
+            const fPrazoCheckbox = document.getElementById('filtroPrazoReuniao').checked;
 
             const corpo = document.getElementById('tabela-resumo-corpo');
             corpo.innerHTML = "";
@@ -495,13 +502,12 @@
             
             let countKpi = 0, countVerde = 0, countAmarelo = 0, countVermelho = 0;
             let somaGlobalProgressoPlanos = 0, totalKpisComPlanos = 0;
-            const hoje = new Date();
-            hoje.setHours(23,59,59,999);
             
             for (let chave in agrupados) {
                 let historico = agrupados[chave];
                 historico.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
 
+                // NOVO: Seleção inteligente baseada no filtro Mês/Ano superior
                 let recente;
                 let encontrouMes = true;
                 if (fMesAno !== "Todos") {
@@ -523,6 +529,7 @@
                 let rawReal = encontrouMes ? lerCampo(recente, CHAVES.real) : "";
                 let ehPct = verificarSeEhPercentual(nKpi);
                 
+                // NOVO: Ajuste do histórico YTD baseado no corte do mês selecionado
                 let historicoFiltradoYTD = [...historico];
                 if (fMesAno !== "Todos" && encontrouMes) {
                     let idx = historico.findIndex(l => formatarDataMesAno(lerCampo(l, CHAVES.mes)) === fMesAno);
@@ -539,38 +546,29 @@
                 if (fPersp !== "Todos" && !nPersp.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
                 if (fStat !== "Todos" && textoFarol !== fStat) continue;
 
-                // CORREÇÃO: Filtro robusto e cruzamento inteligente com a aba Plano de Ação
                 let acoesDoKpi = (dadosOriginais.planoAcao || []).filter(p =>
-                    normalizarTexto(lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo'])) === normalizarTexto(nObj) &&
-                    normalizarTexto(lerCampo(p, CHAVES.kpi)) === normalizarTexto(nKpi)
+                    lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === nObj.toLowerCase().trim() &&
+                    lerCampo(p, CHAVES.kpi).toLowerCase().trim() === nKpi.toLowerCase().trim()
                 );
                 
-                // Inteligência de Cronograma: Identifica o que DEVERIA estar concluído até hoje
-                let acoesDeveriamEstarConcluidas = acoesDoKpi.filter(p => {
-                    let rawFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo_Fim', 'Prazo']);
-                    if (!rawFim) return false;
-                    let dFim = converterParaData(rawFim);
-                    return !isNaN(dFim.getTime()) && dFim <= hoje;
-                });
-
-                let totalDeveriam = acoesDeveriamEstarConcluidas.length;
-                let entreguesNoPrazo = acoesDeveriamEstarConcluidas.filter(p => 
-                    lerCampo(p, CHAVES.status).toLowerCase().includes('concl')
-                ).length;
-                
-                let pctPA = 100; // Default de conformidade caso não existam ações vencendo
-                if (acoesDoKpi.length > 0) {
-                    if (totalDeveriam > 0) {
-                        pctPA = Math.round((entreguesNoPrazo / totalDeveriam) * 100);
-                        if (pctPA > 100) pctPA = 100;
-                    } else {
-                        // Se possui ações planejadas mas nenhuma venceu até hoje, está 100% no cronograma
-                        pctPA = 100;
-                    }
+                if (fPrazoCheckbox) {
+                    let hoje = new Date();
+                    acoesDoKpi = acoesDoKpi.filter(p => {
+                        let rawFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo_Fim', 'Prazo']);
+                        if (!rawFim) return false;
+                        let dFim = converterParaData(rawFim);
+                        return !isNaN(dFim.getTime()) && dFim <= hoje;
+                    });
                 }
                 
-                let farolPA = converterFarolPA(pctPA);
+                let totalAcoes = acoesDoKpi.length;
+                let concluidas = acoesDoKpi.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
                 
+                // CORREÇÃO: Se não há ações criadas ou se tudo está concluído, o progresso é 100% (Verde)
+                let pctPA = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 100;
+                let farolPA = converterFarolPorPorcentagem(pctPA);
+                
+                // Consolidação correta para o card global do topo
                 somaGlobalProgressoPlanos += pctPA;
                 totalKpisComPlanos++;
                 
@@ -598,7 +596,7 @@
                             <div class="flex items-center gap-2">
                                 <span class="font-bold text-slate-700 w-8">${pctPA}%</span>
                                 <div class="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden border border-slate-200/60">
-                                    <div class="h-full ${pctPA === 100 ? 'bg-green-500' : (pctPA >= 90 ? 'bg-amber-500' : 'bg-red-500')}" style="width: ${pctPA}%"></div>
+                                    <div class="h-full ${pctPA >= 90 ? 'bg-green-500' : (pctPA >= 70 ? 'bg-amber-500' : 'bg-red-500')}" style="width: ${pctPA}%"></div>
                                 </div>
                             </div>
                         </td>
@@ -615,18 +613,18 @@
             document.getElementById('pct-card-amarelo').innerText = countKpi > 0 ? Math.round((countAmarelo / countKpi) * 100) + "%" : "0%";
             document.getElementById('pct-card-vermelho').innerText = countKpi > 0 ? Math.round((countVermelho / countKpi) * 100) + "%" : "0%";
             
+            // Exibição corrigida do card de média
             document.getElementById('card-media-planos').innerText = totalKpisComPlanos > 0 ? Math.round(somaGlobalProgressoPlanos / totalKpisComPlanos) + "%" : "100%";
         }
 
         function renderizarMapaEstrategico() {
-            let listaKpis = dadosOriginais.indicadores || [];
+            let listaKpis = dadosOriginales = dadosOriginais.indicadores || [];
             if(!listaKpis.length) return;
 
             const fResp = document.getElementById('filtroResponsavel').value;
             const fPersp = document.getElementById('filtroPerspectiva').value;
             const fStat = document.getElementById('filtroStatus').value;
-            const hoje = new Date();
-            hoje.setHours(23,59,59,999);
+            const fPrazoCheckbox = document.getElementById('filtroPrazoReuniao').checked;
 
             let objetivosAgrupados = {};
             listaKpis.forEach(linha => {
@@ -671,27 +669,23 @@
                 let farolResultadosObj = converterFarolPorPorcentagem(ytdMedioObjetivo);
                 
                 let acoesDoObj = (dadosOriginais.planoAcao || []).filter(p =>
-                    normalizarTexto(lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo'])) === normalizarTexto(nomeObj)
+                    lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === nomeObj.toLowerCase().trim()
                 );
                 
-                let acoesDeveriamObj = acoesDoObj.filter(p => {
-                    let rawFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo_Fim', 'Prazo']);
-                    if (!rawFim) return false;
-                    let dFim = converterParaData(rawFim);
-                    return !isNaN(dFim.getTime()) && dFim <= hoje;
-                });
-
-                let totalDeveriamObj = acoesDeveriamObj.length;
-                let concluidasDeveriamObj = acoesDeveriamObj.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
-
-                let pctPAObjetivo = 100;
-                if (acoesDoObj.length > 0) {
-                    if (totalDeveriamObj > 0) {
-                        pctPAObjetivo = Math.round((concluidasDeveriamObj / totalDeveriamObj) * 100);
-                        if (pctPAObjetivo > 100) pctPAObjetivo = 100;
-                    }
+                if (fPrazoCheckbox) {
+                    let hoje = new Date();
+                    acoesDoObj = acoesDoObj.filter(p => {
+                        let rawFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo_Fim', 'Prazo']);
+                        if (!rawFim) return false;
+                        let dFim = converterParaData(rawFim);
+                        return !isNaN(dFim.getTime()) && dFim <= hoje;
+                    });
                 }
-                let farolPAObj = converterFarolPA(pctPAObjetivo);
+
+                let totalAcoes = acoesDoObj.length;
+                let concluidas = acoesDoObj.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
+                let pctPAObjetivo = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 100;
+                let farolPAObj = converterFarolPorPorcentagem(pctPAObjetivo);
 
                 if (!autorizadoPorLider) continue;
                 if (fPersp !== "Todos" && !perspectivaCard.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
@@ -815,7 +809,10 @@
                             ticks: {
                                 autoSkip: false,
                                 maxRotation: 45,
-                                minRotation: 45
+                                minRotation: 45,
+                                callback: function(value, index) { 
+                                    return index % 3 === 0 ? this.getLabelForValue(value) : ''; 
+                                }
                             }
                         },
                         y: { beginAtZero: true } 
@@ -828,8 +825,8 @@
             const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
             tCorpo.innerHTML = "";
             let planosFiltrados = (dadosOriginais.planoAcao || []).filter(p =>
-                normalizarTexto(lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo'])) === normalizarTexto(objetivoSelecionadoAtual) &&
-                normalizarTexto(lerCampo(p, CHAVES.kpi)) === normalizarTexto(kpiSelecionado)
+                lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === objetivoSelecionadoAtual.toLowerCase().trim() &&
+                lerCampo(p, CHAVES.kpi).toLowerCase().trim() === kpiSelecionado.toLowerCase().trim()
             );
             if(!planosFiltrados.length) {
                 tCorpo.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-400 font-medium">Nenhuma iniciativa vinculada.</td></tr>`;
