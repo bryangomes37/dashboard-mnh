@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo de Governança | Novo Horizonte</title>
+    <!-- Frameworks de Estilização e Gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -14,7 +15,7 @@
         .bg-persp-aprendizado { background-color: #e59834; }
 
         .farol-verde { background-color: #22c55e; border: 2px solid #16a34a; }
-        .farol-amarelo { background-color: #eab308; border: 2px solid #ca8a04; }
+        .farol-amare { background-color: #eab308; border: 2px solid #ca8a04; }
         .farol-vermelho { background-color: #ef4444; border: 2px solid #dc2626; }
         .farol-sem-dados { background-color: #cbd5e1; border: 2px solid #94a3b8; }
 
@@ -39,6 +40,7 @@
 </head>
 <body class="bg-[#f4f6f9] text-slate-800 font-sans antialiased">
 
+    <!-- TOPO INSTITUCIONAL -->
     <header class="bg-[#0b1329] text-white px-6 py-4 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-4 w-full lg:w-auto">
@@ -46,7 +48,7 @@
                 <div class="h-8 w-px bg-slate-700 hidden sm:block"></div>
                 <div>
                     <h1 class="text-base font-black text-white tracking-tight uppercase">Resumo do Plano Estratégico</h1>
-                    <p class="text-xs text-slate-400 font-medium mt-0.5">Visão geral do desempenho dos principais indicadores</p>
+                    <p class="text-xs text-slate-400 font-medium mt-0.5">Visão geral do desempenho dos principais indicators</p>
                 </div>
             </div>
             <div class="flex flex-col gap-1 w-full lg:w-auto items-center lg:items-end">
@@ -67,6 +69,7 @@
         </div>
     </header>
 
+    <!-- NAVEGAÇÃO ENTRE TELAS -->
     <nav class="bg-[#0b1329] border-b border-slate-800 px-6">
         <div class="max-w-7xl mx-auto flex gap-1">
             <button onclick="alternarTela('resumo')" id="btn-tab-resumo" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-300 hover:text-white transition cursor-pointer rounded-t-lg mt-1.5 tab-ativa">
@@ -78,8 +81,10 @@
         </div>
     </nav>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
+        <!-- FILTROS GERAIS -->
         <section class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex flex-col lg:flex-row gap-4 items-end justify-between shadow-2xs">
             <div class="w-full lg:w-auto grid grid-cols-1 sm:grid-cols-4 gap-4 flex-1">
                 <div class="flex flex-col">
@@ -117,6 +122,7 @@
             <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar Filtros</button>
         </section>
 
+        <!-- TELA 1: DASHBOARD RESUMO -->
         <section id="tela-resumo" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
                 <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
@@ -165,6 +171,7 @@
                 </div>
             </div>
 
+            <!-- TABELA PRINCIPAL DE DADOS -->
             <div class="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
@@ -187,26 +194,31 @@
             </div>
         </section>
 
+        <!-- TELA 2: MAPA ESTRATÉGICO -->
         <section id="tela-mapa" class="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-2xs overflow-x-auto min-w-[950px] hidden">
             <div class="mb-4">
                 <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos com Status de Indicadores e Iniciativas</h2>
             </div>
             
+            <!-- Linha Financeira -->
             <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[160px]">
                 <div class="w-40 bg-persp-financeira text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Financeira</div>
                 <div id="cards-financeira" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
             
+            <!-- Linha Clientes -->
             <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[160px]">
                 <div class="w-40 bg-persp-clientes text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Clientes</div>
                 <div id="cards-clientes" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
             
+            <!-- Linha Processos Internos -->
             <div class="flex items-stretch gap-4 border-b border-slate-100 pb-4 min-h-[160px]">
                 <div class="w-40 bg-persp-processos text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Processos Internos</div>
                 <div id="cards-processos" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
             
+            <!-- Linha Aprendizado e Crescimento -->
             <div class="flex items-stretch gap-4 min-h-[160px]">
                 <div class="w-40 bg-persp-aprendizado text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Aprendizado & Crescimento</div>
                 <div id="cards-aprendizado" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
@@ -214,6 +226,7 @@
         </section>
     </main>
 
+    <!-- MODAL DETALHADO DO OBJETIVO ESTRATÉGICO -->
     <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto shadow-2xl flex flex-col">
             
@@ -249,10 +262,12 @@
                     </div>
                 </div>
 
+                <!-- Painel do Gráfico Executivo -->
                 <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs h-72 relative">
                     <canvas id="modalGraficoCanvas"></canvas>
                 </div>
 
+                <!-- Tabela de Planos de Ação -->
                 <div class="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
                     <div class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
                         <h4 class="text-[11px] font-black uppercase text-slate-700 tracking-wider"><i class="fa-solid fa-list-check mr-1 text-slate-400"></i> Plano de Ação Vinculado ao Indicador</h4>
@@ -276,6 +291,7 @@
         </div>
     </div>
 
+    <!-- ENGINE DE LÓGICA INTERNA DO ECOSSISTEMA -->
     <script>
         let dadosOriginais = { indicadores: [], planoAcao: [] };
         let telaAtivaAtual = "resumo";
@@ -348,12 +364,11 @@
             return n.includes('%') || n.includes('margem') || n.includes('taxa') || n.includes('percentual');
         }
 
-        // PARSER DE DATA ULTRA-ROBUSTO PARA GOVERNANÇA DE PRAZOS FUTUROS
         function mapearStringParaData(str) {
             let s = String(str).trim();
             if (s.includes('-')) {
                 let partes = s.split('-');
-                if (partes[0].length === 4) return new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]) || 1);
+                if (partes[0].length === 4) return new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, 1);
             }
             if (s.includes('/')) {
                 let partes = s.split('/');
@@ -366,14 +381,14 @@
                     if (anoStr.length === 2 || ano < 100) ano += 2000;
                     let mes = parseInt(mesStr) - 1;
                     if (isNaN(mes)) mes = obterMesPorExtenso(mesStr);
-                    return new Date(ano, mes, 28);
+                    return new Date(ano, mes, 1);
                 }
             }
             let anoMatch = s.match(/\b\d{4}\b/) || s.match(/[\/\s'](\d{2})\b/);
             let ano = anoMatch ? parseInt(anoMatch[0].replace(/[\/\s']/g, '')) : new Date().getFullYear();
             if (ano < 100) ano += 2000;
             let mes = obterMesPorExtenso(s);
-            return new Date(ano, mes, 28);
+            return new Date(ano, mes, 1);
         }
 
         function obterMesPorExtenso(s) {
@@ -385,7 +400,6 @@
             return 0;
         }
 
-        // REGRA DE GOVERNANÇA EXECUTIVA: Se o prazo final é superior à data de hoje, a ação está "Em Dia" (Verde)
         function verificarAcaoEmDia(p) {
             let st = lerCampo(p, CHAVES.status).toLowerCase();
             if (st.includes('concl') || st.includes('feito') || st.includes('ok')) return true;
@@ -590,7 +604,6 @@
             document.getElementById('card-media-planos').innerText = kpisComPaContados > 0 ? Math.round(somaGlobalPA / kpisComPaContados) + "%" : "--";
         }
 
-        // TELA 2: MAPA ESTRATÉGICO COM CARDS RIGOROSAMENTE PADRONIZADOS
         function renderMapaEstrategico() {
             const cFin = document.getElementById('cards-financeira'); const cCli = document.getElementById('cards-clientes');
             const cPro = document.getElementById('cards-processos'); const cApr = document.getElementById('cards-aprendizado');
@@ -623,13 +636,15 @@
                     textoPA = pctPA + "%";
                 }
 
-                let bordaCor = "border-amber-500";
-                if (obj.perspectiva.toLowerCase().includes('clien')) bordaCor = "border-teal-600";
-                else if (obj.perspectiva.toLowerCase().includes('proc')) bordaCor = "border-[#1a2e4c]";
-                else if (obj.perspectiva.toLowerCase().includes('apren')) bordaCor = "border-orange-400";
+                // CALIBRAÇÃO ESTRETA DE BORDAS: Cor aplicada EXCLUSIVAMENTE na barra lateral esquerda (border-l)
+                let bordaCorEsquerda = "border-l-[#c69232]"; // Financeira
+                if (obj.perspectiva.toLowerCase().includes('clien')) bordaCorEsquerda = "border-l-[#2d7a78]";
+                else if (obj.perspectiva.toLowerCase().includes('proc')) bordaCorEsquerda = "border-l-[#1a2e4c]";
+                else if (obj.perspectiva.toLowerCase().includes('apren')) bordaCorEsquerda = "border-l-[#e59834]";
 
+                // O restante da caixa mantém sempre border-slate-200 de forma 100% idêntica e simétrica
                 let cardHtml = `
-                    <div onclick="abrirModalObjetivo('${obj.nome.replace(/'/g, "\\'")}')" class="obj-card bg-white border border-slate-200 border-l-4 ${bordaCor} p-3 rounded-r-xl flex flex-col justify-between shadow-2xs">
+                    <div onclick="abrirModalObjetivo('${obj.nome.replace(/'/g, "\\'")}')" class="obj-card bg-white border border-slate-200 border-l-4 ${bordaCorEsquerda} p-3 rounded-r-xl flex flex-col justify-between shadow-2xs">
                         <p class="text-[11px] font-black text-slate-800 leading-tight uppercase line-clamp-3 tracking-tight mb-2" title="${obj.nome}">${obj.nome}</p>
                         <div class="grid grid-cols-2 gap-1.5 pt-2 border-t border-slate-100 text-[9px] font-bold">
                             <div class="flex items-center justify-between bg-slate-50 border border-slate-100 p-1 rounded">
@@ -653,25 +668,24 @@
 
         function abrirModalObjetivo(nomeObjetivo) {
             objetivoSelecionadoModal = nomeObjetivo;
-            let linhasIndicadores = (dadosOriginais.indicadores || []).filter(i => 
+            let linesKpi = (dadosOriginais.indicadores || []).filter(i => 
                 normalizarTexto(lerCampo(i, CHAVES.obj)) === normalizarTexto(nomeObjetivo)
             );
 
-            if(linhasIndicadores.length === 0) return;
+            if(linesKpi.length === 0) return;
 
             document.getElementById('modalTituloObjetivo').innerText = nomeObjetivo;
-            document.getElementById('modalPerspectiva').innerText = lerCampo(linhasIndicadores[0], CHAVES.persp);
+            document.getElementById('modalPerspectiva').innerText = lerCampo(linesKpi[0], CHAVES.persp);
 
             let kpisUnicos = new Set();
-            linhasIndicadores.forEach(l => { kpisUnicos.add(lerCampo(l, CHAVES.kpi)); });
+            linesKpi.forEach(l => { kpisUnicos.add(lerCampo(l, CHAVES.kpi)); });
             
             let selectKpi = document.getElementById('modalSelectKpi');
             selectKpi.innerHTML = "";
             Array.from(kpisUnicos).forEach(k => { selectKpi.innerHTML += `<option value="${k}">${k}</option>`; });
 
-            // FILTRAGEM E MAPEAMENTO DO ANO ATUALIZADOS
             let anosUnicos = new Set();
-            linhasIndicadores.forEach(l => {
+            linesKpi.forEach(l => {
                 let mStr = lerCampo(l, CHAVES.mes);
                 let dObj = mapearStringParaData(mStr);
                 if(dObj && !isNaN(dObj.getFullYear())) {
@@ -699,7 +713,6 @@
             renderizarPlanosDeAcaoModal();
         }
 
-        // GRÁFICO MISTO TOTALMENTE PROTEGIDO E CORRIGIDO
         function renderizarGraficoModal() {
             let kpiSelecionado = document.getElementById('modalSelectKpi').value;
             let anoSelecionado = document.getElementById('modalSelectAno').value;
@@ -709,24 +722,31 @@
                 lerCampo(i, CHAVES.kpi) === kpiSelecionado
             );
 
-            // Filtragem direta pelo ano selecionado baseado na data normalizada
+            let itensMapeados = linhasKpi.map(l => {
+                return {
+                    linha: l,
+                    dataReal: mapearStringParaData(lerCampo(l, CHAVES.mes))
+                };
+            }).filter(item => item.dataReal && !isNaN(item.dataReal.getTime()));
+
             if(anoSelecionado !== "Todos") {
-                linhasKpi = linhasKpi.filter(i => {
-                    let mStr = lerCampo(i, CHAVES.mes);
-                    let dObj = mapearStringParaData(mStr);
-                    return dObj.getFullYear() === parseInt(anoSelecionado);
-                });
+                let anoAlvo = parseInt(anoSelecionado);
+                itensMapeados = itensMapeados.filter(item => item.dataReal.getFullYear() === anoAlvo);
             }
+
+            itensMapeados.sort((a, b) => a.dataReal - b.dataReal);
 
             let ytdKpi = calcularYTDInteligente(linhasKpi);
             document.getElementById('modalFarolKpi').className = "w-4 h-4 rounded-full mx-auto mt-1 " + converterFarolPorPorcentagem(ytdKpi);
 
             let labelsMesAno = []; let dadosMetas = []; let dadosRealizados = [];
+            const mesesAbrev = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 
-            linhasKpi.forEach(l => {
-                labelsMesAno.push(lerCampo(l, CHAVES.mes)); // Injeta a data no eixo X
-                dadosMetas.push(limparNumero(lerCampo(l, CHAVES.meta)));
-                dadosRealizados.push(limparNumero(lerCampo(l, CHAVES.real)));
+            itensMapeados.forEach(item => {
+                let d = item.dataReal;
+                labelsMesAno.push(`${mesesAbrev[d.getMonth()]}/${d.getFullYear()}`);
+                dadosMetas.push(limparNumero(lerCampo(item.linha, CHAVES.meta)));
+                dadosRealizados.push(limparNumero(lerCampo(item.linha, CHAVES.real)));
             });
 
             if(graficoInstanciaModal) graficoInstanciaModal.destroy();
@@ -809,7 +829,7 @@
                 if (st.toLowerCase().includes('concl') || st.toLowerCase().includes('feito') || st.toLowerCase().includes('ok')) {
                     corBadge = "bg-green-100 text-green-800 border border-green-200";
                 } else if (emDia) {
-                    corBadge = "bg-emerald-50 text-emerald-700 border border-emerald-200"; // Exibe verde se estiver em prazo futuro!
+                    corBadge = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                 }
 
                 tCorpo.innerHTML += `
