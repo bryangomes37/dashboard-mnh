@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo de Governança | Novo Horizonte</title>
-    <!-- Tailwind CSS e FontAwesome para design moderno e scannable -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .bg-persp-financeira { background-color: #c69232; }
         .bg-persp-clientes { background-color: #2d7a78; }
@@ -17,14 +15,15 @@
         .farol-verde { background-color: #22c55e; border: 2px solid #16a34a; }
         .farol-amarelo { background-color: #eab308; border: 2px solid #ca8a04; }
         .farol-vermelho { background-color: #ef4444; border: 2px solid #dc2626; }
+        .farol-sem-dados { background-color: #cbd5e1; border: 2px solid #94a3b8; }
 
         .obj-card { transition: all 0.2s ease-in-out; cursor: pointer; }
         .obj-card:hover { transform: scale(1.02); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08); }
-
         .tab-ativa { background-color: #ffffff !important; color: #0f172a !important; font-weight: 800; }
     </style>
 </head>
 <body class="bg-[#f4f6f9] text-slate-800 font-sans antialiased">
+
     <!-- TOPO INSTITUCIONAL -->
     <header class="bg-[#0b1329] text-white px-6 py-4 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
@@ -68,12 +67,15 @@
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
         <!-- FILTROS -->
         <section class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex flex-col lg:flex-row gap-4 items-end justify-between shadow-2xs">
             <div class="w-full lg:w-auto grid grid-cols-1 sm:grid-cols-4 gap-4 flex-1">
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-user-tie mr-1"></i> Líder Responsável</label>
-                    <select id="filtroResponsavel" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-700"></select>
+                    <select id="filtroResponsavel" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-700">
+                        <option value="Todos">-- Todos os Líderes --</option>
+                    </select>
                 </div>
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-calendar-days mr-1"></i> Mês/Ano</label>
@@ -101,14 +103,10 @@
                     </select>
                 </div>
             </div>
-            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-2.5 rounded-lg w-full lg:w-auto shadow-inner">
-                <input type="checkbox" id="filtroPrazoReuniao" onchange="atualizarPainelGeral()" class="w-4 h-4 text-blue-600 border-slate-300 rounded cursor-pointer">
-                <label for="filtroPrazoReuniao" class="text-xs font-bold text-slate-600 cursor-pointer select-none">Exibir apenas ações vencidas até hoje</label>
-            </div>
-            <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar</button>
+            <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar Filtros</button>
         </section>
 
-        <!-- TELA 1: RESUMO -->
+        <!-- TELA 1: DASHBOARD RESUMO -->
         <section id="tela-resumo" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
                 <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
@@ -152,12 +150,12 @@
                     <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-md shrink-0"><i class="fa-solid fa-clipboard-list"></i></div>
                     <div>
                         <span class="text-[9px] text-slate-400 font-bold uppercase block tracking-wider leading-none">% MÉDIO EXECUÇÃO P.A.</span>
-                        <h3 id="card-media-planos" class="text-xl font-black text-purple-600 mt-1">0%</h3>
+                        <h3 id="card-media-planos" class="text-xl font-black text-purple-600 mt-1">--</h3>
                     </div>
                 </div>
             </div>
 
-            <!-- TABELA -->
+            <!-- TABELA DE DADOS -->
             <div class="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
@@ -180,90 +178,33 @@
             </div>
         </section>
 
-        <!-- TELA 2: MAPA ESTRATÉGICO MODIFICADO -->
+        <!-- TELA 2: MAPA ESTRATÉGICO -->
         <section id="tela-mapa" class="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-2xs overflow-x-auto min-w-[850px] hidden">
             <div class="mb-2">
                 <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos por Perspectiva</h2>
             </div>
-
             <div class="flex items-stretch gap-4 min-h-[140px] border-b border-slate-100 pb-4">
                 <div class="w-36 bg-persp-financeira text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Financeira</div>
-                <div id="cards-financeira" class="flex flex-wrap items-center gap-4 flex-1"></div>
+                <div id="cards-financeira" class="flex flex-wrap items-center gap-4 flex-1 p-2"></div>
             </div>
             <div class="flex items-stretch gap-4 min-h-[140px] border-b border-slate-100 pb-4">
                 <div class="w-36 bg-persp-clientes text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Clientes</div>
-                <div id="cards-clientes" class="flex flex-wrap items-center gap-4 flex-1"></div>
+                <div id="cards-clientes" class="flex flex-wrap items-center gap-4 flex-1 p-2"></div>
             </div>
             <div class="flex items-stretch gap-4 min-h-[140px] border-b border-slate-100 pb-4">
                 <div class="w-36 bg-persp-processos text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Processos Internos</div>
-                <div id="cards-processos" class="flex flex-wrap items-center gap-4 flex-1"></div>
+                <div id="cards-processos" class="flex flex-wrap items-center gap-4 flex-1 p-2"></div>
             </div>
             <div class="flex items-stretch gap-4 min-h-[140px]">
                 <div class="w-36 bg-persp-aprendizado text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Aprendizado & Crescimento</div>
-                <div id="cards-aprendizado" class="flex flex-wrap items-center gap-4 flex-1"></div>
+                <div id="cards-aprendizado" class="flex flex-wrap items-center gap-4 flex-1 p-2"></div>
             </div>
         </section>
     </main>
 
-    <!-- MODAL DETALHADO -->
-    <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
-            <div class="bg-[#0b1329] text-white p-4 flex justify-between items-center">
-                <div>
-                    <span id="modalIdObj" class="text-[10px] font-bold text-amber-400 block tracking-wider uppercase">OBJETIVO</span>
-                    <h3 id="modalNomeObj" class="text-sm font-black tracking-tight">Nome do Objetivo</h3>
-                </div>
-                <button onclick="fecharModalObjetivo()" class="text-slate-400 hover:text-white transition text-lg cursor-pointer p-1"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div class="p-5 space-y-4 overflow-y-auto flex-1">
-                <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl">
-                    <label class="text-[9px] text-slate-500 font-black uppercase tracking-wider block mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Selecione o Indicador:</label>
-                    <select id="modalSelectKpi" onchange="mudarIndicadorNoModal()" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs font-bold text-slate-800 outline-none cursor-pointer shadow-3xs"></select>
-                </div>
-                <div class="grid grid-cols-3 gap-4 text-[11px] bg-slate-50 p-3 rounded-lg border border-slate-100">
-                    <div><span class="text-slate-400 block font-medium">Líder do Indicador:</span> <strong id="modalLider" class="text-slate-800">--</strong></div>
-                    <div><span class="text-slate-400 block font-medium">Meta Recente Mês:</span> <strong id="modalMetaValor" class="text-slate-700">--</strong></div>
-                    <div><span class="text-slate-400 block font-medium">Último Realizado Mês:</span> <strong id="modalRealValor" class="text-slate-900">--</strong></div>
-                </div>
-                <div class="bg-white p-4 border border-slate-200 rounded-xl">
-                    <div class="flex justify-between items-center mb-2">
-                        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-wider"><i class="fa-solid fa-chart-bar text-blue-600 mr-1"></i> Evolução Histórica</h4>
-                        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-1 rounded-lg">
-                            <label for="modalFiltroAno" class="text-[9px] font-black text-slate-400 uppercase pl-1">Filtrar:</label>
-                            <select id="modalFiltroAno" onchange="renderizarGraficoModal()" class="bg-white border border-slate-200 rounded-md p-1 text-[11px] font-bold text-slate-700 outline-none cursor-pointer shadow-3xs"></select>
-                        </div>
-                    </div>
-                    <div class="relative h-72 w-full">
-                        <canvas id="graficoMensalCanvas"></canvas>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-wider mb-2"><i class="fa-solid fa-list-check text-emerald-600 mr-1"></i> Iniciativas Vinculadas</h4>
-                    <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
-                        <table class="w-full text-left text-xs divide-y divide-slate-200">
-                            <thead class="bg-slate-50 text-slate-500 font-bold text-[10px]">
-                                <tr>
-                                    <th class="p-2.5">Ação Estratégica</th>
-                                    <th class="p-2.5">Responsável</th>
-                                    <th class="p-2.5">Prazo Fim</th>
-                                    <th class="p-2.5 text-center">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="modalTabelaPlanoCorpo" class="divide-y divide-slate-100 font-medium text-slate-600"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- ENGINE LOGICA DO PAINEL -->
     <script>
         let dadosOriginais = { indicadores: [], planoAcao: [] };
-        let graficoInstancia = null;
-        let cacheHistoricoModal = [];
-        let objetivoSelecionadoAtual = "";
         let telaAtivaAtual = "resumo";
 
         const CHAVES = {
@@ -272,8 +213,8 @@
             obj: ['Objetivo Estratégico', 'OBJETIVO ESTRATÉGICO', 'Objetivo'],
             kpi: ['KPI', 'Indicador', 'INDICADOR'],
             resp: ['Responsável', 'RESPONSÁVEL', 'Líder'],
-            meta: ['Meta', 'META'],
-            real: ['Resultado', 'RESULTADO', 'Realizado'],
+            meta: ['Meta', 'META', 'Metas Estratégicas'],
+            real: ['Resultado', 'RESULTADO', 'Realizado', 'Resultado Mês'],
             mes: ['Mês', 'MES', 'Data'],
             status: ['Status', 'STATUS']
         };
@@ -290,45 +231,45 @@
             return "";
         }
 
-        function obterAnoRegistro(valorData) {
-            if (!valorData) return null;
-            let s = String(valorData).trim();
-            if (s.includes('-')) return parseInt(s.substring(0, 4));
-            if (s.includes('/')) {
-                let partes = s.split('/');
-                if (partes.length === 3) return parseInt(partes[2]);
-                if (partes.length === 2) return partes[0].length === 4 ? parseInt(partes[0]) : parseInt(partes[1]);
+        function limparNumero(valor) {
+            if (valor === undefined || valor === null || valor === "" || valor === "--") return 0;
+            let s = String(valor).trim().replace(/[^\d.,-]/g, ''); 
+            
+            if (s.includes('.') && s.includes(',')) {
+                s = s.replace(/\./g, '').replace(',', '.');
+            } else if (s.includes('.') && !s.includes(',')) {
+                if ((s.match(/\./g) || []).length > 1) {
+                    s = s.replace(/\./g, '');
+                } else {
+                    let partes = s.split('.');
+                    if (partes[1].length === 3) s = s.replace(/\./g, '');
+                }
+            } else if (!s.includes('.') && s.includes(',')) {
+                s = s.replace(',', '.');
             }
-            let data = new Date(valorData);
-            if (!isNaN(data.getTime())) return data.getUTCFullYear();
-            return null;
+            let n = parseFloat(s);
+            return isNaN(n) ? 0 : n;
         }
 
-        function converterParaData(valorData) {
-            if (!valorData) return new Date(NaN);
-            let s = String(valorData).trim();
-            if (s.includes('/')) {
-                let partes = s.split('/');
-                if (partes.length === 3) {
-                    return new Date(partes[2], partes[1] - 1, partes[0]);
-                }
-            }
-            return new Date(valorData);
+        function normalizarTexto(txt) {
+            if (!txt) return "";
+            return String(txt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(/\s+/g, ' ');
         }
 
         function formatarNumeroVisual(valor, ehPercentual) {
-            if (valor === undefined || valor === null || valor === "") return "--";
-            let num = parseFloat(valor);
-            if (isNaN(num)) return valor;
-
+            if (valor === undefined || valor === null || valor === "" || valor === "--") return "--";
+            let s = String(valor).trim();
+            let num = limparNumero(s);
+            if (num === 0 && s !== "0" && s !== "0%") return "--";
+            
             if (ehPercentual) {
+                if (s.includes('%')) return num + "%";
                 if (num <= 1.1 && num > -1.1 && num !== 0) {
-                    return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num);
+                    return new Intl.NumberFormat('pt-BR', { style: 'percent' }).format(num);
                 }
-                return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num) + "%";
-            } else {
-                return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+                return num + "%";
             }
+            return new Intl.NumberFormat('pt-BR').format(num);
         }
 
         function verificarSeEhPercentual(nomeKpi) {
@@ -336,32 +277,26 @@
             return n.includes('%') || n.includes('margem') || n.includes('taxa') || n.includes('percentual');
         }
 
-        function calcularYTDInteligente(historicoLinhas, ehPercentual) {
+        function calcularYTDInteligente(historicoLinhas) {
             let metasValidas = [];
             let resultadosValidos = [];
-            for (let i = 0; i < historicoLinhas.length; i++) {
-                let rRaw = lerCampo(historicoLinhas[i], CHAVES.real);
-                if (rRaw !== "" && rRaw !== null && rRaw !== undefined) {
-                    let rNum = parseFloat(rRaw);
-                    let mNum = parseFloat(lerCampo(historicoLinhas[i], CHAVES.meta));
-                    if (!isNaN(rNum)) {
-                        resultadosValidos.push(rNum);
-                        metasValidas.push(isNaN(mNum) ? 0 : mNum);
-                    }
+            
+            historicoLinhas.forEach(l => {
+                let rRaw = lerCampo(l, CHAVES.real);
+                let mRaw = lerCampo(l, CHAVES.meta);
+                if (rRaw !== "" && rRaw !== "--") {
+                    let rNum = limparNumero(rRaw);
+                    let mNum = limparNumero(mRaw);
+                    resultadosValidos.push(rNum);
+                    metasValidas.push(mNum);
                 }
-            }
+            });
+            
             if (resultadosValidos.length === 0) return 0;
-            if (ehPercentual) {
-                let mediaReal = resultadosValidos.reduce((a,b)=>a+b, 0) / resultadosValidos.length;
-                let mediaMeta = metasValidas.reduce((a,b)=>a+b, 0) / metasValidas.length;
-                if (mediaMeta === 0) return 0;
-                let proporcao = mediaReal / mediaMeta;
-                return Math.round(proporcao * 100);
-            } else {
-                let somaReal = resultadosValidos.reduce((a,b)=>a+b, 0);
-                let somaMeta = metasValidas.reduce((a,b)=>a+b, 0);
-                return somaMeta === 0 ? 0 : Math.round((somaReal / somaMeta) * 100);
-            }
+            let somaReal = resultadosValidos.reduce((a,b)=>a+b, 0);
+            let somaMeta = metasValidas.reduce((a,b)=>a+b, 0);
+            if (somaMeta === 0) return 0;
+            return Math.round((somaReal / somaMeta) * 100);
         }
 
         function converterFarolPorPorcentagem(pct) {
@@ -370,20 +305,10 @@
             return 'farol-vermelho';
         }
 
-        function formatarDataMesAno(textoData) {
-            if (!textoData) return "";
-            let data;
-            let s = String(textoData).trim();
-            if (s.includes("-")) data = new Date(s);
-            else if (s.includes("/")) {
-                let partes = s.split("/");
-                if (partes.length === 3) data = new Date(partes[2], partes[1] - 1, partes[0]);
-                else if (partes.length === 2) data = new Date(partes[1], partes[0] - 1, 1);
-            } else data = new Date(s);
-            
-            if (!data || isNaN(data.getTime())) return textoData;
-            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-            return `${meses[data.getUTCMonth()]}/${String(data.getUTCFullYear()).slice(-2)}`;
+        function converterFarolPA(pct) {
+            if (pct === 100) return 'farol-verde';
+            if (pct >= 70 && pct < 100) return 'farol-amarelo';
+            return 'farol-vermelho';
         }
 
         function alternarTela(tela) {
@@ -396,75 +321,43 @@
 
         window.onload = function() {
             const urlSalva = localStorage.getItem('nh_script_url_v11');
-            if(urlSalva) {
-                document.getElementById('urlInputScript').value = urlSalva;
-                buscarDadosOnline(urlSalva);
-            }
+            if(urlSalva) { document.getElementById('urlInputScript').value = urlSalva; buscarDadosOnline(urlSalva); }
         };
 
         function conectarPlanilha() {
             const url = document.getElementById('urlInputScript').value.trim();
-            if(url) {
-                localStorage.setItem('nh_script_url_v11', url);
-                buscarDadosOnline(url);
-            }
+            if(url) { localStorage.setItem('nh_script_url_v11', url); buscarDadosOnline(url); }
         }
 
         function buscarDadosOnline(url) {
             const ind = document.getElementById('indicadorStatusBase');
             ind.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-blue-400 mr-1"></i> Sincronizando...`;
+            fetch(url).then(res => res.json()).then(data => {
+                if(data) {
+                    dadosOriginais = {
+                        indicadores: data.indicadores || [],
+                        planoAcao: data.planoAcao || data.iniciativas || data.plano_acao || []
+                    };
+                    ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Sincronizada`;
+                    
+                    // Montar filtros dinâmicos de líderes e datas
+                    let listUser = new Set();
+                    let listMeses = new Set();
+                    
+                    dadosOriginais.indicadores.forEach(i => { 
+                        let r = lerCampo(i, CHAVES.resp); if(r) listUser.add(r); 
+                        let m = lerCampo(i, CHAVES.mes); if(m) listMeses.add(m);
+                    });
 
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    if(data && (data.indicadores || data.status === "sucesso")) {
-                        dadosOriginais = {
-                            indicadores: data.indicadores || [],
-                            objetivos: data.objetivos || [],
-                            historico: data.historico || [],
-                            planoAcao: data.planoAcao || data.iniciativas || []
-                        };
-                        
-                        ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Conectada e Sincronizada`;
+                    document.getElementById('filtroResponsavel').innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
+                    Array.from(listUser).sort().forEach(u => { document.getElementById('filtroResponsavel').innerHTML += `<option value="${u}">${u}</option>`; });
 
-                        // Popular filtro de líderes
-                        document.getElementById('filtroResponsavel').innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
-                        let listUser = new Set();
-                        let listaKpis = dadosOriginais.indicadores || [];
-                        listaKpis.forEach(i => { let r = lerCampo(i, CHAVES.resp); if(r) listUser.add(r); });
-                        Array.from(listUser).sort().forEach(u => {
-                            document.getElementById('filtroResponsavel').innerHTML += `<option value="${u}">${u}</option>`;
-                        });
+                    document.getElementById('filtroMesAno').innerHTML = '<option value="Todos">-- Todos os Meses --</option>';
+                    Array.from(listMeses).forEach(m => { document.getElementById('filtroMesAno').innerHTML += `<option value="${m}">${m}</option>`; });
 
-                        // NOVO: Alimentação dinâmica do filtro Mês/Ano superior
-                        const selectMesAno = document.getElementById('filtroMesAno');
-                        selectMesAno.innerHTML = '<option value="Todos">-- Todos os Meses --</option>';
-                        let mesesUnicos = new Set();
-                        listaKpis.forEach(i => {
-                            let dataRaw = lerCampo(i, CHAVES.mes);
-                            if (dataRaw) {
-                                let labelMes = formatarDataMesAno(dataRaw);
-                                if (labelMes) mesesUnicos.add(labelMes);
-                            }
-                        });
-                        let mesesOrdenados = Array.from(mesesUnicos).sort((a, b) => {
-                            const deparaMeses = { 'Jan':1, 'Fev':2, 'Mar':3, 'Abr':4, 'Mai':5, 'Jun':6, 'Jul':7, 'Ago':8, 'Set':9, 'Out':10, 'Nov':11, 'Dez':12 };
-                            let [mA, aA] = a.split('/');
-                            let [mB, aB] = b.split('/');
-                            if (aA !== aB) return parseInt(aA) - parseInt(aB);
-                            return (deparaMeses[mA] || 0) - (deparaMeses[mB] || 0);
-                        });
-                        mesesOrdenados.forEach(m => {
-                            selectMesAno.innerHTML += `<option value="${m}">${m}</option>`;
-                        });
-
-                        atualizarPainelGeral();
-                    } else {
-                        ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Falha na estrutura de dados`;
-                    }
-                }).catch(err => {
-                    ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Erro de Conexão`;
-                });
+                    atualizarPainelGeral();
+                }
+            }).catch(() => { ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Erro de Conexão`; });
         }
 
         function limparFiltrosPainel() {
@@ -472,110 +365,98 @@
             document.getElementById('filtroMesAno').value = "Todos";
             document.getElementById('filtroPerspectiva').value = "Todos";
             document.getElementById('filtroStatus').value = "Todos";
-            document.getElementById('filtroPrazoReuniao').checked = false;
             atualizarPainelGeral();
         }
 
-        function atualizarPainelGeral() {
-            renderizarResumoTabela();
-            renderizarMapaEstrategico();
+        function atualizarPainelGeral() { 
+            renderResumoTabela(); 
+            renderMapaEstrategico();
         }
 
-        function renderizarResumoTabela() {
+        // FUNÇÃO RECONSTRUÍDA COM A LOGICA DE FILTROS REAL E INTEGRADA
+        function renderResumoTabela() {
             let listaKpis = dadosOriginais.indicadores || [];
-            if(!listaKpis.length) return;
-
-            const fResp = document.getElementById('filtroResponsavel').value;
-            const fPersp = document.getElementById('filtroPerspectiva').value;
-            const fStat = document.getElementById('filtroStatus').value;
-            const fMesAno = document.getElementById('filtroMesAno').value;
-            const fPrazoCheckbox = document.getElementById('filtroPrazoReuniao').checked;
-
             const corpo = document.getElementById('tabela-resumo-corpo');
             corpo.innerHTML = "";
+
+            const fLider = document.getElementById('filtroResponsavel').value;
+            const fMes = document.getElementById('filtroMesAno').value;
+            const fPersp = document.getElementById('filtroPerspectiva').value;
+            const fStatus = document.getElementById('filtroStatus').value;
+
+            // Agrupar histórico completo por Indicador
             let agrupados = {};
             listaKpis.forEach(linha => {
+                let nLider = lerCampo(linha, CHAVES.resp);
+                let nMes = lerCampo(linha, CHAVES.mes);
+                let nPersp = lerCampo(linha, CHAVES.persp);
+
+                if (fLider !== "Todos" && nLider !== fLider) return;
+                if (fMes !== "Todos" && nMes !== fMes) return;
+                if (fPersp !== "Todos" && normalizarTexto(nPersp) !== normalizarTexto(fPersp)) return;
+
                 let chaveUnica = lerCampo(linha, CHAVES.obj) + "||" + lerCampo(linha, CHAVES.kpi);
                 if (!agrupados[chaveUnica]) agrupados[chaveUnica] = [];
                 agrupados[chaveUnica].push(linha);
             });
-            
+
             let countKpi = 0, countVerde = 0, countAmarelo = 0, countVermelho = 0;
-            let somaGlobalProgressoPlanos = 0, totalKpisComPlanos = 0;
-            
+            let somaGlobalPA = 0, kpisComPaContados = 0;
+
             for (let chave in agrupados) {
                 let historico = agrupados[chave];
-                historico.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
-
-                // NOVO: Seleção inteligente baseada no filtro Mês/Ano superior
-                let recente;
-                let encontrouMes = true;
-                if (fMesAno !== "Todos") {
-                    recente = historico.find(l => formatarDataMesAno(lerCampo(l, CHAVES.mes)) === fMesAno);
-                    if (!recente) {
-                        recente = historico[historico.length - 1];
-                        encontrouMes = false;
-                    }
-                } else {
-                    recente = historico.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historico[historico.length - 1];
-                }
+                let recente = historico.filter(l => { let r = lerCampo(l, CHAVES.real); return r !== "" && r !== "--"; }).pop() || historico[historico.length - 1];
 
                 let nObj = lerCampo(recente, CHAVES.obj);
                 let nKpi = lerCampo(recente, CHAVES.kpi);
                 let nPersp = lerCampo(recente, CHAVES.persp);
                 let nResp = lerCampo(recente, CHAVES.resp);
-
-                let rawMeta = encontrouMes ? lerCampo(recente, CHAVES.meta) : "";
-                let rawReal = encontrouMes ? lerCampo(recente, CHAVES.real) : "";
+                let rawMeta = lerCampo(recente, CHAVES.meta);
+                let rawReal = lerCampo(recente, CHAVES.real);
                 let ehPct = verificarSeEhPercentual(nKpi);
-                
-                // NOVO: Ajuste do histórico YTD baseado no corte do mês selecionado
-                let historicoFiltradoYTD = [...historico];
-                if (fMesAno !== "Todos" && encontrouMes) {
-                    let idx = historico.findIndex(l => formatarDataMesAno(lerCampo(l, CHAVES.mes)) === fMesAno);
-                    if (idx !== -1) {
-                        historicoFiltradoYTD = historico.slice(0, idx + 1);
-                    }
+
+                let ytdPct = calcularYTDInteligente(historico);
+                let classeFarolKpi = converterFarolPorPorcentagem(ytdPct);
+
+                // Filtro por Status do Farol do Indicador
+                if (fStatus !== "Todos") {
+                    if (fStatus === "Verde" && classeFarolKpi !== "farol-verde") continue;
+                    if (fStatus === "Amarelo" && classeFarolKpi !== "farol-amarelo") continue;
+                    if (fStatus === "Vermelho" && classeFarolKpi !== "farol-vermelho") continue;
                 }
 
-                let ytdPct = calcularYTDInteligente(historicoFiltradoYTD, ehPct);
-                let classeFarol = converterFarolPorPorcentagem(ytdPct);
-                let textoFarol = classeFarol === 'farol-verde' ? 'Verde' : (classeFarol === 'farol-amarelo' ? 'Amarelo' : 'Vermelho');
-                
-                if (fResp !== "Todos" && nResp !== fResp) continue;
-                if (fPersp !== "Todos" && !nPersp.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
-                if (fStat !== "Todos" && textoFarol !== fStat) continue;
-
-                let acoesDoKpi = (dadosOriginais.planoAcao || []).filter(p =>
-                    lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === nObj.toLowerCase().trim() &&
-                    lerCampo(p, CHAVES.kpi).toLowerCase().trim() === nKpi.toLowerCase().trim()
-                );
-                
-                if (fPrazoCheckbox) {
-                    let hoje = new Date();
-                    acoesDoKpi = acoesDoKpi.filter(p => {
-                        let rawFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo_Fim', 'Prazo']);
-                        if (!rawFim) return false;
-                        let dFim = converterParaData(rawFim);
-                        return !isNaN(dFim.getTime()) && dFim <= hoje;
-                    });
-                }
-                
-                let totalAcoes = acoesDoKpi.length;
-                let concluidas = acoesDoKpi.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
-                
-                // CORREÇÃO: Se não há ações criadas ou se tudo está concluído, o progresso é 100% (Verde)
-                let pctPA = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 100;
-                let farolPA = converterFarolPorPorcentagem(pctPA);
-                
-                // Consolidação correta para o card global do topo
-                somaGlobalProgressoPlanos += pctPA;
-                totalKpisComPlanos++;
-                
                 countKpi++;
-                if (classeFarol === 'farol-verde') countVerde++;
-                if (classeFarol === 'farol-amarelo') countAmarelo++;
-                if (classeFarol === 'farol-vermelho') countVermelho++;
+                if (classeFarolKpi === 'farol-verde') countVerde++;
+                if (classeFarolKpi === 'farol-amarelo') countAmarelo++;
+                if (classeFarolKpi === 'farol-vermelho') countVermelho++;
+
+                // Cruzamento correto com Plano de Ação
+                let acoesDoKpi = (dadosOriginais.planoAcao || []).filter(p =>
+                    normalizarTexto(lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo'])) === normalizarTexto(nObj) &&
+                    normalizarTexto(lerCampo(p, CHAVES.kpi)) === normalizarTexto(nKpi)
+                );
+
+                let textoPctPA = "--";
+                let farolPA = "farol-sem-dados";
+                let larguraBarra = 0;
+                let corBarra = "bg-slate-300";
+
+                if (acoesDoKpi.length > 0) {
+                    let totalAcoes = acoesDoKpi.length;
+                    let concluidas = acoesDoKpi.filter(p => {
+                        let st = lerCampo(p, CHAVES.status).toLowerCase();
+                        return st.includes('concl') || st.includes('feito') || st.includes('ok');
+                    }).length;
+
+                    let pctFinal = Math.round((concluidas / totalAcoes) * 100);
+                    textoPctPA = pctFinal + "%";
+                    larguraBarra = pctFinal;
+                    farolPA = converterFarolPA(pctFinal);
+                    corBarra = pctFinal === 100 ? 'bg-green-500' : (pctFinal >= 70 ? 'bg-amber-500' : 'bg-red-500');
+
+                    somaGlobalPA += pctFinal;
+                    kpisComPaContados++;
+                }
 
                 let corTextoPersp = "text-amber-600";
                 if(nPersp.toLowerCase().includes('clien')) corTextoPersp = "text-teal-700";
@@ -589,22 +470,21 @@
                         <td class="p-3 text-slate-500 font-medium">${nResp}</td>
                         <td class="p-3 text-right font-mono font-black text-slate-700">${formatarNumeroVisual(rawMeta, ehPct)}</td>
                         <td class="p-3 text-right font-mono font-black text-slate-900">${formatarNumeroVisual(rawReal, ehPct)}</td>
-                        <td class="p-3 text-center">
-                            <span class="px-2 py-0.5 rounded-full border border-slate-200 font-black bg-slate-50 text-slate-700">${ytdPct}%</span>
-                        </td>
+                        <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full border border-slate-200 font-black bg-slate-50 text-slate-700">${ytdPct}%</span></td>
                         <td class="p-3">
                             <div class="flex items-center gap-2">
-                                <span class="font-bold text-slate-700 w-8">${pctPA}%</span>
-                                <div class="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden border border-slate-200/60">
-                                    <div class="h-full ${pctPA >= 90 ? 'bg-green-500' : (pctPA >= 70 ? 'bg-amber-500' : 'bg-red-500')}" style="width: ${pctPA}%"></div>
+                                <span class="font-bold text-slate-700 w-8">${textoPctPA}</span>
+                                <div class="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden border border-slate-200/60 ${textoPctPA === '--' ? 'hidden' : ''}">
+                                    <div class="h-full ${corBarra}" style="width: ${larguraBarra}%"></div>
                                 </div>
                             </div>
                         </td>
-                        <td class="p-3 text-center"><div class="w-3 h-3 rounded-full mx-auto ${classeFarol}"></div></td>
+                        <td class="p-3 text-center"><div class="w-3 h-3 rounded-full mx-auto ${classeFarolKpi}"></div></td>
                         <td class="p-3 text-center"><div class="w-3 h-3 rounded-full mx-auto ${farolPA}"></div></td>
                     </tr>
                 `;
             }
+
             document.getElementById('card-total-kpis').innerText = countKpi;
             document.getElementById('card-total-verde').innerText = countVerde;
             document.getElementById('card-total-amarelo').innerText = countAmarelo;
@@ -612,243 +492,69 @@
             document.getElementById('pct-card-verde').innerText = countKpi > 0 ? Math.round((countVerde / countKpi) * 100) + "%" : "0%";
             document.getElementById('pct-card-amarelo').innerText = countKpi > 0 ? Math.round((countAmarelo / countKpi) * 100) + "%" : "0%";
             document.getElementById('pct-card-vermelho').innerText = countKpi > 0 ? Math.round((countVermelho / countKpi) * 100) + "%" : "0%";
-            
-            // Exibição corrigida do card de média
-            document.getElementById('card-media-planos').innerText = totalKpisComPlanos > 0 ? Math.round(somaGlobalProgressoPlanos / totalKpisComPlanos) + "%" : "100%";
+            document.getElementById('card-media-planos').innerText = kpisComPaContados > 0 ? Math.round(somaGlobalPA / kpisComPaContados) + "%" : "--";
         }
 
-        function renderizarMapaEstrategico() {
-            let listaKpis = dadosOriginales = dadosOriginais.indicadores || [];
-            if(!listaKpis.length) return;
+        // MONTAGEM COMPLETA DOS CARDS DINÂMICOS DO MAPA ESTRATÉGICO (TELA 2)
+        function renderMapaEstrategico() {
+            const containerFinanceira = document.getElementById('cards-financeira');
+            const containerClientes = document.getElementById('cards-clientes');
+            const containerProcessos = document.getElementById('cards-processos');
+            const containerAprendizado = document.getElementById('cards-aprendizado');
 
-            const fResp = document.getElementById('filtroResponsavel').value;
-            const fPersp = document.getElementById('filtroPerspectiva').value;
-            const fStat = document.getElementById('filtroStatus').value;
-            const fPrazoCheckbox = document.getElementById('filtroPrazoReuniao').checked;
+            containerFinanceira.innerHTML = "";
+            containerClientes.innerHTML = "";
+            containerProcessos.innerHTML = "";
+            containerAprendizado.innerHTML = "";
 
-            let objetivosAgrupados = {};
+            let listaKpis = dadosOriginais.indicadores || [];
+            let objetivosMapeados = {};
+
+            // Filtrar e agrupar KPIs pertencentes a cada Objetivo
             listaKpis.forEach(linha => {
-                let nomeObj = lerCampo(linha, CHAVES.obj);
-                if(!nomeObj) return;
-                if(!objetivosAgrupados[nomeObj]) objetivosAgrupados[nomeObj] = [];
-                objetivosAgrupados[nomeObj].push(linha);
+                let objName = lerCampo(linha, CHAVES.obj);
+                let persp = lerCampo(linha, CHAVES.persp);
+                if(!objName || !persp) return;
+
+                if(!objetivosMapeados[objName]) {
+                    objetivosMapeados[objName] = { nome: objName, perspectiva: persp, historicos: [] };
+                }
+                objetivosMapeados[objName].historicos.push(linha);
             });
 
-            const containers = {
-                'financeira': document.getElementById('cards-financeira'),
-                'clientes': document.getElementById('cards-clientes'),
-                'processos': document.getElementById('cards-processos'),
-                'aprendizado': document.getElementById('cards-aprendizado')
-            };
-            Object.values(containers).forEach(c => c.innerHTML = "");
-
-            for (let nomeObj in objetivosAgrupados) {
-                let linhasDoObj = objetivosAgrupados[nomeObj];
-                let kpisUnicos = [...new Set(linhasDoObj.map(l => lerCampo(l, CHAVES.kpi)))];
-
-                let somaYtdKpis = 0;
-                let contKpisValidosParaFiltro = 0;
-                let idCard = "OBJ";
-                let perspectivaCard = "";
-                let autorizadoPorLider = false;
-
-                kpisUnicos.forEach(kpiNome => {
-                    let historicoKpi = linhasDoObj.filter(l => lerCampo(l, CHAVES.kpi) === kpiNome);
-                    let ehPct = verificarSeEhPercentual(kpiNome);
-                    let ytdKpi = calcularYTDInteligente(historicoKpi, ehPct);
-
-                    somaYtdKpis += ytdKpi;
-                    contKpisValidosParaFiltro++;
-                    let topo = historicoKpi[historicoKpi.length - 1];
-                    idCard = lerCampo(topo, CHAVES.id) || idCard;
-                    perspectivaCard = lerCampo(topo, CHAVES.persp);
-                    if (fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
-                });
-
-                let ytdMedioObjetivo = contKpisValidosParaFiltro > 0 ? Math.round(somaYtdKpis / contKpisValidosParaFiltro) : 0;
-                let farolResultadosObj = converterFarolPorPorcentagem(ytdMedioObjetivo);
+            for (let name in objetivosMapeados) {
+                let obj = objetivosMapeados[name];
                 
-                let acoesDoObj = (dadosOriginais.planoAcao || []).filter(p =>
-                    lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === nomeObj.toLowerCase().trim()
-                );
+                // Calcular a média de atingimento real desse objetivo
+                let pctObjetivo = calcularYTDInteligente(obj.historicos);
+                let farolCor = converterFarolPorPorcentagem(pctObjetivo);
+                let bordaCor = "border-amber-500";
                 
-                if (fPrazoCheckbox) {
-                    let hoje = new Date();
-                    acoesDoObj = acoesDoObj.filter(p => {
-                        let rawFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo_Fim', 'Prazo']);
-                        if (!rawFim) return false;
-                        let dFim = converterParaData(rawFim);
-                        return !isNaN(dFim.getTime()) && dFim <= hoje;
-                    });
-                }
+                if (obj.perspectiva.toLowerCase().includes('clien')) bordaCor = "border-teal-600";
+                else if (obj.perspectiva.toLowerCase().includes('proc')) bordaCor = "border-[#1a2e4c]";
+                else if (obj.perspectiva.toLowerCase().includes('apren')) bordaCor = "border-orange-400";
 
-                let totalAcoes = acoesDoObj.length;
-                let concluidas = acoesDoObj.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
-                let pctPAObjetivo = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 100;
-                let farolPAObj = converterFarolPorPorcentagem(pctPAObjetivo);
-
-                if (!autorizadoPorLider) continue;
-                if (fPersp !== "Todos" && !perspectivaCard.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
-
-                let statusTextoFiltro = ytdMedioObjetivo >= 90 ? 'Verde' : (ytdMedioObjetivo >= 70 ? 'Amarelo' : 'Vermelho');
-                if (fStat !== "Todos" && statusTextoFiltro !== fStat) continue;
-
-                let containerAlvo = containers.processos;
-                let pLower = perspectivaCard.toLowerCase();
-                if(pLower.includes('finan')) containerAlvo = containers.financeira;
-                else if(pLower.includes('clien')) containerAlvo = containers.clientes;
-                else if(pLower.includes('apren') || pLower.includes('cresc')) containerAlvo = containers.aprendizado;
-
-                containerAlvo.innerHTML += `
-                    <div onclick="abrirDetalhesObjetivo('${nomeObj.replace(/'/g, "\\'")}')" class="bg-white border border-slate-200 p-3 rounded-xl w-64 h-36 obj-card relative flex flex-col justify-between shadow-2xs">
-                        <div class="overflow-hidden">
-                            <div class="flex justify-between items-center text-[9px] font-black text-slate-400 tracking-wider">
-                                <span>${idCard}</span>
-                                <span class="text-blue-500 font-bold">Metas: ${kpisUnicos.length}</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-700 leading-snug mt-1 line-clamp-2" title="${nomeObj}">${nomeObj}</div>
-                        </div>
-
-                        <div class="pt-2 border-t border-slate-100 space-y-1 text-[10px] font-bold">
-                            <div class="flex justify-between items-center text-slate-500">
-                                <span class="flex items-center gap-1"><i class="fa-solid fa-chart-line text-slate-400 w-3.5"></i>Resultados (YTD): <strong class="text-slate-800 ml-0.5">${ytdMedioObjetivo}%</strong></span>
-                                <div class="w-2.5 h-2.5 rounded-full ${farolResultadosObj}" title="Atingimento das Metas"></div>
-                            </div>
-                            <div class="flex justify-between items-center text-slate-500">
-                                <span class="flex items-center gap-1"><i class="fa-solid fa-list-check text-slate-400 w-3.5"></i>Execução P.A.: <strong class="text-slate-800 ml-0.5">${pctPAObjetivo}%</strong></span>
-                                <div class="w-2.5 h-2.5 rounded-full ${farolPAObj}" title="Evolução do Plano de Ação"></div>
-                            </div>
+                let cardHtml = `
+                    <div class="obj-card bg-white border-l-4 ${bordaCor} p-3 rounded-r-xl shadow-xs w-64 min-h-[90px] flex flex-col justify-between border border-slate-200">
+                        <p class="text-[11px] font-bold text-slate-800 leading-tight line-clamp-3">${obj.nome}</p>
+                        <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+                            <span class="text-[10px] font-black text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded-md border border-slate-200">Média YTD: ${pctObjetivo}%</span>
+                            <div class="w-2.5 h-2.5 rounded-full ${farolCor}"></div>
                         </div>
                     </div>
                 `;
+
+                if (obj.perspectiva.toLowerCase().includes('finan')) containerFinanceira.innerHTML += cardHtml;
+                else if (obj.perspectiva.toLowerCase().includes('clien')) containerClientes.innerHTML += cardHtml;
+                else if (obj.perspectiva.toLowerCase().includes('proc')) containerProcessos.innerHTML += cardHtml;
+                else if (obj.perspectiva.toLowerCase().includes('apren')) containerAprendizado.innerHTML += cardHtml;
             }
-        }
 
-        function abrirDetalhesObjetivo(nomeDoObjetivo) {
-            objetivoSelecionadoAtual = nomeDoObjetivo;
-            let listaKpis = dadosOriginais.indicadores || [];
-            let linesDoObj = listaKpis.filter(i => lerCampo(i, CHAVES.obj) === nomeDoObjetivo);
-            if(!linesDoObj.length) return;
-
-            document.getElementById('modalIdObj').innerText = lerCampo(linesDoObj[0], CHAVES.id) || "OBJETIVO";
-            document.getElementById('modalNomeObj').innerText = nomeDoObjetivo;
-            
-            let kpisUnicos = [...new Set(linesDoObj.map(l => lerCampo(l, CHAVES.kpi)))];
-            const selectKpi = document.getElementById('modalSelectKpi');
-            selectKpi.innerHTML = "";
-            kpisUnicos.forEach(kpi => {
-                selectKpi.innerHTML += `<option value="${kpi.replace(/'/g, "\\'")}">${kpi}</option>`;
-            });
-            mudarIndicadorNoModal();
-            document.getElementById('modalObjetivo').style.display = 'flex';
-        }
-
-        function mudarIndicadorNoModal() {
-            let kpiSelecionado = document.getElementById('modalSelectKpi').value;
-            let listaKpis = dadosOriginais.indicadores || [];
-            cacheHistoricoModal = listaKpis.filter(i => lerCampo(i, CHAVES.obj) === objetivoSelecionadoAtual && lerCampo(i, CHAVES.kpi) === kpiSelecionado);
-
-            cacheHistoricoModal.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
-            let topo = cacheHistoricoModal.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || cacheHistoricoModal[cacheHistoricoModal.length - 1];
-
-            let ehPct = verificarSeEhPercentual(kpiSelecionado);
-            document.getElementById('modalLider').innerText = lerCampo(topo, CHAVES.resp) || "--";
-            document.getElementById('modalMetaValor').innerText = formatarNumeroVisual(lerCampo(topo, CHAVES.meta), ehPct);
-            document.getElementById('modalRealValor').innerText = formatarNumeroVisual(lerCampo(topo, CHAVES.real), ehPct);
-            
-            const selectAno = document.getElementById('modalFiltroAno');
-            selectAno.innerHTML = '<option value="Total">Histórico Total</option>';
-            let anosUnicos = new Set();
-            cacheHistoricoModal.forEach(reg => {
-                let ano = obterAnoRegistro(lerCampo(reg, CHAVES.mes));
-                if (ano) anosUnicos.add(ano);
-            });
-            Array.from(anosUnicos).sort((a, b) => b - a).forEach(ano => {
-                selectAno.innerHTML += `<option value="${ano}">${ano}</option>`;
-            });
-            
-            renderizarGraficoModal();
-            renderizarIniciativasModal(kpiSelecionado);
-        }
-
-        function renderizarGraficoModal() {
-            const filtroAno = document.getElementById('modalFiltroAno').value;
-            let dadosFiltrados = cacheHistoricoModal;
-            
-            if (filtroAno !== "Total") {
-                dadosFiltrados = cacheHistoricoModal.filter(reg => {
-                    return obterAnoRegistro(lerCampo(reg, CHAVES.mes)) === parseInt(filtroAno);
-                });
-            }
-            
-            let eixoXLabels = [];
-            let dadosMeta = [];
-            let dadosResultado = [];
-            dadosFiltrados.forEach(reg => {
-                eixoXLabels.push(formatarDataMesAno(lerCampo(reg, CHAVES.mes)));
-                dadosMeta.push(parseFloat(lerCampo(reg, CHAVES.meta)) || 0);
-                dadosResultado.push(parseFloat(lerCampo(reg, CHAVES.real)) || 0);
-            });
-
-            if (graficoInstancia) graficoInstancia.destroy();
-            const ctx = document.getElementById('graficoMensalCanvas').getContext('2d');
-            graficoInstancia = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: eixoXLabels,
-                    datasets: [
-                        { label: 'Meta', type: 'line', data: dadosMeta, borderColor: '#ef4444', borderWidth: 2, fill: false, tension: 0.1 },
-                        { label: 'Realizado', data: dadosResultado, backgroundColor: '#1a2e4c', borderRadius: 2 }
-                    ]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    scales: { 
-                        x: {
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 45,
-                                callback: function(value, index) { 
-                                    return index % 3 === 0 ? this.getLabelForValue(value) : ''; 
-                                }
-                            }
-                        },
-                        y: { beginAtZero: true } 
-                    } 
-                }
-            });
-        }
-
-        function renderizarIniciativasModal(kpiSelecionado) {
-            const tCorpo = document.getElementById('modalTabelaPlanoCorpo');
-            tCorpo.innerHTML = "";
-            let planosFiltrados = (dadosOriginais.planoAcao || []).filter(p =>
-                lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === objetivoSelecionadoAtual.toLowerCase().trim() &&
-                lerCampo(p, CHAVES.kpi).toLowerCase().trim() === kpiSelecionado.toLowerCase().trim()
-            );
-            if(!planosFiltrados.length) {
-                tCorpo.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-400 font-medium">Nenhuma iniciativa vinculada.</td></tr>`;
-            } else {
-                planosFiltrados.forEach(p => {
-                    let st = lerCampo(p, CHAVES.status);
-                    let corBadge = st.toLowerCase().includes('concl') ? "bg-green-50 text-green-700 border border-green-200" : (st.toLowerCase().includes('andam') ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-600 border border-slate-200");
-                    let dataFim = lerCampo(p, ['Prazo Fim', 'Fim', 'Prazo', 'Prazo_Fim']);
-                    tCorpo.innerHTML += `
-                        <tr class="hover:bg-slate-50/60 text-[11px]">
-                            <td class="p-2.5 font-semibold text-slate-700">${lerCampo(p, ['AÇÃO', 'Acao', 'Atividade'])}</td>
-                            <td class="p-2.5 font-bold text-slate-500">${lerCampo(p, ['RESPONSÁVEL', 'Responsável'])}</td>
-                            <td class="p-2.5 font-mono text-slate-400">${dataFim || '--'}</td>
-                            <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${corBadge}">${st || 'Pendente'}</span></td>
-                        </tr>
-                    `;
-                });
-            }
-        }
-
-        function fecharModalObjetivo() {
-            document.getElementById('modalObjetivo').style.display = 'none';
+            // Fallbacks visuais para perspectivas sem dados ativos no filtro
+            if(!containerFinanceira.innerHTML) containerFinanceira.innerHTML = '<span class="text-[11px] text-slate-400 italic">Nenhum objetivo listado</span>';
+            if(!containerClientes.innerHTML) containerClientes.innerHTML = '<span class="text-[11px] text-slate-400 italic">Nenhum objetivo listado</span>';
+            if(!containerProcessos.innerHTML) containerProcessos.innerHTML = '<span class="text-[11px] text-slate-400 italic">Nenhum objetivo listado</span>';
+            if(!containerAprendizado.innerHTML) containerAprendizado.innerHTML = '<span class="text-[11px] text-slate-400 italic">Nenhum objetivo listado</span>';
         }
     </script>
 </body>
