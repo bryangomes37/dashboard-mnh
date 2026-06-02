@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo de Governança | Novo Horizonte</title>
+    <!-- Tailwind CSS e FontAwesome para design moderno e scannable -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -24,6 +25,7 @@
     </style>
 </head>
 <body class="bg-[#f4f6f9] text-slate-800 font-sans antialiased">
+    <!-- TOPO INSTITUCIONAL -->
     <header class="bg-[#0b1329] text-white px-6 py-4 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-4 w-full lg:w-auto">
@@ -52,6 +54,7 @@
         </div>
     </header>
 
+    <!-- NAVEGAÇÃO -->
     <nav class="bg-[#0b1329] border-b border-slate-800 px-6">
         <div class="max-w-7xl mx-auto flex gap-1">
             <button onclick="alternarTela('resumo')" id="btn-tab-resumo" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-300 hover:text-white transition cursor-pointer rounded-t-lg mt-1.5 tab-ativa">
@@ -63,12 +66,20 @@
         </div>
     </nav>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- FILTROS -->
         <section class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex flex-col lg:flex-row gap-4 items-end justify-between shadow-2xs">
-            <div class="w-full lg:w-auto grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+            <div class="w-full lg:w-auto grid grid-cols-1 sm:grid-cols-4 gap-4 flex-1">
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-user-tie mr-1"></i> Líder Responsável</label>
                     <select id="filtroResponsavel" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-700"></select>
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-calendar-days mr-1"></i> Mês/Ano</label>
+                    <select id="filtroMesAno" onchange="atualizarPainelGeral()" class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-semibold outline-none cursor-pointer text-slate-700">
+                        <option value="Todos">-- Todos os Meses --</option>
+                    </select>
                 </div>
                 <div class="flex flex-col">
                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1"><i class="fa-solid fa-layer-group mr-1"></i> Perspectiva</label>
@@ -97,6 +108,7 @@
             <button onclick="limparFiltrosPainel()" class="text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-lg transition cursor-pointer w-full lg:w-auto text-center"><i class="fa-solid fa-trash-can mr-1"></i> Limpar</button>
         </section>
 
+        <!-- TELA 1: RESUMO -->
         <section id="tela-resumo" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
                 <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-2xs flex items-center gap-4">
@@ -145,6 +157,7 @@
                 </div>
             </div>
 
+            <!-- TABELA -->
             <div class="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
@@ -167,6 +180,7 @@
             </div>
         </section>
 
+        <!-- TELA 2: MAPA ESTRATÉGICO MODIFICADO -->
         <section id="tela-mapa" class="space-y-4 bg-white p-5 rounded-xl border border-slate-200 shadow-2xs overflow-x-auto min-w-[850px] hidden">
             <div class="mb-2">
                 <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-map text-slate-400"></i> Visão de Objetivos por Perspectiva</h2>
@@ -191,6 +205,7 @@
         </section>
     </main>
 
+    <!-- MODAL DETALHADO -->
     <div id="modalObjetivo" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden justify-center items-center p-4 z-50 overflow-y-auto">
         <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl border border-slate-200 overflow-hidden my-8 max-h-[90vh] flex flex-col">
             <div class="bg-[#0b1329] text-white p-4 flex justify-between items-center">
@@ -243,6 +258,7 @@
         </div>
     </div>
 
+    <!-- ENGINE LOGICA DO PAINEL -->
     <script>
         let dadosOriginais = { indicadores: [], planoAcao: [] };
         let graficoInstancia = null;
@@ -274,7 +290,6 @@
             return "";
         }
 
-        // --- ITEM 1: NOVA FUNÇÃO DE TRATAMENTO DE DATA/ANOS PARA EVITAR ERROS DE PARSING ---
         function obterAnoRegistro(valorData) {
             if (!valorData) return null;
             let s = String(valorData).trim();
@@ -289,7 +304,6 @@
             return null;
         }
 
-        // Auxiliar robusta para converter datas em formato string brasileiro (DD/MM/YYYY) para objeto Date
         function converterParaData(valorData) {
             if (!valorData) return new Date(NaN);
             let s = String(valorData).trim();
@@ -356,7 +370,6 @@
             return 'farol-vermelho';
         }
 
-        // --- ITEM 2: FORMATAR DATA DINAMICAMENTE PARA EXIBIR MESES EM PORTUGUÊS NO GRÁFICO (Mês/Ano) ---
         function formatarDataMesAno(textoData) {
             if (!textoData) return "";
             let data;
@@ -405,7 +418,6 @@
                 .then(res => res.json())
                 .then(data => {
                     if(data && (data.indicadores || data.status === "sucesso")) {
-                        // --- ITEM 3: MAPEAMENTO SEGURO DE INICIATIVAS INDEPENDENTE DOS DOIS FORMATOS DA PLANILHA ---
                         dadosOriginais = {
                             indicadores: data.indicadores || [],
                             objetivos: data.objetivos || [],
@@ -415,6 +427,7 @@
                         
                         ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Conectada e Sincronizada`;
 
+                        // Popular filtro de líderes
                         document.getElementById('filtroResponsavel').innerHTML = '<option value="Todos">-- Todos os Líderes --</option>';
                         let listUser = new Set();
                         let listaKpis = dadosOriginais.indicadores || [];
@@ -422,6 +435,29 @@
                         Array.from(listUser).sort().forEach(u => {
                             document.getElementById('filtroResponsavel').innerHTML += `<option value="${u}">${u}</option>`;
                         });
+
+                        // NOVO: Alimentação dinâmica do filtro Mês/Ano superior
+                        const selectMesAno = document.getElementById('filtroMesAno');
+                        selectMesAno.innerHTML = '<option value="Todos">-- Todos os Meses --</option>';
+                        let mesesUnicos = new Set();
+                        listaKpis.forEach(i => {
+                            let dataRaw = lerCampo(i, CHAVES.mes);
+                            if (dataRaw) {
+                                let labelMes = formatarDataMesAno(dataRaw);
+                                if (labelMes) mesesUnicos.add(labelMes);
+                            }
+                        });
+                        let mesesOrdenados = Array.from(mesesUnicos).sort((a, b) => {
+                            const deparaMeses = { 'Jan':1, 'Fev':2, 'Mar':3, 'Abr':4, 'Mai':5, 'Jun':6, 'Jul':7, 'Ago':8, 'Set':9, 'Out':10, 'Nov':11, 'Dez':12 };
+                            let [mA, aA] = a.split('/');
+                            let [mB, aB] = b.split('/');
+                            if (aA !== aB) return parseInt(aA) - parseInt(aB);
+                            return (deparaMeses[mA] || 0) - (deparaMeses[mB] || 0);
+                        });
+                        mesesOrdenados.forEach(m => {
+                            selectMesAno.innerHTML += `<option value="${m}">${m}</option>`;
+                        });
+
                         atualizarPainelGeral();
                     } else {
                         ind.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Falha na estrutura de dados`;
@@ -433,6 +469,7 @@
 
         function limparFiltrosPainel() {
             document.getElementById('filtroResponsavel').value = "Todos";
+            document.getElementById('filtroMesAno').value = "Todos";
             document.getElementById('filtroPerspectiva').value = "Todos";
             document.getElementById('filtroStatus').value = "Todos";
             document.getElementById('filtroPrazoReuniao').checked = false;
@@ -451,6 +488,7 @@
             const fResp = document.getElementById('filtroResponsavel').value;
             const fPersp = document.getElementById('filtroPerspectiva').value;
             const fStat = document.getElementById('filtroStatus').value;
+            const fMesAno = document.getElementById('filtroMesAno').value;
             const fPrazoCheckbox = document.getElementById('filtroPrazoReuniao').checked;
 
             const corpo = document.getElementById('tabela-resumo-corpo');
@@ -469,16 +507,38 @@
                 let historico = agrupados[chave];
                 historico.sort((a, b) => new Date(lerCampo(a, CHAVES.mes)) - new Date(lerCampo(b, CHAVES.mes)));
 
-                let recente = historico.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historico[historico.length - 1];
+                // NOVO: Seleção inteligente baseada no filtro Mês/Ano superior
+                let recente;
+                let encontrouMes = true;
+                if (fMesAno !== "Todos") {
+                    recente = historico.find(l => formatarDataMesAno(lerCampo(l, CHAVES.mes)) === fMesAno);
+                    if (!recente) {
+                        recente = historico[historico.length - 1];
+                        encontrouMes = false;
+                    }
+                } else {
+                    recente = historico.filter(l => lerCampo(l, CHAVES.real) !== "").pop() || historico[historico.length - 1];
+                }
+
                 let nObj = lerCampo(recente, CHAVES.obj);
                 let nKpi = lerCampo(recente, CHAVES.kpi);
                 let nPersp = lerCampo(recente, CHAVES.persp);
                 let nResp = lerCampo(recente, CHAVES.resp);
 
-                let rawMeta = lerCampo(recente, CHAVES.meta);
-                let rawReal = lerCampo(recente, CHAVES.real);
+                let rawMeta = encontrouMes ? lerCampo(recente, CHAVES.meta) : "";
+                let rawReal = encontrouMes ? lerCampo(recente, CHAVES.real) : "";
                 let ehPct = verificarSeEhPercentual(nKpi);
-                let ytdPct = calcularYTDInteligente(historico, ehPct);
+                
+                // NOVO: Ajuste do histórico YTD baseado no corte do mês selecionado
+                let historicoFiltradoYTD = [...historico];
+                if (fMesAno !== "Todos" && encontrouMes) {
+                    let idx = historico.findIndex(l => formatarDataMesAno(lerCampo(l, CHAVES.mes)) === fMesAno);
+                    if (idx !== -1) {
+                        historicoFiltradoYTD = historico.slice(0, idx + 1);
+                    }
+                }
+
+                let ytdPct = calcularYTDInteligente(historicoFiltradoYTD, ehPct);
                 let classeFarol = converterFarolPorPorcentagem(ytdPct);
                 let textoFarol = classeFarol === 'farol-verde' ? 'Verde' : (classeFarol === 'farol-amarelo' ? 'Amarelo' : 'Vermelho');
                 
@@ -491,7 +551,6 @@
                     lerCampo(p, CHAVES.kpi).toLowerCase().trim() === nKpi.toLowerCase().trim()
                 );
                 
-                // --- ITEM 8 & 9: SE FILTRADO, CALCULA SÓ COM AS AÇÕES CUJO PRAZO JÁ VENCEU ---
                 if (fPrazoCheckbox) {
                     let hoje = new Date();
                     acoesDoKpi = acoesDoKpi.filter(p => {
@@ -504,14 +563,15 @@
                 
                 let totalAcoes = acoesDoKpi.length;
                 let concluidas = acoesDoKpi.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
-                let pctPA = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 0;
                 
-                if(totalAcoes > 0) {
-                    somaGlobalProgressoPlanos += pctPA;
-                    totalKpisComPlanos++;
-                }
+                // CORREÇÃO: Se não há ações criadas ou se tudo está concluído, o progresso é 100% (Verde)
+                let pctPA = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 100;
+                let farolPA = converterFarolPorPorcentagem(pctPA);
                 
-                let farolPA = totalAcoes > 0 ? converterFarolPorPorcentagem(pctPA) : 'bg-slate-200';
+                // Consolidação correta para o card global do topo
+                somaGlobalProgressoPlanos += pctPA;
+                totalKpisComPlanos++;
+                
                 countKpi++;
                 if (classeFarol === 'farol-verde') countVerde++;
                 if (classeFarol === 'farol-amarelo') countAmarelo++;
@@ -552,11 +612,13 @@
             document.getElementById('pct-card-verde').innerText = countKpi > 0 ? Math.round((countVerde / countKpi) * 100) + "%" : "0%";
             document.getElementById('pct-card-amarelo').innerText = countKpi > 0 ? Math.round((countAmarelo / countKpi) * 100) + "%" : "0%";
             document.getElementById('pct-card-vermelho').innerText = countKpi > 0 ? Math.round((countVermelho / countKpi) * 100) + "%" : "0%";
-            document.getElementById('card-media-planos').innerText = totalKpisComPlanos > 0 ? Math.round(somaGlobalProgressoPlanos / totalKpisComPlanos) + "%" : "0%";
+            
+            // Exibição corrigida do card de média
+            document.getElementById('card-media-planos').innerText = totalKpisComPlanos > 0 ? Math.round(somaGlobalProgressoPlanos / totalKpisComPlanos) + "%" : "100%";
         }
 
         function renderizarMapaEstrategico() {
-            let listaKpis = dadosOriginais.indicadores || [];
+            let listaKpis = dadosOriginales = dadosOriginais.indicadores || [];
             if(!listaKpis.length) return;
 
             const fResp = document.getElementById('filtroResponsavel').value;
@@ -600,7 +662,7 @@
                     let topo = historicoKpi[historicoKpi.length - 1];
                     idCard = lerCampo(topo, CHAVES.id) || idCard;
                     perspectivaCard = lerCampo(topo, CHAVES.persp);
-                    if (fResp === "Tomar" || fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
+                    if (fResp === "Todos" || lerCampo(topo, CHAVES.resp) === fResp) autorizadoPorLider = true;
                 });
 
                 let ytdMedioObjetivo = contKpisValidosParaFiltro > 0 ? Math.round(somaYtdKpis / contKpisValidosParaFiltro) : 0;
@@ -610,7 +672,6 @@
                     lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo']).toLowerCase().trim() === nomeObj.toLowerCase().trim()
                 );
                 
-                // --- ITEM 8 & 9 COMPLEMENTO: Sincronização do filtro de ações também no cálculo dos blocos do mapa ---
                 if (fPrazoCheckbox) {
                     let hoje = new Date();
                     acoesDoObj = acoesDoObj.filter(p => {
@@ -623,8 +684,8 @@
 
                 let totalAcoes = acoesDoObj.length;
                 let concluidas = acoesDoObj.filter(p => lerCampo(p, CHAVES.status).toLowerCase().includes('concl')).length;
-                let pctPAObjetivo = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 0;
-                let farolPAObj = totalAcoes > 0 ? converterFarolPorPorcentagem(pctPAObjetivo) : 'bg-slate-200';
+                let pctPAObjetivo = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 100;
+                let farolPAObj = converterFarolPorPorcentagem(pctPAObjetivo);
 
                 if (!autorizadoPorLider) continue;
                 if (fPersp !== "Todos" && !perspectivaCard.toLowerCase().includes(fPersp.toLowerCase().substring(0,5))) continue;
@@ -695,7 +756,6 @@
             document.getElementById('modalMetaValor').innerText = formatarNumeroVisual(lerCampo(topo, CHAVES.meta), ehPct);
             document.getElementById('modalRealValor').innerText = formatarNumeroVisual(lerCampo(topo, CHAVES.real), ehPct);
             
-            // --- ITEM 4: CORREÇÃO FILTRO DE ANO COM BASE NA NOVA ENGINE DE TRATAMENTO DE STRING/DATA ---
             const selectAno = document.getElementById('modalFiltroAno');
             selectAno.innerHTML = '<option value="Total">Histórico Total</option>';
             let anosUnicos = new Set();
@@ -715,7 +775,6 @@
             const filtroAno = document.getElementById('modalFiltroAno').value;
             let dadosFiltrados = cacheHistoricoModal;
             
-            // --- ITEM 5: FILTRO DE ANO AGORA FUNCIONANDO EM TEMPO REAL COM O NOVO ENGINE ---
             if (filtroAno !== "Total") {
                 dadosFiltrados = cacheHistoricoModal.filter(reg => {
                     return obterAnoRegistro(lerCampo(reg, CHAVES.mes)) === parseInt(filtroAno);
@@ -742,7 +801,6 @@
                         { label: 'Realizado', data: dadosResultado, backgroundColor: '#1a2e4c', borderRadius: 2 }
                     ]
                 },
-                // --- ITEM 6: AJUSTADO O EIXO X PARA INCLUIR ROTATION DE 45° E CONDICIONAL A CADA 3 MESES SE PRECISAR EVITAR APERTO ---
                 options: { 
                     responsive: true, 
                     maintainAspectRatio: false, 
