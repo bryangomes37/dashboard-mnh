@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Executivo de Governança | Novo Horizonte</title>
+    <title>Painel Executive de Governança | Novo Horizonte</title>
     <!-- Frameworks de Estilização e Gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,14 +51,21 @@
                     <p class="text-xs text-slate-400 font-medium mt-0.5">Visão geral do desempenho dos principais indicadores</p>
                 </div>
             </div>
-            <div class="flex flex-col gap-1 w-full lg:w-auto items-center lg:items-end">
-                <div class="flex items-center gap-2 bg-[#1b253d] p-1.5 rounded-xl text-xs border border-slate-700 w-full md:w-80 shadow-inner">
-                    <i class="fa-solid fa-link text-slate-500 ml-1.5"></i>
-                    <input type="text" id="urlInputScript" placeholder="URL do Apps Script..." class="bg-transparent border-none outline-none w-full text-slate-100 font-mono text-[11px] placeholder-slate-500">
-                    <button onclick="conectarPlanilha()" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-blue-500 transition cursor-pointer shrink-0 shadow-sm">Conectar Base</button>
+            
+            <!-- MELHORIA 6: MENU OCULTO CONFIGURAÇÕES DA BASE DE DADOS -->
+            <div class="flex items-center gap-3 w-full lg:w-auto justify-end relative">
+                <div id="painelConfigBase" class="hidden absolute top-12 right-0 bg-[#1b253d] border border-slate-700 p-3 rounded-xl shadow-2xl z-50 flex items-center gap-2 w-72 md:w-80">
+                    <input type="text" id="urlInputScript" placeholder="URL do Apps Script..." class="bg-transparent border border-slate-600 rounded-lg p-1.5 w-full text-slate-100 font-mono text-[11px] placeholder-slate-500 outline-none">
+                    <button onclick="conectarPlanilha()" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-blue-500 transition cursor-pointer shrink-0 shadow-sm text-xs">Conectar</button>
                 </div>
-                <span id="indicadorStatusBase" class="text-[10px] font-bold text-slate-400 tracking-wide mt-0.5"><i class="fa-solid fa-circle-notch mr-1"></i>Aguardando link de sincronização</span>
+                <div class="text-right">
+                    <span id="indicadorStatusBase" class="text-[10px] font-bold text-slate-400 tracking-wide block"><i class="fa-solid fa-circle-notch mr-1"></i>Aguardando sincronização</span>
+                    <button onclick="document.getElementById('painelConfigBase').classList.toggle('hidden')" class="text-slate-400 hover:text-white text-xs mt-1 cursor-pointer flex items-center gap-1 justify-end w-full font-bold">
+                        <i class="fa-solid fa-gear text-blue-400"></i> Configurações da Base
+                    </button>
+                </div>
             </div>
+
             <div class="flex items-center gap-4 w-full lg:w-auto justify-end bg-[#1b253d]/50 p-2.5 rounded-xl border border-slate-700/60">
                 <div class="text-right">
                     <span class="text-[9px] text-slate-400 font-bold block tracking-wider leading-none">PARCEIRO DE GOVERNANÇA</span>
@@ -370,8 +377,6 @@
             
             let s = String(str).trim();
             
-            // 1. Trata strings ISO que o Google Sheets gera em segundo plano (Ex: 2026-02-01T00:00:00.000Z)
-            // Divide no 'T' para travar no dia correto e anular problemas de fusos horários locais
             if (s.includes('T')) {
                 let datePart = s.split('T')[0];
                 let parts = datePart.split('-');
@@ -380,23 +385,19 @@
                 }
             }
             
-            // 2. Trata formato direto YYYY-MM-DD
             if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
                 let parts = s.split('-');
                 return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, 1);
             }
             
-            // 3. Trata formato clássico de planilha com barras (MM/AAAA ou DD/MM/AAAA)
             if (s.includes('/')) {
                 let partes = s.split('/');
                 if (partes.length === 3) {
-                    // DD/MM/AAAA
                     let mes = parseInt(partes[1]) - 1;
                     let ano = parseInt(partes[2]);
                     if (partes[2].length === 2) ano += 2000;
                     return new Date(ano, mes, 1);
                 } else if (partes.length === 2) {
-                    // MM/AAAA (Caso exato da sua coluna na planilha)
                     let mes = parseInt(partes[0]) - 1;
                     let ano = parseInt(partes[1]);
                     if (partes[1].length === 2) ano += 2000;
@@ -404,14 +405,12 @@
                 }
             }
             
-            // 4. Fallback de contingência para numeração serial pura
             let num = Number(s);
             if (!isNaN(num) && num > 30000 && num < 60000) {
                 let d = new Date((num - 25569) * 86400 * 1000);
                 return new Date(d.getUTCFullYear(), d.getUTCMonth(), 1);
             }
             
-            // 5. Fallback por extração textual direta
             let anoMatch = s.match(/\b\d{4}\b/);
             let ano = anoMatch ? parseInt(anoMatch[0]) : new Date().getFullYear();
             
@@ -503,19 +502,23 @@
 
         function conectarPlanilha() {
             const url = document.getElementById('urlInputScript').value.trim();
-            if(url) { localStorage.setItem('nh_script_url_v11', url); buscarDadosOnline(url); }
+            if(url) { 
+                localStorage.setItem('nh_script_url_v11', url); 
+                buscarDadosOnline(url); 
+                document.getElementById('painelConfigBase').classList.add('hidden');
+            }
         }
 
         function buscarDadosOnline(url) {
             const ind = document.getElementById('indicadorStatusBase');
-            ind.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-blue-400 mr-1"></i> Sincronizando...`;
+            ind.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-blue-400 mr-1"></i> Conectando...`;
             fetch(url).then(res => res.json()).then(data => {
                 if(data) {
                     dadosOriginais = {
                         indicadores: data.indicadores || [],
                         planoAcao: data.planoAcao || data.iniciativas || data.plano_acao || []
                     };
-                    ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> Base Sincronizada`;
+                    ind.innerHTML = `<i class="fa-solid fa-circle-check text-green-500 mr-1"></i> Base Conectada`;
                     
                     let listUser = new Set(); let listMeses = new Set();
                     dadosOriginais.indicadores.forEach(i => { 
@@ -619,8 +622,9 @@
                 else if(nPersp.toLowerCase().includes('proc')) corTextoPersp = "text-[#1a2e4c]";
                 else if(nPersp.toLowerCase().includes('apren')) corTextoPersp = "text-orange-500";
 
+                // MELHORIA 11: IMPLEMENTAÇÃO DO ONCLICK COM CURSOR E HOVER NA LINHA DA TABELA RESUMO RESPEITANDO O ASYNC
                 corpo.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-100 text-[11px]">
+                    <tr onclick="abrirModalObjetivo('${nObj.replace(/'/g, "\\'")}', '${nKpi.replace(/'/g, "\\'")}')" class="hover:bg-slate-100 cursor-pointer border-b border-slate-100 text-[11px] transition-colors">
                         <td class="p-3 pl-5 font-black uppercase tracking-tight ${corTextoPersp}">${nPersp}</td>
                         <td class="p-3 font-bold text-slate-800">${nKpi}</td>
                         <td class="p-3 text-slate-500 font-medium">${nResp}</td>
@@ -660,9 +664,20 @@
             let objetivosMapeados = {};
             const dataRefAtiva = obterDataReferenciaAtual();
 
+            // MELHORIA 1: FILTROS GLOBAIS INTEGRADOS EM TEMPO REAL COM O MAPA ESTRATÉGICO
+            const fLider = document.getElementById('filtroResponsavel').value;
+            const fMes = document.getElementById('filtroMesAno').value;
+            const fPersp = document.getElementById('filtroPerspectiva').value;
+            const fStatus = document.getElementById('filtroStatus').value;
+
             listaKpis.forEach(linha => {
                 let objName = lerCampo(linha, CHAVES.obj); let persp = lerCampo(linha, CHAVES.persp);
                 if(!objName || !persp) return;
+
+                if (fLider !== "Todos" && lerCampo(linha, CHAVES.resp) !== fLider) return;
+                if (fMes !== "Todos" && lerCampo(linha, CHAVES.mes) !== fMes) return;
+                if (fPersp !== "Todos" && normalizarTexto(lerCampo(linha, CHAVES.persp)) !== normalizarTexto(fPersp)) return;
+
                 if(!objetivosMapeados[objName]) objetivosMapeados[objName] = { nome: objName, perspectiva: persp, historicos: [] };
                 objetivosMapeados[objName].historicos.push(linha);
             });
@@ -671,6 +686,12 @@
                 let obj = objetivosMapeados[name];
                 let pctObjetivo = calcularYTDInteligente(obj.historicos);
                 let farolCorKpi = converterFarolPorPorcentagem(pctObjetivo);
+
+                if (fStatus !== "Todos") {
+                    if (fStatus === "Verde" && farolCorKpi !== "farol-verde") continue;
+                    if (fStatus === "Amarelo" && farolCorKpi !== "farol-amarelo") continue;
+                    if (fStatus === "Vermelho" && farolCorKpi !== "farol-vermelho") continue;
+                }
                 
                 let acoesDoObj = (dadosOriginais.planoAcao || []).filter(p => 
                     normalizarTexto(lerCampo(p, ['OBJETIVO ESTRATÉGICO', 'Objetivo'])) === normalizarTexto(obj.nome)
@@ -711,7 +732,8 @@
             }
         }
 
-        function abrirModalObjetivo(nomeObjetivo) {
+        // SUPORTE AO DRILL-DOWN DINÂMICO
+        function abrirModalObjetivo(nomeObjetivo, kpiPreSelecionado = null) {
             objetivoSelecionadoModal = nomeObjetivo;
             let linesKpi = (dadosOriginais.indicadores || []).filter(i => 
                 normalizarTexto(lerCampo(i, CHAVES.obj)) === normalizarTexto(nomeObjetivo)
@@ -727,7 +749,10 @@
             
             let selectKpi = document.getElementById('modalSelectKpi');
             selectKpi.innerHTML = "";
-            Array.from(kpisUnicos).forEach(k => { selectKpi.innerHTML += `<option value="${k}">${k}</option>`; });
+            Array.from(kpisUnicos).forEach(k => { 
+                let chosen = (kpiPreSelecionado && k === kpiPreSelecionado) ? "selected" : "";
+                selectKpi.innerHTML += `<option value="${k}" ${chosen}>${k}</option>`; 
+            });
 
             let anosUnicos = new Set();
             linesKpi.forEach(l => {
@@ -738,10 +763,21 @@
                 }
             });
 
+            // MELHORIA 8: SINCRONIZAÇÃO INTELIGENTE DO ANO DO FILTRO GLOBAL DIRETAMENTE NO GRÁFICO DO MODAL
+            let fMesGlobal = document.getElementById('filtroMesAno').value;
+            let anoPreDefinido = "Todos";
+            if (fMesGlobal !== "Todos") {
+                let dataG = mapearStringParaData(fMesGlobal);
+                if (dataG && !isNaN(dataG.getFullYear())) {
+                    anoPreDefinido = dataG.getFullYear().toString();
+                }
+            }
+
             let selectAno = document.getElementById('modalSelectAno');
             selectAno.innerHTML = '<option value="Todos">Todos os Anos</option>';
             Array.from(anosUnicos).sort().forEach(a => {
-                selectAno.innerHTML += `<option value="${a}">${a}</option>`;
+                let checkSelected = (a.toString() === anoPreDefinido) ? "selected" : "";
+                selectAno.innerHTML += `<option value="${a}" ${checkSelected}>${a}</option>`;
             });
 
             document.getElementById('modalObjetivo').classList.remove('hidden');
@@ -751,6 +787,10 @@
         function fecharModalObjetivo() {
             document.getElementById('modalObjetivo').classList.add('hidden');
             if(graficoInstanciaModal) { graficoInstanciaModal.destroy(); graficoInstanciaModal = null; }
+        }
+
+        function abrirModalObjetivoPeloResumo(nomeObjetivo, nomeKpi) {
+            abrirModalObjetivo(nomeObjetivo, nomeKpi);
         }
 
         function alterarIndicadorModal() {
@@ -774,6 +814,7 @@
                 };
             }).filter(item => item.dataReal && !isNaN(item.dataReal.getTime()));
 
+            // MELHORIA 8: FILTRAGEM ESTRITA DO EIXO X DO GRÁFICO EVITANDO PLOTAGEM EXCESSIVA E SOBREPOSIÇÃO DE ANOS FUTUROS
             if(anoSelecionado !== "Todos") {
                 let anoAlvo = parseInt(anoSelecionado);
                 itensMapeados = itensMapeados.filter(item => item.dataReal.getFullYear() === anoAlvo);
