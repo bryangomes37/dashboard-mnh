@@ -85,6 +85,9 @@
             <button onclick="alternarTela('mapa')" id="btn-tab-mapa" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-300 hover:text-white transition cursor-pointer rounded-t-lg mt-1.5">
                 <i class="fa-solid fa-map-location-dot mr-1"></i> 2. Mapa Estratégico
             </button>
+            <button onclick="alternarTela('planos')" id="btn-tab-planos" class="px-5 py-3 text-xs uppercase tracking-wider font-bold text-slate-300 hover:text-white transition cursor-pointer rounded-t-lg mt-1.5">
+                <i class="fa-solid fa-list-check mr-1"></i> 3. Planos de Ação
+            </button>
         </div>
     </nav>
 
@@ -228,6 +231,70 @@
             <!-- Linha Aprendizado e Crescimento -->
             <div class="flex items-stretch gap-4 min-h-[160px]">
                 <div class="w-40 bg-persp-aprendizado text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center p-3 text-center shrink-0 shadow-sm">Aprendizado & Crescimento</div>
+                <section id="tela-planos" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Total de Iniciativas</span>
+                        <h3 id="card-pa-total" class="text-xl font-black text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="p-3 bg-slate-50 text-slate-600 rounded-lg"><i class="fa-solid fa-diagram-project text-lg"></i></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] text-green-600 font-bold uppercase tracking-wider block">Ações Concluídas</span>
+                        <h3 id="card-pa-concluidas" class="text-xl font-black text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="p-3 bg-green-50 text-green-600 rounded-lg"><i class="fa-solid fa-circle-check text-lg"></i></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider block">Em Dia / Pendentes</span>
+                        <h3 id="card-pa-emdia" class="text-xl font-black text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-clock text-lg"></i></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] text-rose-600 font-bold uppercase tracking-wider block">Ações Atrasadas</span>
+                        <h3 id="card-pa-atrasadas" class="text-xl font-black text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="p-3 bg-rose-50 text-rose-600 rounded-lg"><i class="fa-solid fa-triangle-exclamation text-lg"></i></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+                <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div>
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-tight"><i class="fa-solid fa-list-check text-indigo-600 mr-1"></i> Rastreabilidade Global de Planos de Ação</h3>
+                        <p class="text-[10px] text-slate-400 font-medium mt-0.5">Visão consolidada de todas as iniciativas estratégicas vinculadas aos objetivos</p>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <input type="text" id="buscarAcaoGlobal" oninput="filtrarTabelaPlanosGlobal()" placeholder="Buscar por ação ou líder responsável..." class="bg-white border border-slate-200 text-xs rounded-lg px-3 py-1.5 outline-none w-full sm:w-64 font-semibold text-slate-700 shadow-3xs placeholder-slate-400 focus:border-slate-400 transition">
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-[10px] text-slate-400 font-black uppercase tracking-wider">
+                                <th class="p-3 pl-4 w-[35%]">Iniciativa / Ação Prática</th>
+                                <th class="p-3 w-[25%]">Objetivo Estratégico Relacionado</th>
+                                <th class="p-3 w-[15%]">Líder Responsável</th>
+                                <th class="p-3 text-center w-[12%]">Prazo Final</th>
+                                <th class="p-3 text-center w-[13%]">Status Execução</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-planos-global-corpo" class="divide-y divide-slate-100 font-medium text-slate-600">
+                            <tr>
+                                <td colspan="5" class="p-6 text-center text-slate-400 font-medium italic text-xs">
+                                    <i class="fa-solid fa-circle-notch fa-spin mr-2 text-blue-500"></i> Sincronize a base de dados para listar e gerenciar as iniciativas de governança...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
                 <div id="cards-aprendizado" class="grid grid-cols-4 gap-4 flex-1 p-1"></div>
             </div>
         </section>
