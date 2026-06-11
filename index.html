@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo de Governança | Novo Horizonte</title>
+    <!-- Frameworks de Estilização e Gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,7 +17,7 @@
         .farol-amarelo { background-color: #eab308; border: 2px solid #ca8a04; }
         .farol-vermelho { background-color: #ef4444; border: 2px solid #dc2626; }
         .farol-sem-dados { background-color: #94a3b8; border: 2px solid #64748b; }
-        .tab-ativa { background-color: #ffffff; color: #0f172a !important; font-weight: 800; border-bottom: 4px solid #3b82f6; }
+        .tab-ativa { background-color: #ffffff !important; color: #0f172a !important; font-weight: 800; border-radius: 6px 6px 0 0; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -25,200 +26,247 @@
 </head>
 <body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col font-sans">
 
-    <header class="bg-[#0f172a] text-white shadow-xl border-b border-slate-800 sticky top-0 z-50">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center space-x-4">
-                <div class="flex flex-col">
-                    <span class="text-lg font-black tracking-wider text-amber-500 font-mono">MÓVEIS NOVO HORIZONTE</span>
-                    <span class="text-[9px] uppercase tracking-widest text-slate-400 font-bold">Consultoria de Gestão Estratégica &amp; Governança <span class="text-amber-400">IGHER</span></span>
+    <!-- CABEÇALHO EXECUTIVO INTEGRADO (FOTO INTEGRAL DE IDENTITY) -->
+    <header class="bg-[#0f172a] text-white shadow-xl sticky top-0 z-50">
+        <div class="max-w-[1600px] mx-auto px-6 pt-4 pb-0">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4 pb-4">
+                <div class="flex items-center space-x-4 w-full lg:w-auto">
+                    <div class="flex flex-col">
+                        <span class="text-xl font-black tracking-wider text-amber-500 font-mono">MÓVEIS NOVO HORIZONTE</span>
+                        <span class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Consultoria de Gestão Estratégica &amp; Governança <span class="text-amber-500">IGHER</span></span>
+                    </div>
+                    <div class="h-10 w-[1px] bg-slate-700 hidden sm:block"></div>
+                    <div class="hidden sm:block">
+                        <h1 class="text-sm font-extrabold uppercase tracking-wide text-slate-100">PAINEL DE GOVERNANÇA BSC</h1>
+                        <p class="text-[11px] text-slate-400">Acompanhamento e Tração de KPIs e Planos de Ação</p>
+                    </div>
                 </div>
-                <div class="h-8 w-[1px] bg-slate-700 hidden sm:block"></div>
-                <div class="hidden sm:block">
-                    <h1 class="text-xs font-extrabold uppercase tracking-wide text-slate-200">Painel de Governança BSC</h1>
-                    <p class="text-[10px] text-slate-400">Acompanhamento e Tração de KPIs e Planos de Ação</p>
+                
+                <!-- CONTROLES WEB APP CLOUD -->
+                <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-end">
+                    <div class="flex items-center bg-slate-900/60 border border-slate-700/50 rounded-xl p-2 shadow-inner w-full sm:w-auto">
+                        <i class="fa-solid fa-link text-slate-500 mx-2 text-xs"></i>
+                        <input type="text" id="input-url-web-app" placeholder="Insira a URL do Google Apps Script" 
+                               class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none w-full sm:w-80 border-none">
+                        <button onclick="salvarConfigUrl()" class="text-slate-400 hover:text-white ml-2 transition-colors cursor-pointer" title="Salvar URL">
+                            <i class="fa-solid fa-gear"></i>
+                        </button>
+                    </div>
+                    <button onclick="carregarDadosCloud()" class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs transition-all shadow-md active:scale-95 flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Sincronizar Dados
+                    </button>
+                    <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        <span id="led-status" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span id="label-status">Modo Local</span>
+                    </div>
                 </div>
             </div>
-            
-            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
-                <div class="flex items-center bg-slate-900 border border-slate-700/60 rounded-xl p-1.5 shadow-inner w-full sm:w-auto">
-                    <i class="fa-solid fa-link text-slate-500 mx-2 text-xs"></i>
-                    <input type="text" id="input-url-web-app" placeholder="Insira a URL do Google Apps Script" 
-                           class="bg-transparent text-xs text-slate-200 font-mono focus:outline-none w-full sm:w-72 border-none">
-                </div>
-                <button onclick="carregarDadosCloud()" class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-4 py-2 rounded-xl text-xs transition-all shadow-md active:scale-95 flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> Sincronizar Dados
+
+            <!-- FILAS DE NAVEGAÇÃO REPRODUZIDAS FIELMENTE -->
+            <div class="flex overflow-x-auto space-x-1 mt-2">
+                <button onclick="mudarAba('resumo')" id="tab-resumo" class="px-6 py-3 text-xs font-bold text-slate-300 hover:text-white transition-all flex items-center gap-2 whitespace-nowrap tab-ativa">
+                    <i class="fa-solid fa-chart-line text-xs"></i> 1. Resumo Executivo
                 </button>
-                <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    <span id="led-status" class="w-2 h-2 rounded-full bg-amber-500"></span>
-                    <span id="label-status">Modo Local</span>
-                </div>
+                <button onclick="mudarAba('mapa')" id="tab-mapa" class="px-6 py-3 text-xs font-bold text-slate-300 hover:text-white transition-all flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-layer-group text-xs"></i> 2. Mapa Estratégico (BSC)
+                </button>
+                <button onclick="mudarAba('planos')" id="tab-planos" class="px-6 py-3 text-xs font-bold text-slate-300 hover:text-white transition-all flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-list-check text-xs"></i> 3. Planos de Ação
+                </button>
             </div>
         </div>
     </header>
 
-    <nav class="bg-[#0f172a] border-t border-slate-900 shadow-md">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 flex overflow-x-auto space-x-1">
-            <button onclick="mudarAba('resumo')" id="tab-resumo" class="px-5 py-3.5 text-xs font-bold text-slate-400 hover:text-slate-200 transition-all border-b-4 border-transparent flex items-center gap-2 whitespace-nowrap tab-ativa">
-                <i class="fa-solid fa-chart-line text-sm"></i> 1. Resumo Executivo
-            </button>
-            <button onclick="mudarAba('mapa')" id="tab-mapa" class="px-5 py-3.5 text-xs font-bold text-slate-400 hover:text-slate-200 transition-all border-b-4 border-transparent flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-layer-group text-sm"></i> 2. Mapa Estratégico (BSC)
-            </button>
-            <button onclick="mudarAba('planos')" id="tab-planos" class="px-5 py-3.5 text-xs font-bold text-slate-400 hover:text-slate-200 transition-all border-b-4 border-transparent flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-list-check text-sm"></i> 3. Planos de Ação
-            </button>
-        </div>
-    </nav>
-
-    <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 space-y-6">
+    <!-- CONTAINER MASTER PRINCIPAL -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-6 space-y-6">
         
-        <section class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs">
-            <div class="flex items-center gap-2 text-slate-700 font-extrabold text-xs uppercase tracking-wider border-b border-slate-100 pb-2 mb-4">
+        <!-- MATRIZ DE FILTROS SUPERIORES -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+            <div class="flex items-center gap-2 text-slate-700 font-extrabold text-xs uppercase tracking-wider border-b border-slate-100 pb-3 mb-4">
                 <i class="fa-solid fa-filter text-blue-500"></i>
                 <span>Filtros Estruturais de Controle</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Líder / Responsável</label>
-                    <select id="filtro-lider" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 transition-all">
+                    <select id="filtro-lider" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 transition-all">
                         <option value="">-- Todos os Líderes --</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Ano Corrente</label>
-                    <select id="filtro-ano" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 transition-all">
+                    <select id="filtro-ano" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 transition-all">
                         <option value="">-- Todos os Anos --</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Mês Referência</label>
-                    <select id="filtro-mes" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 transition-all">
+                    <select id="filtro-mes" onchange="aplicarFiltros()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500 transition-all">
                         <option value="">-- Todos os Meses --</option>
                     </select>
                 </div>
                 <div>
-                    <button onclick="limparFiltros()" class="w-full bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-200 font-bold p-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2 h-[42px] cursor-pointer">
+                    <button onclick="limparFiltros()" class="w-full bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-200 font-bold p-3 rounded-xl text-xs transition-colors flex items-center justify-center gap-2 h-[46px] cursor-pointer">
                         <i class="fa-solid fa-trash-can"></i> Limpar Filtros
                     </button>
                 </div>
             </div>
         </section>
 
+        <!-- ==================== TELA 1: RESUMO EXECUTIVO GERENCIAL ==================== -->
         <section id="aba-resumo" class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between shadow-xs">
+            <!-- REPRODUÇÃO EXATA DOS CARDS DE IMAGE_DD0BC6.PNG -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- CARD 1 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between shadow-xs">
                     <div>
                         <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
                             <span>Atingimento Médio YTD</span>
                             <i class="fa-solid fa-gauge-high text-blue-500 text-sm"></i>
                         </div>
-                        <span id="card-atingimento-ytd" class="text-2xl font-black text-slate-800 tracking-tight">0.0%</span>
+                        <span id="card-atingimento-ytd" class="text-3xl font-black text-slate-800 tracking-tight">0.0%</span>
                     </div>
-                    <div class="w-full bg-slate-100 h-1.5 rounded-full mt-4 overflow-hidden">
+                    <div class="w-full bg-slate-100 h-2 rounded-full mt-5 overflow-hidden">
                         <div id="progresso-atingimento" class="bg-blue-500 h-full w-0 transition-all duration-500"></div>
                     </div>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between shadow-xs">
+                <!-- CARD 2 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between shadow-xs">
                     <div>
                         <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
                             <span>Total de Indicadores</span>
                             <i class="fa-solid fa-layer-group text-amber-500 text-sm"></i>
                         </div>
-                        <span id="card-total-kpis" class="text-2xl font-black text-slate-800 tracking-tight">0</span>
+                        <span id="card-total-kpis" class="text-3xl font-black text-slate-800 tracking-tight">0</span>
                     </div>
-                    <div class="text-[10px] text-slate-400 font-medium mt-4">Métricas sob monitoramento ativo</div>
+                    <div class="text-[11px] text-slate-400 font-medium mt-5">Métricas sob monitoramento ativo</div>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between shadow-xs">
+                <!-- CARD 3 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between shadow-xs">
                     <div>
                         <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
                             <span>Planos Concluídos</span>
                             <i class="fa-solid fa-square-check text-emerald-500 text-sm"></i>
                         </div>
-                        <span id="card-planos-concluidos" class="text-2xl font-black text-emerald-600 tracking-tight">0%</span>
+                        <span id="card-planos-concluidos" class="text-3xl font-black text-emerald-600 tracking-tight">0%</span>
                     </div>
-                    <div class="w-full bg-slate-100 h-1.5 rounded-full mt-4 overflow-hidden">
+                    <div class="w-full bg-slate-100 h-2 rounded-full mt-5 overflow-hidden">
                         <div id="progresso-planos" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
                     </div>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between shadow-xs">
+                <!-- CARD 4 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between shadow-xs">
                     <div>
                         <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
                             <span>Volume de Iniciativas</span>
                             <i class="fa-solid fa-list-check text-indigo-500 text-sm"></i>
                         </div>
-                        <span id="card-total-planos" class="text-2xl font-black text-slate-800 tracking-tight">0</span>
+                        <span id="card-total-planos" class="text-3xl font-black text-slate-800 tracking-tight">0</span>
                     </div>
-                    <div class="text-[10px] text-slate-400 font-medium mt-4">Ações cadastradas na matriz</div>
+                    <div class="text-[11px] text-slate-400 font-medium mt-5">Ações cadastradas na matriz</div>
                 </div>
             </div>
 
+            <!-- BLOCO GRÁFICO DA TELA 1 -->
             <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-100 pb-3 mb-4 gap-2">
                     <div>
                         <h3 class="text-xs font-black text-slate-700 uppercase tracking-wide">Evolução Histórica de Resultados</h3>
-                        <p class="text-[10px] text-slate-400 font-medium">Comparativo cronológico consolidado entre Meta (Linha) e Realizado (Barras)</p>
+                        <p class="text-[11px] text-slate-400 font-medium">Comparativo cronológico consolidado entre Meta (Linha) e Realizado (Barras)</p>
                     </div>
                     <div class="flex items-center gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-2 bg-blue-500 rounded-sm"></span> Realizado</div>
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-rose-500"></span> Meta Fixada</div>
+                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500 rounded-sm"></span> Realizado</div>
+                        <div class="flex items-center gap-1.5"><span class="w-4 h-0.5 bg-rose-500"></span> Meta Fixada</div>
                     </div>
                 </div>
                 <div class="w-full h-80 relative">
                     <canvas id="canvasGrafico"></canvas>
                 </div>
             </div>
+
+            <!-- TABELA COMPLETA DA TELA 1 (RESTAURADA INTEGRALMENTE) -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden flex flex-col">
+                <div class="p-4 bg-slate-50 border-b border-slate-200/60 text-xs font-black text-slate-700 uppercase tracking-wide">
+                    <i class="fa-solid fa-table mr-2 text-blue-500"></i> Detalhamento de Performance por Indicador
+                </div>
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full text-left border-collapse" id="tabela-indicadores-main">
+                        <thead>
+                            <tr class="bg-[#0f172a] text-white text-[10px] tracking-widest uppercase">
+                                <th class="p-4 font-bold">Perspectiva</th>
+                                <th class="p-4 font-bold">Indicador (KPI)</th>
+                                <th class="p-4 font-bold">Responsável</th>
+                                <th class="p-4 font-bold text-center">Meta Mensal</th>
+                                <th class="p-4 font-bold text-center">Realizado</th>
+                                <th class="p-4 font-bold text-center">YTD %</th>
+                                <th class="p-4 font-bold text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs divide-y divide-slate-100 font-medium text-slate-600 bg-white" id="corpo-tabela-main">
+                            <!-- Injeção via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
+        <!-- ==================== TELA 2: MAPA ESTRATÉGICO COMPLETO (BSC) ==================== -->
         <section id="aba-mapa" class="hidden space-y-4">
             <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-100 pb-4 mb-6 gap-2">
                     <div>
                         <h2 class="text-xs font-black text-slate-700 uppercase tracking-wide">Arquitetura Estratégica Balanced Scorecard (BSC)</h2>
-                        <p class="text-[10px] text-slate-400 font-medium">Matriz de Objetivos com Faróis de Alinhamento e Performance Executiva</p>
+                        <p class="text-[11px] text-slate-400 font-medium">Matriz de Objetivos com Faróis de Alinhamento e Performance Executiva</p>
                     </div>
-                    <div class="flex flex-wrap items-center gap-3 text-[9px] font-bold text-slate-500 uppercase tracking-wider">
+                    <div class="flex flex-wrap items-center gap-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                         <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Excelente (&ge; 95%)</div>
                         <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Atenção (85% a 94.9%)</div>
                         <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Crítico (&lt; 85%)</div>
                     </div>
                 </div>
 
+                <!-- LINHAS DAS PERSPECTIVAS BSC (RESTAURADO COMPLETO) -->
                 <div class="space-y-4">
+                    <!-- PERSPECTIVA FINANCEIRA -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 border border-slate-100 rounded-xl overflow-hidden shadow-2xs">
-                        <div class="lg:col-span-2 bg-persp-financeira text-white p-4 flex flex-col items-center justify-center text-center gap-1">
-                            <i class="fa-solid fa-wallet text-lg"></i>
+                        <div class="lg:col-span-2 bg-persp-financeira text-white p-5 flex flex-col items-center justify-center text-center gap-1">
+                            <i class="fa-solid fa-wallet text-xl"></i>
                             <span class="text-[10px] font-black uppercase tracking-widest">Financeira</span>
                         </div>
-                        <div id="container-persp-financeira" class="lg:col-span-10 p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 bg-slate-50/40"></div>
+                        <div id="container-persp-financeira" class="lg:col-span-10 p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 bg-slate-50/40"></div>
                     </div>
                     
+                    <!-- PERSPECTIVA CLIENTES -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 border border-slate-100 rounded-xl overflow-hidden shadow-2xs">
-                        <div class="lg:col-span-2 bg-persp-clientes text-white p-4 flex flex-col items-center justify-center text-center gap-1">
-                            <i class="fa-solid fa-users text-lg"></i>
+                        <div class="lg:col-span-2 bg-persp-clientes text-white p-5 flex flex-col items-center justify-center text-center gap-1">
+                            <i class="fa-solid fa-users text-xl"></i>
                             <span class="text-[10px] font-black uppercase tracking-widest">Clientes</span>
                         </div>
-                        <div id="container-persp-clientes" class="lg:col-span-10 p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 bg-slate-50/40"></div>
+                        <div id="container-persp-clientes" class="lg:col-span-10 p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 bg-slate-50/40"></div>
                     </div>
 
+                    <!-- PERSPECTIVA PROCESSOS INTERNOS -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 border border-slate-100 rounded-xl overflow-hidden shadow-2xs">
-                        <div class="lg:col-span-2 bg-persp-processos text-white p-4 flex flex-col items-center justify-center text-center gap-1">
-                            <i class="fa-solid fa-gears text-lg"></i>
+                        <div class="lg:col-span-2 bg-persp-processos text-white p-5 flex flex-col items-center justify-center text-center gap-1">
+                            <i class="fa-solid fa-gears text-xl"></i>
                             <span class="text-[10px] font-black uppercase tracking-widest">Processos</span>
                         </div>
-                        <div id="container-persp-processos" class="lg:col-span-10 p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 bg-slate-50/40"></div>
+                        <div id="container-persp-processos" class="lg:col-span-10 p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 bg-slate-50/40"></div>
                     </div>
 
+                    <!-- PERSPECTIVA APRENDIZADO & CRESCIMENTO -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 border border-slate-100 rounded-xl overflow-hidden shadow-2xs">
-                        <div class="lg:col-span-2 bg-persp-aprendizado text-white p-4 flex flex-col items-center justify-center text-center gap-1">
-                            <i class="fa-solid fa-graduation-cap text-lg"></i>
+                        <div class="lg:col-span-2 bg-persp-aprendizado text-white p-5 flex flex-col items-center justify-center text-center gap-1">
+                            <i class="fa-solid fa-graduation-cap text-xl"></i>
                             <span class="text-[10px] font-black uppercase tracking-widest">Aprendizado</span>
                         </div>
-                        <div id="container-persp-aprendizado" class="lg:col-span-10 p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 bg-slate-50/40"></div>
+                        <div id="container-persp-aprendizado" class="lg:col-span-10 p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 bg-slate-50/40"></div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- ==================== TELA 3: CENTRAL DE PLANOS DE AÇÃO (ADICIONADA ADICIONALMENTE) ==================== -->
         <section id="aba-planos" class="hidden space-y-4">
             <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden flex flex-col">
                 <div class="p-4 bg-slate-50 border-b border-slate-200/60 flex items-center justify-between">
@@ -226,7 +274,7 @@
                         <h3 class="text-xs font-black text-slate-700 uppercase tracking-wide">
                             <i class="fa-solid fa-table-list text-blue-500 mr-2"></i> Painel Geral de Iniciativas e Planos de Ação
                         </h3>
-                        <p class="text-[10px] text-slate-400 font-medium">Controle dinâmico e rastreabilidade de tarefas associadas ao Planejamento Estratégico</p>
+                        <p class="text-[11px] text-slate-400 font-medium">Controle dinâmico e rastreabilidade de tarefas associadas ao Planejamento Estratégico</p>
                     </div>
                 </div>
                 
@@ -244,7 +292,8 @@
                             </tr>
                         </thead>
                         <tbody class="text-xs divide-y divide-slate-100 font-medium text-slate-600 bg-white" id="corpo-tabela-planos-central">
-                            </tbody>
+                            <!-- Injeção puramente dinâmica de dados -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -252,15 +301,81 @@
 
     </main>
 
-    <footer class="bg-white border-t border-slate-200 py-3 px-6 mt-10">
-        <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 gap-2">
+    <!-- MODAL INTERATIVO COMPLETO DO BSC (RESTAURADO) -->
+    <div id="modal-objetivo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <div>
+                    <span id="modal-txt-persp" class="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded text-white bg-slate-500">---</span>
+                    <h3 id="modal-txt-titulo" class="text-sm font-black text-slate-800 uppercase mt-1">Objetivo Estratégico</h3>
+                </div>
+                <button onclick="fecharModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-rose-100 text-slate-500 hover:text-rose-600 flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-6 flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Selecione o Indicador</label>
+                        <select id="modal-select-kpi" onchange="atualizarModalGrafico()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold text-slate-700"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Filtrar por Ano</label>
+                        <select id="modal-select-ano" onchange="atualizarModalGrafico()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold text-slate-700"></select>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex items-center justify-around">
+                        <div class="text-center">
+                            <span class="block text-[9px] font-bold text-slate-400 uppercase">Atingimento YTD</span>
+                            <span id="modal-txt-ytd" class="text-base font-black text-slate-800">0.0%</span>
+                        </div>
+                        <div class="h-6 w-[1px] bg-slate-200"></div>
+                        <div class="text-center">
+                            <span class="block text-[9px] font-bold text-slate-400 uppercase">Líder</span>
+                            <span id="modal-txt-lider" class="text-xs font-bold text-slate-700">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full h-64 relative border border-slate-100 rounded-xl p-3 bg-white">
+                    <canvas id="canvasGraficoModal"></canvas>
+                </div>
+
+                <div class="border border-slate-100 rounded-xl overflow-hidden">
+                    <div class="bg-slate-50 p-3 border-b border-slate-100 text-[10px] font-black text-slate-600 uppercase tracking-wider">
+                        Planos de Ação Vinculados a este Objetivo
+                    </div>
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-800 text-white text-[9px] uppercase tracking-wider">
+                                    <th class="p-3 font-bold">Ação / Iniciativa</th>
+                                    <th class="p-3 font-bold whitespace-nowrap">Responsável</th>
+                                    <th class="p-3 font-bold text-center whitespace-nowrap">Prazo Final</th>
+                                    <th class="p-3 font-bold text-center whitespace-nowrap">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-corpo-planos" class="divide-y divide-slate-100 font-medium text-slate-600">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER INSTITUCIONAL -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-6 mt-10">
+        <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400 gap-2">
             <span>Móveis Novo Horizonte &copy; 2026</span>
             <span>IGHER Consultoria de Resultados</span>
         </div>
     </footer>
 
+    <!-- ==================== LÓGICA E ENGINE DE DADOS COMPLETA ==================== -->
     <script>
-        // MASSA DE DADOS DE BACKUP LOCAL COMPLETA (INDICADORES DAS TELAS 1 E 2)
+        // MASSA DE CRASH SÓLIDA DE BACKUP LOCAL COMPLETA (INDICADORES)
         let BANCO_DADOS_INDICADORES_LOCAL = [
             {"PERSPECTIVA":"FINANCEIRA","OBJETIVO ESTRATÉGICO":"Aumentar faturamento bruto através de novos canais","KPI":"Faturamento Mensal (R$)","RESPONSÁVEL":"Leonardo","META_ANUAL":"R$ 5.000.000","META_MENSAL":"416666","REALIZADO":"425000","MÊS":"01","ANO":"2026"},
             {"PERSPECTIVA":"FINANCEIRA","OBJETIVO ESTRATÉGICO":"Aumentar faturamento bruto através de novos canais","KPI":"Faturamento Mensal (R$)","RESPONSÁVEL":"Leonardo","META_ANUAL":"R$ 5.000.000","META_MENSAL":"416666","REALIZADO":"395000","MÊS":"02","ANO":"2026"},
@@ -277,7 +392,7 @@
             {"PERSPECTIVA":"APRENDIZADO","OBJETIVO ESTRATÉGICO":"Capacitar 100% da liderança técnica em campo","KPI":"Horas de Treinamento/Líder","RESPONSÁVEL":"Aline","META_ANUAL":"40","META_MENSAL":"4","REALIZADO":"3.8","MÊS":"02","ANO":"2026"}
         ];
 
-        // MASSA DE DADOS DE BACKUP LOCAL COMPLETA (PLANOS DE AÇÃO DA TELA 3)
+        // MASSA DE BACKUP LOCAL COMPLETA (PLANOS DE AÇÃO)
         let BANCO_DADOS_PLANOS_LOCAL = [
             {"PERSPECTIVA":"PROCESSOS","META / OBJETIVO":"Padronizar fluxos críticos de devolução de materiais","AÇÃO":"Mapear e desenhar o fluxo de devolução de sobras de obras elétricas","RESPONSÁVEL":"Lucas","PRAZO_INICIO":"05/01/2026","PRAZO_FIM":"15/03/2026","STATUS":"Concluído"},
             {"PERSPECTIVA":"PROCESSOS","META / OBJETIVO":"Padronizar fluxos críticos de devolução de materiais","AÇÃO":"Implantar rotina de inventário cíclico e layout de almoxarifado","RESPONSÁVEL":"Lucas","PRAZO_INICIO":"01/02/2026","PRAZO_FIM":"30/06/2026","STATUS":"Em Andamento"},
@@ -287,39 +402,43 @@
             {"PERSPECTIVA":"APRENDIZADO","META / OBJETIVO":"Capacitar 100% da liderança técnica em campo","AÇÃO":"Lançar trilha corporativa de reciclagem técnica de segurança em redes elétricas","RESPONSÁVEL":"Aline","PRAZO_INICIO":"01/02/2026","PRAZO_FIM":"15/04/2026","STATUS":"Atrasado"}
         ];
 
-        // VARIÁVEIS ATIVAS DO SISTEMA
         let dadosIndicadores = [...BANCO_DADOS_INDICADORES_LOCAL];
         let dadosPlanos = [...BANCO_DADOS_PLANOS_LOCAL];
-        let graficoInstancia = null;
+        
+        let graficoMain = null;
+        let graficoModal = null;
+        let objetivoSelecionadoModal = "";
 
-        // CHAVES PADRONIZADAS PARA MAPEAR HEADERS VARIADOS DE PLANILHAS
         const CHAVES = {
             persp: ['PERSPECTIVA', 'Perspectiva', 'Persp'],
             obj: ['OBJETIVO ESTRATÉGICO', 'Objetivo Estratégico', 'OBJETIVO', 'Meta Estratégica', 'META / OBJETIVO'],
             kpi: ['KPI', 'Kpi', 'Indicador'],
             resp: ['RESPONSÁVEL', 'Responsável', 'Responsavel', 'Líder'],
-            metaAnual: ['META_ANUAL', 'Meta Anual', 'Meta_Anual'],
-            metaMensal: ['META_MENSAL', 'Meta Mensal', 'Meta_Mensal', 'Meta'],
+            metaAnual: ['META_ANUAL', 'Meta Anual'],
+            metaMensal: ['META_MENSAL', 'Meta Mensal', 'Meta'],
             real: ['REALIZADO', 'Realizado', 'Resultado'],
             mes: ['MÊS', 'Mês', 'Mes'],
             ano: ['ANO', 'Ano'],
-            acao: ['AÇÃO', 'Acao', 'Atividade', 'Iniciativa', 'Ação / Iniciativa'],
-            prazoIni: ['PRAZO_INICIO', 'Prazo Inicio', 'Prazo Início', 'Inicio', 'Prazo_Inicio'],
-            prazoFim: ['PRAZO_FIM', 'Prazo Fim', 'Prazo_Fim', 'Fim'],
+            acao: ['AÇÃO', 'Acao', 'Iniciativa', 'Ação / Iniciativa'],
+            prazoIni: ['PRAZO_INICIO', 'Prazo Início', 'Prazo Inicio', 'Inicio'],
+            prazoFim: ['PRAZO_FIM', 'Prazo Fim', 'Fim'],
             status: ['STATUS', 'Status', 'Situação']
         };
 
-        // INICIALIZADOR CORE ENGINE
         window.addEventListener('DOMContentLoaded', () => {
             const urlSalva = localStorage.getItem('url_sheets_bsc');
-            if (urlSalva) {
-                document.getElementById('input-url-web-app').value = urlSalva;
-            }
+            if (urlSalva) document.getElementById('input-url-web-app').value = urlSalva;
+            
             gerarFiltrosDinamicos();
             aplicarFiltros();
         });
 
-        // REGRAS DE ALTERNAÇÃO DE TELAS (ABAS)
+        function salvarConfigUrl() {
+            const url = document.getElementById('input-url-web-app').value.trim();
+            localStorage.setItem('url_sheets_bsc', url);
+            alert("URL do Google Apps Script configurada e salva localmente!");
+        }
+
         function mudarAba(abaId) {
             document.getElementById('aba-resumo').classList.add('hidden');
             document.getElementById('aba-mapa').classList.add('hidden');
@@ -341,13 +460,10 @@
             }
         }
 
-        // UTILS: LEITURA TOLERANTE A CAPS E ESPAÇOS PARA LIQUIDAR CONFLITOS DE HEADERS
-        function lerCampo(objeto, chavesLista) {
-            if (!objeto) return '';
-            for (let c of chavesLista) {
-                if (objeto[c] !== undefined && objeto[c] !== null) {
-                    return String(objeto[c]).trim();
-                }
+        function lerCampo(obj, chaves) {
+            if (!obj) return '';
+            for (let c of chaves) {
+                if (obj[c] !== undefined && obj[c] !== null) return String(obj[c]).trim();
             }
             return '';
         }
@@ -360,11 +476,8 @@
             return isNaN(n) ? 0 : n;
         }
 
-        // POPULAÇÃO AUTOMÁTICA DOS DROPDOWNS BASEADO NAS MATRIZES EXISTENTES
         function gerarFiltrosDinamicos() {
-            let lideres = new Set();
-            let anos = new Set();
-            let meses = new Set();
+            let lideres = new Set(); let anos = new Set(); let meses = new Set();
 
             dadosIndicadores.forEach(i => {
                 let l = lerCampo(i, CHAVES.resp); if (l) lideres.add(l);
@@ -372,17 +485,9 @@
                 let m = lerCampo(i, CHAVES.mes); if (m) meses.add(m);
             });
 
-            dadosPlanos.forEach(p => {
-                let l = lerCampo(p, CHAVES.resp); if (l) lideres.add(l);
-            });
-
             const selLider = document.getElementById('filtro-lider');
             const selAno = document.getElementById('filtro-ano');
             const selMes = document.getElementById('filtro-mes');
-
-            const valLider = selLider.value;
-            const valAno = selAno.value;
-            const valMes = selMes.value;
 
             selLider.innerHTML = '<option value="">-- Todos os Líderes --</option>';
             [...lideres].sort().forEach(l => selLider.innerHTML += `<option value="${l}">${l}</option>`);
@@ -395,10 +500,6 @@
             [...meses].sort((a,b)=>parseInt(a)-parseInt(b)).forEach(m => {
                 selMes.innerHTML += `<option value="${m}">${mesesNomes[m] || m}</option>`;
             });
-
-            selLider.value = valLider;
-            selAno.value = valAno;
-            selMes.value = valMes;
         }
 
         function limparFiltros() {
@@ -408,162 +509,105 @@
             aplicarFiltros();
         }
 
-        // MOTOR CENTRAL DE FILTRAGEM DE GOVERNANÇA (DISPARA ATUALIZAÇÕES PARA AS 3 TELAS)
         function aplicarFiltros() {
             const fl = document.getElementById('filtro-lider').value;
             const fa = document.getElementById('filtro-ano').value;
             const fm = document.getElementById('filtro-mes').value;
 
-            // Filtro para os Indicadores (Telas 1 e 2)
             let indFiltrados = dadosIndicadores.filter(i => {
-                let resp = lerCampo(i, CHAVES.resp);
-                let ano = lerCampo(i, CHAVES.ano);
-                let mes = lerCampo(i, CHAVES.mes);
-
-                if (fl && resp !== fl) return false;
-                if (fa && ano !== fa) return false;
-                if (fm && mes !== fm) return false;
+                if (fl && lerCampo(i, CHAVES.resp) !== fl) return false;
+                if (fa && lerCampo(i, CHAVES.ano) !== fa) return false;
+                if (fm && lerCampo(i, CHAVES.mes) !== fm) return false;
                 return true;
             });
 
-            // Filtro para os Planos de Ação (Tela 3 responde de forma estrita ao Líder/Responsável)
             let plFiltrados = dadosPlanos.filter(p => {
-                let resp = lerCampo(p, CHAVES.resp);
-                if (fl && resp !== fl) return false;
+                if (fl && lerCampo(p, CHAVES.resp) !== fl) return false;
                 return true;
             });
 
-            // Atualização de todas as visões mantendo o isolamento perfeito
             atualizarCardsResumo(indFiltrados, plFiltrados);
             renderizarGraficoEvolutivo(indFiltrados);
+            atualizarTabelaMain(indFiltrados);
             atualizarMapaEstrategicoBSC(indFiltrados);
             atualizarTabelaPlanosCentral(plFiltrados);
         }
 
-        // CÁLCULO INTELIGENTE DO DESEMPENHO REALIZADO VS META ACUMULADA
         function calcularYTDInteligente(historicoLinhas) {
-            let metasValidas = []; 
-            let resultadosValidos = [];
-
+            let metas = []; let reals = [];
             historicoLinhas.forEach(l => {
-                let rRaw = lerCampo(l, CHAVES.real); 
-                let mRaw = lerCampo(l, CHAVES.metaMensal);
-                if (rRaw !== "" && rRaw !== "--" && mRaw !== "" && mRaw !== "--") {
-                    resultadosValidos.push(limparNumero(rRaw));
-                    metasValidas.push(limparNumero(mRaw));
+                let r = lerCampo(l, CHAVES.real); let m = lerCampo(l, CHAVES.metaMensal);
+                if (r !== "" && m !== "") {
+                    reals.push(limparNumero(r)); metas.push(limparNumero(m));
                 }
             });
-
-            if (resultadosValidos.length === 0) return 0;
-            let somaReal = resultadosValidos.reduce((a, b) => a + b, 0);
-            let somaMeta = metasValidas.reduce((a, b) => a + b, 0);
-
-            if (somaMeta === 0) return 0;
-            return (somaReal / somaMeta) * 100;
+            if (reals.length === 0) return 0;
+            let sm = metas.reduce((a,b)=>a+b,0);
+            let sr = reals.reduce((a,b)=>a+b,0);
+            return sm === 0 ? 0 : (sr / sm) * 100;
         }
 
-        // TELA 1: RECONSTRUÇÃO DOS CARDS EXECUTIVOS DOS ANÁLITICOS
         function atualizarCardsResumo(ind, pl) {
             document.getElementById('card-total-kpis').innerText = ind.length;
             document.getElementById('card-total-planos').innerText = pl.length;
 
-            // Atingimento Médio das Linhas Filtradas Atuais
-            let somaPorcentagens = 0;
-            let contagemValida = 0;
-
+            let somaPorcentagens = 0; let contValida = 0;
             ind.forEach(i => {
                 let m = limparNumero(lerCampo(i, CHAVES.metaMensal));
                 let r = limparNumero(lerCampo(i, CHAVES.real));
-                if (m > 0) {
-                    somaPorcentagens += (r / m) * 100;
-                    contagemValida++;
-                }
+                if (m > 0) { somaPorcentagens += (r / m) * 100; contValida++; }
             });
-
-            let mediaAtingimento = contagemValida > 0 ? (somaPorcentagens / contagemValida) : 0;
+            let mediaAtingimento = contValida > 0 ? (somaPorcentagens / contValida) : 0;
             document.getElementById('card-atingimento-ytd').innerText = `${mediaAtingimento.toFixed(1)}%`;
             document.getElementById('progresso-atingimento').style.width = `${Math.min(mediaAtingimento, 100)}%`;
 
-            // Percentual de Conclusão dos Planos de Ação Filtrados
             let totalPl = pl.length;
             let concluidosPl = pl.filter(p => {
                 let st = lerCampo(p, CHAVES.status).toUpperCase();
-                return st === 'CONCLUÍDO' || st === 'CONCLUIDO' || st === 'FINALIZADO';
+                return st.includes('CONCLU') || st.includes('FINALIZ');
             }).length;
-
             let taxaConclusao = totalPl > 0 ? (concluidosPl / totalPl) * 100 : 0;
             document.getElementById('card-planos-concluidos').innerText = `${taxaConclusao.toFixed(0)}%`;
             document.getElementById('progresso-planos').style.width = `${taxaConclusao}%`;
         }
 
-        // TELA 1: RECONSTRUÇÃO COMPLETA DO CHART HISTÓRICO CRONOLÓGICO
-        function renderizarGraficoEvolutivo(linhasIndicadores) {
+        function renderizarGraficoEvolutivo(linhas) {
             const ctx = document.getElementById('canvasGrafico');
             if (!ctx) return;
+            if (graficoMain) graficoMain.destroy();
 
-            if (graficoInstancia) {
-                graficoInstancia.destroy();
-            }
-
-            // Agrupamento robusto estruturado por Mês/Ano de Meta vs Realizado
             let grupos = {};
-            linhasIndicadores.forEach(l => {
-                let m = lerCampo(l, CHAVES.mes);
-                let a = lerCampo(l, CHAVES.ano);
+            linhas.forEach(l => {
+                let m = lerCampo(l, CHAVES.mes); let a = lerCampo(l, CHAVES.ano);
                 if (!m || !a) return;
-                let chavePeriodo = `${m}/${a}`;
-
-                if (!grupos[chavePeriodo]) {
-                    grupos[chavePeriodo] = { real: 0, meta: 0 };
-                }
-                grupos[chavePeriodo].real += limparNumero(lerCampo(l, CHAVES.real));
-                grupos[chavePeriodo].meta += limparNumero(lerCampo(l, CHAVES.metaMensal));
+                let c = `${m}/${a}`;
+                if (!grupos[c]) grupos[c] = { real: 0, meta: 0 };
+                grupos[c].real += limparNumero(lerCampo(l, CHAVES.real));
+                grupos[c].meta += limparNumero(lerCampo(l, CHAVES.metaMensal));
             });
 
-            // Ordenação estrita de meses para blindar o gráfico contra exibições fora de ordem
-            let periodosOrdenados = Object.keys(grupos).sort((x, y) => {
+            let ordenados = Object.keys(grupos).sort((x,y) => {
                 let px = x.split('/'); let py = y.split('/');
                 return new Date(px[1], px[0]-1) - new Date(py[1], py[0]-1);
             });
 
-            let labelsFormatadas = [];
-            let dadosReal = [];
-            let dadosMeta = [];
             const mesesSiglas = {"01":"Jan","02":"Fev","03":"Mar","04":"Abr","05":"Mai","06":"Jun","07":"Jul","08":"Ago","09":"Set","10":"Out","11":"Nov","12":"Dez"};
+            let labels = []; let dReal = []; let dMeta = [];
 
-            periodosOrdenados.forEach(p => {
+            ordenados.forEach(p => {
                 let pt = p.split('/');
-                labelsFormatadas.push(`${mesesSiglas[pt[0]] || pt[0]}/${pt[1]}`);
-                dadosReal.push(grupos[p].real.toFixed(0));
-                dadosMeta.push(grupos[p].meta.toFixed(0));
+                labels.push(`${mesesSiglas[pt[0]] || pt[0]}/${pt[1]}`);
+                dReal.push(grupos[p].real.toFixed(0));
+                dMeta.push(grupos[p].meta.toFixed(0));
             });
 
-            graficoInstancia = new Chart(ctx, {
+            graficoMain = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labelsFormatadas,
+                    labels: labels,
                     datasets: [
-                        {
-                            label: 'Realizado',
-                            data: dadosReal,
-                            backgroundColor: 'rgba(59, 130, 246, 0.85)',
-                            borderColor: '#2563eb',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            order: 2
-                        },
-                        {
-                            label: 'Meta',
-                            data: dadosMeta,
-                            type: 'line',
-                            borderColor: '#f43f5e',
-                            borderWidth: 2.5,
-                            pointBackgroundColor: '#e11d48',
-                            pointRadius: 3,
-                            fill: false,
-                            tension: 0.1,
-                            order: 1
-                        }
+                        { label: 'Realizado', data: dReal, backgroundColor: 'rgba(59, 130, 246, 0.85)', borderColor: '#2563eb', borderWidth: 1, borderRadius: 4, order: 2 },
+                        { label: 'Meta', data: dMeta, type: 'line', borderColor: '#f43f5e', borderWidth: 2.5, pointBackgroundColor: '#e11d48', fill: false, tension: 0.1, order: 1 }
                     ]
                 },
                 options: {
@@ -571,15 +615,47 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 9 } } },
-                        x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } }
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } },
+                        x: { grid: { display: false }, ticks: { font: { size: 10, weight: 'bold' } } }
                     }
                 }
             });
         }
 
-        // TELA 2: ATUALIZAÇÃO DO MAPA DE PERSPECTIVAS DO BALANCED SCORECARD
-        function atualizarMapaEstrategicoBSC(linhasIndicadores) {
+        function atualizarTabelaMain(linhas) {
+            const corpo = document.getElementById('corpo-tabela-main');
+            if (!corpo) return;
+            corpo.innerHTML = '';
+
+            if (linhas.length === 0) {
+                corpo.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">Nenhum dado ativo para os filtros atuais.</td></tr>`;
+                return;
+            }
+
+            linhas.forEach(i => {
+                let m = limparNumero(lerCampo(i, CHAVES.metaMensal));
+                let r = limparNumero(lerCampo(i, CHAVES.real));
+                let pct = m > 0 ? (r / m) * 100 : 0;
+
+                let farol = 'farol-vermelho';
+                if (pct >= 95) farol = 'farol-verde';
+                else if (pct >= 85) farol = 'farol-amarelo';
+
+                corpo.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-bold text-[10px] tracking-wider text-slate-500 uppercase">${lerCampo(i, CHAVES.persp)}</td>
+                        <td class="p-4 text-slate-800 font-bold">${lerCampo(i, CHAVES.kpi)}</td>
+                        <td class="p-4 text-slate-600 font-semibold">${lerCampo(i, CHAVES.resp)}</td>
+                        <td class="p-4 text-center font-mono font-bold">${lerCampo(i, CHAVES.metaMensal)}</td>
+                        <td class="p-4 text-center font-mono font-bold text-blue-600">${lerCampo(i, CHAVES.real)}</td>
+                        <td class="p-4 text-center font-mono font-black text-slate-700">${pct.toFixed(1)}%</td>
+                        <td class="p-4 text-center"><span class="inline-block w-3 h-3 rounded-full ${farol}"></span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function atualizarMapaEstrategicoBSC(linhas) {
             const containers = {
                 'FINANCEIRA': document.getElementById('container-persp-financeira'),
                 'CLIENTES': document.getElementById('container-persp-clientes'),
@@ -587,61 +663,44 @@
                 'APRENDIZADO': document.getElementById('container-persp-aprendizado')
             };
 
-            // Limpa containers
             Object.values(containers).forEach(el => { if (el) el.innerHTML = ''; });
 
-            // Agrupa KPIs por Objetivo Estratégico dentro de cada Perspectiva
-            let objetivosMapeados = {};
-
-            linhasIndicadores.forEach(i => {
+            let objs = {};
+            linhas.forEach(i => {
                 let pRaw = lerCampo(i, CHAVES.persp).toUpperCase();
-                let pChave = '';
-                if (pRaw.includes('FINAN')) pChave = 'FINANCEIRA';
-                else if (pRaw.includes('CLIENT')) pChave = 'CLIENTES';
-                else if (pRaw.includes('PROCES')) pChave = 'PROCESSOS';
-                else if (pRaw.includes('APREND') || pRaw.includes('CRESC')) pChave = 'APRENDIZADO';
+                let c = '';
+                if (pRaw.includes('FINAN')) c = 'FINANCEIRA';
+                else if (pRaw.includes('CLIENT')) c = 'CLIENTES';
+                else if (pRaw.includes('PROCES')) c = 'PROCESSOS';
+                else if (pRaw.includes('APREND') || pRaw.includes('CRESC')) c = 'APRENDIZADO';
 
-                if (!pChave) return;
+                if (!c) return;
+                let o = lerCampo(i, CHAVES.obj);
+                if (!o) return;
 
-                let objNome = lerCampo(i, CHAVES.obj);
-                if (!objNome) return;
-
-                if (!objetivosMapeados[objNome]) {
-                    objetivosMapeados[objNome] = { perspectiva: pChave, linhas: [] };
-                }
-                objetivosMapeados[objNome].lines.push(i);
+                if (!objs[o]) objs[o] = { perspectiva: c, lines: [] };
+                objs[o].lines.push(i);
             });
 
-            // Reconstrói visualmente os cards com base nos cálculos de faróis estratégicos
-            Object.keys(objetivosMapeados).forEach(nomeObj => {
-                let metaObj = objetivosMapeados[nomeObj];
-                let ytdObj = calcularYTDInteligente(metaObj.lines);
+            Object.keys(objs).forEach(nomeObj => {
+                let metaObj = objs[nomeObj];
+                let ytd = calcularYTDInteligente(metaObj.lines);
 
-                let farolClasse = 'farol-vermelho';
-                if (ytdObj >= 95) farolClasse = 'farol-verde';
-                else if (ytdObj >= 85) farolClasse = 'farol-amarelo';
-                if (ytdObj === 0 && metaObj.lines.length === 0) farolClasse = 'farol-sem-dados';
-
-                let listagemKpisHtml = '';
-                metaObj.lines.slice(0, 3).forEach(k => {
-                    let kNome = lerCampo(k, CHAVES.kpi);
-                    let kMeta = lerCampo(k, CHAVES.metaMensal);
-                    let kReal = lerCampo(k, CHAVES.real);
-                    listagemKpisHtml += `<div class="text-[9px] text-slate-500 truncate font-medium">&bull; ${kNome} (M: ${kMeta} | R: ${kReal})</div>`;
-                });
+                let farol = 'farol-vermelho';
+                if (ytd >= 95) farol = 'farol-verde';
+                else if (ytd >= 85) farol = 'farol-amarelo';
 
                 let cardHtml = `
-                    <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs relative overflow-hidden flex flex-col justify-between min-h-[110px]">
+                    <div onclick="abrirModalObj('${nomeObj}')" class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs hover:shadow-md transition-all cursor-pointer relative flex flex-col justify-between min-h-[110px]">
                         <div>
                             <div class="flex items-start justify-between gap-2 mb-2">
                                 <h4 class="text-[11px] font-black text-slate-700 uppercase tracking-wide leading-tight line-clamp-2">${nomeObj}</h4>
-                                <span class="w-3 h-3 rounded-full shrink-0 ${farolClasse} shadow-sm"></span>
+                                <span class="w-3 h-3 rounded-full shrink-0 ${farol}"></span>
                             </div>
-                            <div class="space-y-0.5 mb-2">${listagemKpisHtml}</div>
                         </div>
                         <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[9px] font-bold text-slate-400">
-                            <span>Atingimento: <strong class="text-slate-700">${ytdObj.toFixed(1)}%</strong></span>
-                            <span class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[8px]">${lerCampo(metaObj.lines[0], CHAVES.resp)}</span>
+                            <span>Atingimento: <strong class="text-slate-700">${ytd.toFixed(1)}%</strong></span>
+                            <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[8px]">${lerCampo(metaObj.lines[0], CHAVES.resp)}</span>
                         </div>
                     </div>
                 `;
@@ -650,34 +709,110 @@
                     containers[metaObj.perspectiva].insertAdjacentHTML('beforeend', cardHtml);
                 }
             });
+        }
 
-            // Mensagem amigável caso a esteira de perspectivas fique zerada após os filtros
-            Object.keys(containers).forEach(k => {
-                if (containers[k] && containers[k].children.length === 0) {
-                    containers[k].innerHTML = `
-                        <div class="col-span-full py-6 text-center text-[10px] text-slate-400 font-medium italic">
-                            Nenhum objetivo ou indicador ativo para esta perspectiva sob os filtros atuais.
-                        </div>
+        function abrirModalObj(nomeObj) {
+            objetivoSelecionadoModal = nomeObj;
+            let linhasObj = dadosIndicadores.filter(i => lerCampo(i, CHAVES.obj) === nomeObj);
+            
+            if (linhasObj.length === 0) return;
+
+            document.getElementById('modal-txt-titulo').innerText = nomeObj;
+            document.getElementById('modal-txt-persp').innerText = lerCampo(linhasObj[0], CHAVES.persp);
+            document.getElementById('modal-txt-lider').innerText = lerCampo(linhasObj[0], CHAVES.resp);
+
+            let kpisUnicos = new Set(); let anosUnicos = new Set();
+            linhasObj.forEach(i => {
+                kpisUnicos.add(lerCampo(i, CHAVES.kpi));
+                anosUnicos.add(lerCampo(i, CHAVES.ano));
+            });
+
+            const selKpi = document.getElementById('modal-select-kpi');
+            selKpi.innerHTML = '';
+            [...kpisUnicos].forEach(k => selKpi.innerHTML += `<option value="${k}">${k}</option>`);
+
+            const selAno = document.getElementById('modal-select-ano');
+            selAno.innerHTML = '';
+            [...anosUnicos].sort().forEach(a => selAno.innerHTML += `<option value="${a}">${a}</option>`);
+
+            // Planos de Ação Vinculados dentro do Modal
+            const corpoPlanos = document.getElementById('modal-corpo-planos');
+            corpoPlanos.innerHTML = '';
+            
+            let planosVinculados = dadosPlanos.filter(p => lerCampo(p, CHAVES.obj) === nomeObj);
+            if (planosVinculados.length === 0) {
+                corpoPlanos.innerHTML = `<tr><td colspan="4" class="p-4 text-center italic text-slate-400">Sem ações mapeadas para este objetivo.</td></tr>`;
+            } else {
+                planosVinculados.forEach(p => {
+                    corpoPlanos.innerHTML += `
+                        <tr>
+                            <td class="p-3 text-slate-800 font-bold">${lerCampo(p, CHAVES.acao)}</td>
+                            <td class="p-3 whitespace-nowrap">${lerCampo(p, CHAVES.resp)}</td>
+                            <td class="p-3 text-center font-mono whitespace-nowrap">${lerCampo(p, CHAVES.prazoFim) || '--'}</td>
+                            <td class="p-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[9px] bg-slate-100 border text-slate-600">${lerCampo(p, CHAVES.status)}</span></td>
+                        </tr>
                     `;
-                }
+                });
+            }
+
+            document.getElementById('modal-objetivo').classList.remove('hidden');
+            atualizarModalGrafico();
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-objetivo').classList.add('hidden');
+        }
+
+        function atualizarModalGrafico() {
+            const kpiSel = document.getElementById('modal-select-kpi').value;
+            const anoSel = document.getElementById('modal-select-ano').value;
+
+            let linhasFiltradas = dadosIndicadores.filter(i => 
+                lerCampo(i, CHAVES.obj) === objetivoSelecionadoModal &&
+                lerCampo(i, CHAVES.kpi) === kpiSel &&
+                lerCampo(i, CHAVES.ano) === anoSel
+            );
+
+            let ytd = calcularYTDInteligente(linhasFiltradas);
+            document.getElementById('modal-txt-ytd').innerText = `${ytd.toFixed(1)}%`;
+
+            // Render Chart Modal
+            const ctx = document.getElementById('canvasGraficoModal');
+            if (!ctx) return;
+            if (graficoModal) graficoModal.destroy();
+
+            linhasFiltradas.sort((a,b) => parseInt(lerCampo(a, CHAVES.mes)) - parseInt(lerCampo(b, CHAVES.mes)));
+
+            const mesesSiglas = {"01":"Jan","02":"Fev","03":"Mar","04":"Abr","05":"Mai","06":"Jun","07":"Jul","08":"Ago","09":"Set","10":"Out","11":"Nov","12":"Dez"};
+            let labels = []; let dReal = []; let dMeta = [];
+
+            linhasFiltradas.forEach(l => {
+                let m = lerCampo(l, CHAVES.mes);
+                labels.push(mesesSiglas[m] || m);
+                dReal.push(limparNumero(lerCampo(l, CHAVES.real)));
+                dMeta.push(limparNumero(lerCampo(l, CHAVES.metaMensal)));
+            });
+
+            graficoModal = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Realizado', data: dReal, backgroundColor: 'rgba(59, 130, 246, 0.85)', borderColor: '#2563eb', borderWidth: 1 },
+                        { label: 'Meta', data: dMeta, type: 'line', borderColor: '#f43f5e', borderWidth: 2, fill: false }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
-        // ==================== TELA 3: ATUALIZAÇÃO RIGOROSA DA CENTRAL DE PLANOS ====================
         function atualizarTabelaPlanosCentral(linhasPlanos) {
             const corpo = document.getElementById('corpo-tabela-planos-central');
             if (!corpo) return;
-
             corpo.innerHTML = '';
 
             if (!linhasPlanos || linhasPlanos.length === 0) {
-                corpo.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="p-10 text-center font-medium italic text-slate-400 bg-white">
-                            <i class="fa-solid fa-folder-open block text-xl text-slate-300 mb-1"></i>
-                            Nenhum plano de ação localizado para os critérios aplicados.
-                        </td>
-                    </tr>`;
+                corpo.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">Nenhum plano localizado para a consulta.</td></tr>`;
                 return;
             }
 
@@ -685,25 +820,18 @@
                 let st = lerCampo(p, CHAVES.status).toUpperCase();
                 let corBadge = 'bg-slate-100 text-slate-600 border-slate-200';
                 
-                if (st === 'CONCLUÍDO' || st === 'CONCLUIDO' || st === 'FINALIZADO') {
-                    corBadge = 'bg-emerald-50 text-emerald-700 border-emerald-200 font-bold';
-                } else if (st === 'EM ANDAMENTO' || st === 'ANDAMENTO' || st === 'EXECUTANDO') {
-                    corBadge = 'bg-amber-50 text-amber-700 border-amber-200 font-bold';
-                } else if (st === 'ATRASADO' || st === 'IMPEDIDO') {
-                    corBadge = 'bg-rose-50 text-rose-700 border-rose-200 font-bold';
-                }
-
-                let pIni = lerCampo(p, CHAVES.prazoIni);
-                let pFim = lerCampo(p, CHAVES.prazoFim);
+                if (st.includes('CONCLU') || st.includes('FINALIZ')) corBadge = 'bg-emerald-50 text-emerald-700 border-emerald-200 font-bold';
+                else if (st.includes('ANDA') || st.includes('EXEC')) corBadge = 'bg-amber-50 text-amber-700 border-amber-200 font-bold';
+                else if (st.includes('ATRA') || st.includes('IMPED')) corBadge = 'bg-rose-50 text-rose-700 border-rose-200 font-bold';
 
                 corpo.innerHTML += `
-                    <tr class="hover:bg-slate-50/80 border-b border-slate-100 transition-colors">
+                    <tr class="hover:bg-slate-50 border-b border-slate-100 transition-colors">
                         <td class="p-4 font-black text-slate-800 text-[10px] tracking-wider uppercase whitespace-nowrap">${lerCampo(p, CHAVES.persp) || 'PROCESSOS'}</td>
-                        <td class="p-4 text-slate-500 max-w-xs truncate font-medium text-[11px] uppercase">${lerCampo(p, CHAVES.obj)}</td>
+                        <td class="p-4 text-slate-500 max-w-xs truncate font-semibold text-[11px] uppercase">${lerCampo(p, CHAVES.obj)}</td>
                         <td class="p-4 text-slate-800 font-bold text-xs leading-relaxed">${lerCampo(p, CHAVES.acao)}</td>
                         <td class="p-4 text-slate-700 font-semibold whitespace-nowrap"><i class="fa-solid fa-user-tie text-slate-300 text-[10px] mr-1"></i> ${lerCampo(p, CHAVES.resp)}</td>
-                        <td class="p-4 text-center font-mono text-slate-500 font-semibold text-[11px] whitespace-nowrap">${pIni || '--'}</td>
-                        <td class="p-4 text-center font-mono text-slate-500 font-semibold text-[11px] whitespace-nowrap">${pFim || '--'}</td>
+                        <td class="p-4 text-center font-mono text-slate-500 text-[11px] whitespace-nowrap">${lerCampo(p, CHAVES.prazoIni) || '--'}</td>
+                        <td class="p-4 text-center font-mono text-slate-500 text-[11px] whitespace-nowrap">${lerCampo(p, CHAVES.prazoFim) || '--'}</td>
                         <td class="p-4 text-center whitespace-nowrap">
                             <span class="px-2.5 py-1 rounded-full text-[9px] uppercase tracking-wider border ${corBadge}">
                                 ${lerCampo(p, CHAVES.status) || 'Pendente'}
@@ -714,48 +842,34 @@
             });
         }
 
-        // INTEGRATION: LEITURA E SINCRONIZAÇÃO COMPLETA DE DADOS DO GOOGLE SHEETS
         function carregarDadosCloud() {
-            const urlElement = document.getElementById('input-url-web-app');
-            const url = urlElement.value.trim();
-            
-            if (!url) {
-                alert("Por favor, forneça uma URL de integração do Google Apps Script válida.");
-                return;
-            }
+            const url = document.getElementById('input-url-web-app').value.trim();
+            if (!url) { alert("Forneça a URL válida antes de sincronizar."); return; }
 
-            localStorage.setItem('url_sheets_bsc', url);
-            
             const led = document.getElementById('led-status');
             const lbl = document.getElementById('label-status');
 
             lbl.innerText = "SINCRONIZANDO...";
-            led.className = "w-2 h-2 rounded-full bg-blue-500 animate-pulse";
+            led.className = "w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse";
 
             fetch(url)
-                .then(res => { if (!res.ok) throw new Error("HTTP Erro"); return res.json(); })
+                .then(res => res.json())
                 .then(resData => {
-                    // Proteção de Estrutura: Aceita arranjos bidirecionais (tanto objetos com chaves quanto arrays diretas)
-                    if (resData.indicadores && Array.isArray(resData.indicadores)) {
-                        dadosIndicadores = resData.indicadores;
-                    }
-                    if (resData.planos && Array.isArray(resData.planos)) {
-                        dadosPlanos = resData.planos;
-                    }
+                    if (resData.indicadores && Array.isArray(resData.indicadores)) dadosIndicadores = resData.indicadores;
+                    if (resData.planos && Array.isArray(resData.planos)) dadosPlanos = resData.planos;
 
                     gerarFiltrosDinamicos();
                     aplicarFiltros();
 
                     lbl.innerText = "SINCRONIZADO";
-                    led.className = "w-2 h-2 rounded-full bg-emerald-500";
+                    led.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
                 })
                 .catch(err => {
-                    console.error("Erro na carga de dados da nuvem:", err);
+                    console.error(err);
                     lbl.innerText = "FALHA SYNC";
-                    led.className = "w-2 h-2 rounded-full bg-rose-500";
-                    alert("Não foi possível sincronizar os dados. Verifique a publicação do seu Apps Script (acesso para 'Qualquer pessoa') ou as políticas de CORS.");
+                    led.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+                    alert("Falha na sincronização. Retornando para a massa de dados local padrão.");
                     
-                    // Retorno de segurança para a massa local
                     dadosIndicadores = [...BANCO_DADOS_INDICADORES_LOCAL];
                     dadosPlanos = [...BANCO_DADOS_PLANOS_LOCAL];
                     gerarFiltrosDinamicos();
